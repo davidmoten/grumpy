@@ -21,12 +21,21 @@ function init() {
                 {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22}
             )
         ],
-        center: new OpenLayers.LonLat(10.2, 48.9)
+        center: new OpenLayers.LonLat(149.1,-35.3)
             // Google.v3 uses web mercator as projection, so we have to
             // transform our coordinates
             .transform('EPSG:4326', 'EPSG:3857'),
-        zoom: 5
+        zoom: 6
     });
+    
+
+    var layer = new OpenLayers.Layer.WMS( "Custom WMS Layer",
+                "http://localhost:8080/wms-demo/wms", 
+                {layers: 'Custom',transparent: "true", format: "image/png",styles:"Standard"},
+                {gutter:15, singleTile:true,visibility:true,opacity: 0.5});
+    map.addLayer(layer);
+
+    
     map.addControl(new OpenLayers.Control.LayerSwitcher());
     
     // add behavior to html

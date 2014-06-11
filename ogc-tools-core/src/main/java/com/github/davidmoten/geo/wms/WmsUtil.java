@@ -5,6 +5,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.davidmoten.geo.projection.Projector;
+import com.github.davidmoten.geo.projection.ProjectorTarget;
+
 public class WmsUtil {
 	public static List<Color> getColorFromStyles(List<String> styles) {
 		List<Color> colors = new ArrayList<Color>();
@@ -25,5 +28,11 @@ public class WmsUtil {
 			}
 		}
 		return colors;
+	}
+
+	public static Projector getProjector(WmsRequest request) {
+		ProjectorTarget target = new ProjectorTarget(request.getWidth(),
+				request.getHeight());
+		return new Projector(request.getBounds(), target);
 	}
 }

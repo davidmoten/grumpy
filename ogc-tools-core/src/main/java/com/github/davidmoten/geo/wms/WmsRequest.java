@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.ObjectUtils;
 
 import com.github.davidmoten.geo.projection.FeatureUtil;
+import com.github.davidmoten.geo.projection.ProjectorBounds;
 
 public class WmsRequest {
 
