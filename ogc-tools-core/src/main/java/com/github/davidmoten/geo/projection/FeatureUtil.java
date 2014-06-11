@@ -43,10 +43,6 @@ public class FeatureUtil {
 				String wkt = IOUtils.toString(FeatureUtil.class
 						.getResourceAsStream("/epsg/EPSG_102100.txt"));
 				crs.put(epsg, CRS.parseWKT(wkt));
-			} else if (epsg.equals(EPSG_3857)) {
-				String wkt = IOUtils.toString(FeatureUtil.class
-						.getResourceAsStream("/epsg/EPSG_3857.txt"));
-				crs.put(epsg, CRS.parseWKT(wkt));
 			} else
 				crs.put(epsg, CRS.decode(epsg));
 			return crs.get(epsg);
