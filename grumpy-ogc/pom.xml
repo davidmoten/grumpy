@@ -21,7 +21,7 @@
     
         <dependency>
             <groupId>com.github.davidmoten</groupId>
-            <artifactId>grumpy-core</artifactId>
+            <artifactId>grumpy-projection</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     
