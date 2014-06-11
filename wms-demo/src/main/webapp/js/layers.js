@@ -25,14 +25,15 @@ function init() {
             // Google.v3 uses web mercator as projection, so we have to
             // transform our coordinates
             .transform('EPSG:4326', 'EPSG:3857'),
-        zoom: 6
+        zoom: 6,
+        zoomMethod: null
     });
     
 
     var layer = new OpenLayers.Layer.WMS( "Custom WMS Layer",
                 "http://localhost:8080/wms-demo/wms", 
                 {layers: 'Custom',transparent: "true", format: "image/png",styles:"Standard"},
-                {gutter:15,singleTile:true, visibility:true,opacity: 0.5});
+                {gutter:15,singleTile:true, visibility:true,opacity: 0.5,animationEnabled: false});
     map.addLayer(layer);
 
     

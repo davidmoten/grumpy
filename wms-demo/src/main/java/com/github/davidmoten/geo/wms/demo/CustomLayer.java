@@ -28,6 +28,9 @@ public class CustomLayer implements Layer {
 
     @Override
     public void render(Graphics2D g, WmsRequest request) {
+
+        log.info(request.getCrs());
+        log.info(request.getVersion());
         Projector projector = WmsUtil.getProjector(request);
 
         // draw a border around Canberra and shade it.
