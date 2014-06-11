@@ -17,6 +17,7 @@ Todo
 * draw shape over pole
 * demo get info on click in openlayers client
 * use guava cache with expiry on time by layer and total size in ``ImageCache```
+* Use text instead of InfoFormat
 
 Getting started
 -------------------
