@@ -73,13 +73,11 @@ public class Projector {
 			point = (com.vividsolutions.jts.geom.Point) JTS.transform(point,
 					transform);
 
-			System.out.println("lon=" + lon + ",lat=" + lat + "x="
-					+ point.getX() + " y=" + point.getY());
-			double maxX;
-
 			double proportionX;
 			if (point.getX() > bounds.getMaxX()
 					|| point.getX() < bounds.getMinX()) {
+				// assume the maxX occurs at longitude 180 (true for EPSG 3857
+				// spherical mercator) but maybe not true for other projections?
 				Coordinate c = new Coordinate(180, 0);
 				com.vividsolutions.jts.geom.Point pt = (com.vividsolutions.jts.geom.Point) JTS
 						.transform(geometryFactory.createPoint(c), transform);
