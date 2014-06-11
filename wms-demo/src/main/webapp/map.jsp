@@ -13,24 +13,6 @@
         <script src="js/google-v3.js"></script>
     </head>
     <body onload="init()">
-        <h1 id="title">Google (v3) Layer Example</h1>
-        <div id="tags">
-            Google, api key, apikey, light
-        </div>
-        <p id="shortdesc">
-            Demonstrate use the Google Maps v3 API.
-        </p>
-        <div id="map" class="smallmap"></div>
-        <div id="docs">
-            <p><input id="animate" type="checkbox" checked="checked">Animated
-                zoom (if supported by GMaps on your device)</input></p>
-            <p>
-                If you use the Google Maps v3 API with a Google layer, you don't
-                need to include an API key.  This layer only works in the 
-                spherical mercator projection.  See the 
-                <a href="google-v3.js" target="_blank">google-v3.js source</a> 
-                to see how this is done.
-            </p>
-        </div>
+        <div id="map" class="fullmap"></div>
     </body>
 </html>

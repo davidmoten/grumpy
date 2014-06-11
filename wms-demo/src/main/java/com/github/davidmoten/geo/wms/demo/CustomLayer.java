@@ -1,15 +1,21 @@
 package com.github.davidmoten.geo.wms.demo;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Shape;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.davidmoten.geo.Position;
 import com.github.davidmoten.geo.projection.Projector;
 import com.github.davidmoten.geo.wms.Layer;
+import com.github.davidmoten.geo.wms.RendererUtil;
 import com.github.davidmoten.geo.wms.WmsRequest;
 import com.github.davidmoten.geo.wms.WmsUtil;
 
@@ -23,13 +29,28 @@ public class CustomLayer implements Layer {
 	private static final double CANBERRA_LON = 149.1244;
 
 	@Override
-	public void render(Graphics g, WmsRequest request) {
+	public void render(Graphics2D g, WmsRequest request) {
 		Projector projector = WmsUtil.getProjector(request);
+
+		// draw a border around Canberra and shade it.
+		List<Position> list = new ArrayList<Position>();
+		list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON - 2));
+		list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON - 2));
+		list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON + 2));
+		list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON + 2));
+		Shape shape = RendererUtil.getPath(projector, list);
+		g.setColor(Color.white);
+		g.fill(shape);
+		g.setColor(Color.BLUE);
+		g.draw(shape);
+
+		// label Canberra
 		Point p = projector.toPoint(CANBERRA_LAT, CANBERRA_LON);
 		g.setColor(Color.RED);
-		g.setFont(g.getFont().deriveFont(12.0f));
+		g.setFont(g.getFont().deriveFont(24.0f).deriveFont(Font.BOLD));
 		log.info("drawing string at " + p);
 		g.drawString(CANBERRA, p.x + 5, p.y);
+
 	}
 
 	@Override

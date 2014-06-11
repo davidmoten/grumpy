@@ -76,9 +76,12 @@ h6 {
 /**
  * Map Examples Specific
  */
-.smallmap {
-    width: 512px;
-    height: 256px;
+.fullmap {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
     border: 1px solid #ccc;
 }
 #tags {
@@ -101,8 +104,11 @@ h6 {
         width      : 100%;
     }
     #map {
+    	position: absolute;
+    	top: 0;
+    	left:0;
         border : 0;
-        height : 250px;
+        height : 100%;
     }
     #title {
         font-size   : 1.3em;

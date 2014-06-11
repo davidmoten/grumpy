@@ -38,11 +38,4 @@ function init() {
     
     map.addControl(new OpenLayers.Control.LayerSwitcher());
     
-    // add behavior to html
-    var animate = document.getElementById("animate");
-    animate.onclick = function() {
-        for (var i=map.layers.length-1; i>=0; --i) {
-            map.layers[i].animationEnabled = this.checked;
-        }
-    };
 }

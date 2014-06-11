@@ -92,15 +92,16 @@ public class RendererUtil {
 		return positions;
 	}
 
-	public static Shape getPath(Projector projector, Position... positions) {
+	public static Shape getPath(Projector projector, List<Position> positions) {
 		return getPath(projector,
 				DEFAULT_MAX_DISTANCE_BETWEEN_POINTS_IN_PIXELS, positions);
 	}
 
 	public static Shape getPath(Projector projector,
-			double maxDistanceBetweenPointsInPixels, Position... mainPositions) {
+			double maxDistanceBetweenPointsInPixels,
+			List<Position> mainPositions) {
 
-		if (mainPositions.length < 2)
+		if (mainPositions.size() < 2)
 			throw new RuntimeException("must provide at least two positions");
 
 		GeneralPath path = new GeneralPath();
