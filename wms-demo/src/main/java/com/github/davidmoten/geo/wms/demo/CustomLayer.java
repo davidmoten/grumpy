@@ -27,26 +27,47 @@ public class CustomLayer implements Layer {
 	public void render(Graphics2D g, WmsRequest request) {
 
 		Projector projector = WmsUtil.getProjector(request);
+		{
+			// draw a border around Canberra and shade it.
+			List<Position> list = new ArrayList<Position>();
+			list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON - 4));
+			list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON - 4));
+			list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON + 4));
+			list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON + 4));
+			list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON - 4));
 
-		// draw a border around Canberra and shade it.
-		List<Position> list = new ArrayList<Position>();
-		list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON - 4));
-		list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON - 4));
-		list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON + 4));
-		list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON + 4));
-		list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON - 4));
+			// join the positions using great circle paths
+			Shape shape = RendererUtil.getPath(projector, list);
+			g.setColor(Color.white);
 
-		// join the positions using great circle paths
-		Shape shape = RendererUtil.getPath(projector, list);
-		g.setColor(Color.white);
+			// fill the box with white
+			g.fill(shape);
 
-		// fill the box with white
-		g.fill(shape);
+			// draw border in blue
+			g.setColor(Color.blue);
+			g.draw(shape);
+		}
 
-		// draw border in blue
-		g.setColor(Color.blue);
-		g.draw(shape);
+		{
+			// draw a border around Canberra and shade it.
+			List<Position> list = new ArrayList<Position>();
+			list.add(Position.create(CANBERRA_LAT - 2, 176));
+			list.add(Position.create(CANBERRA_LAT + 2, 176));
+			list.add(Position.create(CANBERRA_LAT + 2, -176));
+			list.add(Position.create(CANBERRA_LAT - 2, -176));
+			list.add(Position.create(CANBERRA_LAT - 2, 176));
 
+			// join the positions using great circle paths
+			Shape shape = RendererUtil.getPath(projector, list);
+			g.setColor(Color.green);
+
+			// fill the box with white
+			g.fill(shape);
+
+			// draw border in blue
+			g.setColor(Color.blue);
+			g.draw(shape);
+		}
 		// label Canberra
 		Point p = projector.toPoint(CANBERRA_LAT, CANBERRA_LON);
 		g.setColor(Color.RED);

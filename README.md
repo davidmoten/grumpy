@@ -5,6 +5,13 @@ ogc-tools
 
 Status: *pre-alpha*
 
+TODO
+---------
+* draw box over 180 longitude, -180 longitude
+* draw shape over pole
+* demo get info on click in openlayers client
+* use guava cache with expiry on time by layer and total size in ``ImageCache```
+
 Getting started
 -------------------
 
