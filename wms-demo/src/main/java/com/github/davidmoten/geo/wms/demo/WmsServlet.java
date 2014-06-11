@@ -17,39 +17,38 @@ import com.github.davidmoten.geo.wms.WmsServletRequestProcessor;
 
 public class WmsServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 1518113833457077766L;
+    private static final long serialVersionUID = 1518113833457077766L;
 
-	private final WmsServletRequestProcessor processor;
+    private final WmsServletRequestProcessor processor;
 
-	public WmsServlet() {
+    public WmsServlet() {
 
-		// get capabilities xml from the classpath
-		WmsGetCapabilitiesProvider getCapabilitiesProvider = fromClasspath("/wms-capabilities.xml");
+        // get capabilities xml from the classpath
+        WmsGetCapabilitiesProvider getCapabilitiesProvider = fromClasspath("/wms-capabilities.xml");
 
-		// add a single layer
-		Layers layers = LayersBuilder
-		// get a builder
-				.builder()
-				// add our custom layer (the name should match the name in
-				// capabilities.xml
-				.add("Custom", new CustomLayer())
-				// build the Layers
-				.build();
+        // add a single layer
+        Layers layers = LayersBuilder
+        // get a builder
+                .builder()
+                // add our custom layer (the name should match the name in
+                // capabilities.xml
+                .add("Custom", new CustomLayer())
+                // build the Layers
+                .build();
 
-		// create and configure the cache
-		ImageCache imageCache = new ImageCache();
+        // create and configure the cache
+        ImageCache imageCache = new ImageCache();
 
-		// initialize the request processor
-		processor = new WmsServletRequestProcessor(getCapabilitiesProvider,
-				layers, imageCache);
-	}
+        // initialize the request processor
+        processor = new WmsServletRequestProcessor(getCapabilitiesProvider, layers, imageCache);
+    }
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+            IOException {
 
-		// use the processor to handle requests
-		processor.doGet(req, resp);
-	}
+        // use the processor to handle requests
+        processor.doGet(req, resp);
+    }
 
 }

@@ -1,7 +1,7 @@
 ogc-tools
 =============
 
-OGC WMS Server allowing custom rendering of WMS layers using projection utilities and Graphics2D.
+[OGC WMS](http://www.opengeospatial.org/standards/wms) Server in java allowing custom rendering of WMS layers using projection utilities and Graphics2D.
 
 Getting started
 -------------------

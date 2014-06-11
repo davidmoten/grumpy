@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="css/style.css" type="text/css">
         <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
         <script src="http://openlayers.org/api/2.13.1/OpenLayers.js"></script>
-        <script src="js/google-v3.js"></script>
+        <script src="js/layers.js"></script>
     </head>
     <body onload="init()">
         <div id="map" class="fullmap"></div>
