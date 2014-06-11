@@ -37,7 +37,7 @@ public class WmsServlet extends HttpServlet {
 				.build();
 
 		// create and configure the cache for max 200 images
-		ImageCache imageCache = new ImageCache(200).add("Custom");
+		ImageCache imageCache = ImageCache.create(200).add("Custom");
 
 		// initialize the request processor
 		processor = new WmsServletRequestProcessor(getCapabilitiesProvider,

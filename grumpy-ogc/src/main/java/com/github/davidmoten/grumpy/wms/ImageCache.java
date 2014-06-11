@@ -42,6 +42,10 @@ public class ImageCache {
 		this.maxSize = size;
 	}
 
+	public static ImageCache create(int size) {
+		return new ImageCache(size);
+	}
+
 	public void clear(String layerName) {
 		synchronized (this) {
 			log.info("clearing cache for layer " + layerName);
