@@ -20,7 +20,7 @@ cd wms-demo
 mvn jetty:run
 ```
 
-Go to [http://localhost:8080](http://localhost:8080) with a browser.
+Go to [http://localhost:8080](http://localhost:8080/wms-demo) with a browser.
 
 And at the map link you will see this:
 
