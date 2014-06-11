@@ -18,13 +18,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.davidmoten.geo.wms.InfoProvider.Format;
 
 public class LayerManager implements InfosProvider {
 
-	private static Logger log = Logger.getLogger(LayerManager.class);
+	private static Logger log = LoggerFactory.getLogger(LayerManager.class);
 
 	private final Layers layers;
 

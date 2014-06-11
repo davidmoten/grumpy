@@ -7,7 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Caches images keyed on the {@link WmsRequest}.
@@ -27,7 +28,7 @@ public class ImageCache {
 		log.info("constructed");
 	}
 
-	private static Logger log = Logger.getLogger(ImageCache.class);
+	private static Logger log = LoggerFactory.getLogger(ImageCache.class);
 
 	private static int MAX_SIZE = 250;// 50MB at 200K per image
 

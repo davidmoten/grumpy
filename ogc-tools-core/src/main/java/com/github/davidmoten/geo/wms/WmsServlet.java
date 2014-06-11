@@ -15,13 +15,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.davidmoten.geo.wms.InfoProvider.Format;
 
 public class WmsServlet {
 
-	private static Logger log = Logger.getLogger(WmsServlet.class);
+	private static org.slf4j.Logger log = LoggerFactory
+			.getLogger(WmsServlet.class);
 
 	private static final String REQUEST_GET_MAP = "GetMap";
 	private static final String PARAMETER_REQUEST = "REQUEST";

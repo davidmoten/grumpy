@@ -4,86 +4,96 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>9</version>
+		<groupId>com.github.davidmoten</groupId>
+		<artifactId>ogc-tools</artifactId>
+		<version>0.1-SNAPSHOT</version>
 	</parent>
 
-	<groupId>com.github.davidmoten</groupId>
-	<artifactId>ogc-tools</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<artifactId>ogc-tools-core</artifactId>
 
 	<name>${project.artifactId}</name>
 	<description>OGC tools including WMS server</description>
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 
 	<url>http://github.com/davidmoten/ogc-tools</url>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.target>1.7</maven.compiler.target>
-        <slf4j.version>1.7.7</slf4j.version>
-        <geotools.version>8.1</geotools.version>
+	<dependencies>
+		 <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-main</artifactId>
+            <version>${geotools.version}</version>
+            <optional>false</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-render</artifactId>
+            <version>${geotools.version}</version>
+            <optional>false</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-epsg-wkt</artifactId>
+            <version>${geotools.version}</version>
+            <optional>false</optional>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        
+         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.3.2</version>
+        </dependency>
+        
+		<!-- Test Dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+        <dependency>
+            <artifactId>log4j</artifactId>
+            <groupId>log4j</groupId>
+            <version>1.2.17</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+       
+	</dependencies>
 
-		<cobertura.version>2.6</cobertura.version>
-		<checkstyle.version>2.11</checkstyle.version>
-		<findbugs.version>2.5.3</findbugs.version>
-		<javadoc.version>2.9.1</javadoc.version>
-		<pmd.version>3.0.1</pmd.version>
-		<jdepend.version>2.0-beta-2</jdepend.version>
-		<javancss.version>2.0</javancss.version>
-		<project.info.version>2.4</project.info.version>
-		<jxr.version>2.4</jxr.version>
-		<taglist.version>2.4</taglist.version>
-		<m3.site.version>3.3</m3.site.version>
-		<changelog.version>2.2</changelog.version>
-		<coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
-	</properties>
-
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-			<comments>A business-friendly OSS license</comments>
-		</license>
-	</licenses>
-
-	<ciManagement>
-		<system>CloudBees</system>
-		<url>https://xuml-tools.ci.cloudbees.com</url>
-	</ciManagement>
-
-	<issueManagement>
-		<system>GitHub</system>
-		<url>https://github.com/davidmoten/ogc-tools/issues</url>
-	</issueManagement>
-
-	<inceptionYear>2013</inceptionYear>
-	<developers>
-		<developer>
-			<id>dave</id>
-			<name>Dave Moten</name>
-			<url>https://github.com/davidmoten/</url>
-			<roles>
-				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>+10</timezone>
-		</developer>
-	</developers>
-
-	<scm>
-		<connection>scm:git:git@github.com:davidmoten/ogc-tools.git</connection>
-		<developerConnection>scm:git:git@github.com:davidmoten/ogc-tools.git</developerConnection>
-		<url>scm:git:git@github.com:davidmoten/ogc-tools.git</url>
-	</scm>
-
-    <modules>
-		<module>ogc-tools-core</module>
-    </modules>
-	
 	<build>
 		<plugins>
 			<plugin>
