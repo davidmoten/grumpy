@@ -27,9 +27,7 @@ public class LayersBuilder {
 			@Override
 			public Layer getLayer(String layerName) {
 				Layer layer = m.get(layerName);
-				if (layer == null)
-					throw new RuntimeException("unknown layer:'" + layerName
-							+ "'");
+				// null return handled by LayerManager with a warning in the log
 				return layer;
 			}
 
