@@ -29,7 +29,7 @@ public class WmsServlet extends HttpServlet {
 		// add a single layer
 		Layers layers = LayersBuilder.builder()
 		// add our custom layer (the name should match the name in
-		// capabilities.xml
+		// capabilities.xml)
 				.add("Custom", new CustomLayer())
 				// build the layers
 				.build();
