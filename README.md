@@ -26,7 +26,7 @@ And at the map link you will see this:
 
 <img src="https://raw.githubusercontent.com/davidmoten/ogc-tools/master/src/docs/demo.png"/>
 
-This demonstrates a custom filled shape and some text that is placed around the position of Canberra on the map.
+This demonstrates a custom filled shape and some text that is placed around the position of Canberra on the map. Notice that the borders are great circle paths.
 
 How is it done? Easy!
 
