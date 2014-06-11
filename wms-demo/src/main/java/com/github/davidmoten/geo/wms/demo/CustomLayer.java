@@ -34,10 +34,11 @@ public class CustomLayer implements Layer {
 
 		// draw a border around Canberra and shade it.
 		List<Position> list = new ArrayList<Position>();
-		list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON - 2));
-		list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON - 2));
-		list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON + 2));
-		list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON + 2));
+		list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON - 4));
+		list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON - 4));
+		list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON + 4));
+		list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON + 4));
+		list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON - 4));
 		Shape shape = RendererUtil.getPath(projector, list);
 		g.setColor(Color.white);
 		g.fill(shape);
