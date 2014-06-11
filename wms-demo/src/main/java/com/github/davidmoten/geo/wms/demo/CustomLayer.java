@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.davidmoten.geo.Position;
 import com.github.davidmoten.geo.projection.Projector;
 import com.github.davidmoten.geo.wms.Layer;
@@ -20,9 +17,6 @@ import com.github.davidmoten.geo.wms.WmsRequest;
 import com.github.davidmoten.geo.wms.WmsUtil;
 
 public class CustomLayer implements Layer {
-
-	private static final Logger log = LoggerFactory
-			.getLogger(CustomLayer.class);
 
 	private static final String CANBERRA = "Canberra";
 	private static final double CANBERRA_LAT = -35.3075;
@@ -48,7 +42,7 @@ public class CustomLayer implements Layer {
 		g.fill(shape);
 
 		// draw border in blue
-		g.setColor(Color.BLUE);
+		g.setColor(Color.blue);
 		g.draw(shape);
 
 		// label Canberra

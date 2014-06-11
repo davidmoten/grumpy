@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.davidmoten.geo.wms.ImageCache;
-import com.github.davidmoten.geo.wms.Layer;
 import com.github.davidmoten.geo.wms.Layers;
+import com.github.davidmoten.geo.wms.LayersBuilder;
 import com.github.davidmoten.geo.wms.WmsGetCapabilitiesProvider;
 import com.github.davidmoten.geo.wms.WmsServletRequestProcessor;
 
@@ -22,27 +22,33 @@ public class WmsServlet extends HttpServlet {
 	private final WmsServletRequestProcessor processor;
 
 	public WmsServlet() {
+
+		// get capabilities xml from the classpath
 		WmsGetCapabilitiesProvider getCapabilitiesProvider = fromClasspath("/wms-capabilities.xml");
+
+		// add a single layer
+		Layers layers = LayersBuilder
+		// get a builder
+				.builder()
+				// add our custom layer
+				.add("CustomWms", new CustomLayer())
+				// build the Layers
+				.build();
+
+		// create and configure the cache
+		ImageCache imageCache = new ImageCache();
+
+		// initialize the request processor
 		processor = new WmsServletRequestProcessor(getCapabilitiesProvider,
-				createLayers(), new ImageCache());
+				layers, imageCache);
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+
+		// use the processor to handle requests
 		processor.doGet(req, resp);
-	}
-
-	private Layers createLayers() {
-		return new Layers() {
-
-			private final Layer layer = new CustomLayer();
-
-			@Override
-			public Layer getLayer(String layerName) {
-				return layer;
-			}
-		};
 	}
 
 }
