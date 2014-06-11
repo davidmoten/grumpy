@@ -39,9 +39,15 @@ public class CustomLayer implements Layer {
 		list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON + 4));
 		list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON + 4));
 		list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON - 4));
+
+		// join the positions using great circle paths
 		Shape shape = RendererUtil.getPath(projector, list);
 		g.setColor(Color.white);
+
+		// fill the box with white
 		g.fill(shape);
+
+		// draw border in blue
 		g.setColor(Color.BLUE);
 		g.draw(shape);
 
@@ -49,7 +55,6 @@ public class CustomLayer implements Layer {
 		Point p = projector.toPoint(CANBERRA_LAT, CANBERRA_LON);
 		g.setColor(Color.RED);
 		g.setFont(g.getFont().deriveFont(24.0f).deriveFont(Font.BOLD));
-		log.info("drawing string at " + p);
 		g.drawString(CANBERRA, p.x + 5, p.y);
 
 	}
