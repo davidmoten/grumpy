@@ -1,4 +1,4 @@
-ogc-tools
+grumpy
 =============
 
 [OGC WMS](http://www.opengeospatial.org/standards/wms) Server in java allowing custom rendering of WMS layers using projection utilities and Graphics2D.
