@@ -24,7 +24,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.target>1.7</maven.compiler.target>
         <slf4j.version>1.7.7</slf4j.version>
-        <geotools.version>8.1</geotools.version>
+        <geotools.version>11.1</geotools.version>
 
 		<cobertura.version>2.6</cobertura.version>
 		<checkstyle.version>2.11</checkstyle.version>
