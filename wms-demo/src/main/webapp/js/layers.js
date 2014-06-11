@@ -32,7 +32,7 @@ function init() {
     var layer = new OpenLayers.Layer.WMS( "Custom WMS Layer",
                 "http://localhost:8080/wms-demo/wms", 
                 {layers: 'Custom',transparent: "true", format: "image/png",styles:"Standard"},
-                {gutter:15, singleTile:true,visibility:true,opacity: 0.5});
+                {gutter:15,singleTile:true, visibility:true,opacity: 0.5});
     map.addLayer(layer);
 
     
