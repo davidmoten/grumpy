@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>com.github.davidmoten</groupId>
-        <artifactId>ogc-tools</artifactId>
+        <artifactId>grumpy</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 
@@ -16,7 +16,7 @@
     <description>OGC tools including WMS server</description>
     <packaging>war</packaging>
 
-    <url>http://github.com/davidmoten/ogc-tools</url>
+    <url>http://github.com/davidmoten/grumpy</url>
 
     <properties>
         <jetty.plugin.version>8.1.12.v20130726</jetty.plugin.version>
@@ -25,7 +25,7 @@
     <dependencies>
         <dependency>
             <groupId>com.github.davidmoten</groupId>
-            <artifactId>ogc-tools-core</artifactId>
+            <artifactId>grumpy-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

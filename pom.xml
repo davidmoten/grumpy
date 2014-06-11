@@ -10,14 +10,14 @@
 	</parent>
 
 	<groupId>com.github.davidmoten</groupId>
-	<artifactId>ogc-tools</artifactId>
+	<artifactId>grumpy</artifactId>
 	<version>0.1-SNAPSHOT</version>
 
 	<name>${project.artifactId}</name>
-	<description>OGC tools including WMS server</description>
+	<description>OGC tools including WMS server, projection and great circle utilities</description>
 	<packaging>pom</packaging>
 
-	<url>http://github.com/davidmoten/ogc-tools</url>
+	<url>http://github.com/davidmoten/grumpy</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -57,7 +57,7 @@
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/davidmoten/ogc-tools/issues</url>
+		<url>https://github.com/davidmoten/grumpy/issues</url>
 	</issueManagement>
 
 	<inceptionYear>2013</inceptionYear>
@@ -75,13 +75,13 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git:git@github.com:davidmoten/ogc-tools.git</connection>
-		<developerConnection>scm:git:git@github.com:davidmoten/ogc-tools.git</developerConnection>
-		<url>scm:git:git@github.com:davidmoten/ogc-tools.git</url>
+		<connection>scm:git:git@github.com:davidmoten/grumpy.git</connection>
+		<developerConnection>scm:git:git@github.com:davidmoten/grumpy.git</developerConnection>
+		<url>scm:git:git@github.com:davidmoten/grumpy.git</url>
 	</scm>
 
     <modules>
-		<module>ogc-tools-core</module>
+		<module>grumpy-core</module>
 		<module>wms-demo</module>
     </modules>
 	
