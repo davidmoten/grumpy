@@ -1,4 +1,4 @@
-package com.github.davidmoten.geo;
+package com.github.davidmoten.grumpy.core;
 
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;

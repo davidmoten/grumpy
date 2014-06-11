@@ -1,6 +1,6 @@
 package com.github.davidmoten.geo.wms.demo;
 
-import static com.github.davidmoten.geo.wms.WmsGetCapabilitiesProviderFromClasspath.fromClasspath;
+import static com.github.davidmoten.grumpy.wms.WmsGetCapabilitiesProviderFromClasspath.fromClasspath;
 
 import java.io.IOException;
 
@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.github.davidmoten.geo.wms.ImageCache;
-import com.github.davidmoten.geo.wms.Layers;
-import com.github.davidmoten.geo.wms.LayersBuilder;
-import com.github.davidmoten.geo.wms.WmsGetCapabilitiesProvider;
-import com.github.davidmoten.geo.wms.WmsServletRequestProcessor;
+import com.github.davidmoten.grumpy.wms.ImageCache;
+import com.github.davidmoten.grumpy.wms.Layers;
+import com.github.davidmoten.grumpy.wms.LayersBuilder;
+import com.github.davidmoten.grumpy.wms.WmsGetCapabilitiesProvider;
+import com.github.davidmoten.grumpy.wms.WmsServletRequestProcessor;
 
 public class WmsServlet extends HttpServlet {
 

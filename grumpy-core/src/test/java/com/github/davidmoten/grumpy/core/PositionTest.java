@@ -1,7 +1,7 @@
-package com.github.davidmoten.util.navigation;
+package com.github.davidmoten.grumpy.core;
 
-import static com.github.davidmoten.geo.Position.longitudeDiff;
-import static com.github.davidmoten.geo.Position.to180;
+import static com.github.davidmoten.grumpy.core.Position.longitudeDiff;
+import static com.github.davidmoten.grumpy.core.Position.to180;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -14,8 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
-import com.github.davidmoten.geo.Position;
-import com.github.davidmoten.geo.Position.LongitudePair;
+import com.github.davidmoten.grumpy.core.Position;
+import com.github.davidmoten.grumpy.core.Position.LongitudePair;
 
 /**
  * @author sxo

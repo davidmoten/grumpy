@@ -1,4 +1,4 @@
-package com.github.davidmoten.geo.projection;
+package com.github.davidmoten.grumpy.projection;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -10,7 +10,7 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
-import com.github.davidmoten.geo.Position;
+import com.github.davidmoten.grumpy.core.Position;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 

@@ -1,4 +1,4 @@
-package idot.util;
+package com.github.davidmoten.grumpy.util;
 
 import java.awt.Rectangle;
 import java.awt.Shape;

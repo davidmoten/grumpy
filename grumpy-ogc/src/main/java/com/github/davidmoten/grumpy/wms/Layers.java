@@ -1,4 +1,4 @@
-package com.github.davidmoten.geo.wms;
+package com.github.davidmoten.grumpy.wms;
 
 public interface Layers {
     Layer getLayer(String layerName);

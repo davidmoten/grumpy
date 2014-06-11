@@ -1,7 +1,7 @@
-package com.github.davidmoten.geo.wms;
+package com.github.davidmoten.grumpy.wms;
 
-import static com.github.davidmoten.geo.wms.RequestUtil.getList;
-import static com.github.davidmoten.geo.wms.RequestUtil.getParameter;
+import static com.github.davidmoten.grumpy.wms.RequestUtil.getList;
+import static com.github.davidmoten.grumpy.wms.RequestUtil.getParameter;
 
 import java.awt.Color;
 import java.text.ParseException;
@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.ObjectUtils;
 
-import com.github.davidmoten.geo.projection.FeatureUtil;
-import com.github.davidmoten.geo.projection.ProjectorBounds;
+import com.github.davidmoten.grumpy.projection.FeatureUtil;
+import com.github.davidmoten.grumpy.projection.ProjectorBounds;
 
 public class WmsRequest {
 

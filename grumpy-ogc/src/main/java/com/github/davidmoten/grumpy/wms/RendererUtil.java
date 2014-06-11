@@ -1,6 +1,4 @@
-package com.github.davidmoten.geo.wms;
-
-import idot.util.NearBSpline;
+package com.github.davidmoten.grumpy.wms;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -15,10 +13,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import com.github.davidmoten.geo.Position;
-import com.github.davidmoten.geo.projection.FeatureUtil;
-import com.github.davidmoten.geo.projection.Projector;
-import com.github.davidmoten.geo.projection.ProjectorBounds;
+import com.github.davidmoten.grumpy.core.Position;
+import com.github.davidmoten.grumpy.projection.FeatureUtil;
+import com.github.davidmoten.grumpy.projection.Projector;
+import com.github.davidmoten.grumpy.projection.ProjectorBounds;
+import com.github.davidmoten.grumpy.util.NearBSpline;
 
 public class RendererUtil {
 

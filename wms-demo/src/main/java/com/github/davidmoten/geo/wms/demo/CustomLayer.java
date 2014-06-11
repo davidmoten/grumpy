@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.github.davidmoten.geo.Position;
-import com.github.davidmoten.geo.projection.Projector;
-import com.github.davidmoten.geo.wms.InfoFormat;
-import com.github.davidmoten.geo.wms.Layer;
-import com.github.davidmoten.geo.wms.RendererUtil;
-import com.github.davidmoten.geo.wms.WmsRequest;
-import com.github.davidmoten.geo.wms.WmsUtil;
+import com.github.davidmoten.grumpy.core.Position;
+import com.github.davidmoten.grumpy.projection.Projector;
+import com.github.davidmoten.grumpy.wms.InfoFormat;
+import com.github.davidmoten.grumpy.wms.Layer;
+import com.github.davidmoten.grumpy.wms.RendererUtil;
+import com.github.davidmoten.grumpy.wms.WmsRequest;
+import com.github.davidmoten.grumpy.wms.WmsUtil;
 
 public class CustomLayer implements Layer {
 

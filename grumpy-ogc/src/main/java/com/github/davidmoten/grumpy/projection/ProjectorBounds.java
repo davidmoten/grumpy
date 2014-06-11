@@ -1,4 +1,4 @@
-package com.github.davidmoten.geo.projection;
+package com.github.davidmoten.grumpy.projection;
 
 public class ProjectorBounds {
     private double minX;

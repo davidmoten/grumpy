@@ -1,12 +1,12 @@
-package com.github.davidmoten.geo.wms;
+package com.github.davidmoten.grumpy.wms;
 
 import java.awt.Color;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.davidmoten.geo.projection.Projector;
-import com.github.davidmoten.geo.projection.ProjectorTarget;
+import com.github.davidmoten.grumpy.projection.Projector;
+import com.github.davidmoten.grumpy.projection.ProjectorTarget;
 
 public class WmsUtil {
     public static List<Color> getColorFromStyles(List<String> styles) {

@@ -1,11 +1,11 @@
-package com.github.davidmoten.geo.wms;
+package com.github.davidmoten.grumpy.wms;
 
 import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.github.davidmoten.geo.wms.MissingMandatoryParameterException;
+import com.github.davidmoten.grumpy.wms.MissingMandatoryParameterException;
 
 public class RequestUtil {
 

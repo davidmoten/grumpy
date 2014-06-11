@@ -1,4 +1,4 @@
-package com.github.davidmoten.geo.wms;
+package com.github.davidmoten.grumpy.wms;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;

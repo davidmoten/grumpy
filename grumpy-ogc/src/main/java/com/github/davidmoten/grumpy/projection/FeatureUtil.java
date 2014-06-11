@@ -1,4 +1,4 @@
-package com.github.davidmoten.geo.projection;
+package com.github.davidmoten.grumpy.projection;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
-import com.github.davidmoten.geo.Position;
+import com.github.davidmoten.grumpy.core.Position;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;

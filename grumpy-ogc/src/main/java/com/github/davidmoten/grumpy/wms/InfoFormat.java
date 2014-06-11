@@ -1,4 +1,4 @@
-package com.github.davidmoten.geo.wms;
+package com.github.davidmoten.grumpy.wms;
 
 public enum InfoFormat {
     XML("text/xml"), GML("application/vnd.ogc.gml"), HTML("text/html");
