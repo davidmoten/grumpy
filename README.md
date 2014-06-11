@@ -5,7 +5,7 @@ ogc-tools
 
 Status: *pre-alpha*
 
-TODO
+Todo
 ---------
 * draw box over 180 longitude, -180 longitude
 * draw shape over pole
