@@ -40,7 +40,7 @@ See [wms-capabilities.xml](https://github.com/davidmoten/ogc-tools/blob/master/w
 
 ###Create a servlet to serve the layer and capabilities:
 
-See [WmsServlet.java](https://github.com/davidmoten/ogc-tools/blob/master/wms-demo%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgithub%2Fdavidmoten%2Fgeo%2Fwms%2Fdemo%2FWmsServlet.java) for how an ```HttpServlet``` is created to server WMS requests. You do need to register this servlet against a url of course in web.xml.
+See [WmsServlet.java](https://github.com/davidmoten/ogc-tools/blob/master/wms-demo%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgithub%2Fdavidmoten%2Fgeo%2Fwms%2Fdemo%2FWmsServlet.java) for how an ```HttpServlet``` is created to server WMS requests. You do need to register this servlet against a url of course in [web.xml](https://github.com/davidmoten/ogc-tools/blob/master/wms-demo/src/main/webapp/WEB-INF/web.xml).
 
 From this point you have a working WMS service against the url for the ```WmsServlet```!
 
