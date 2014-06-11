@@ -1,7 +1,7 @@
 package com.github.davidmoten.util.navigation;
 
-import static com.github.davidmoten.util.navigation.Position.longitudeDiff;
-import static com.github.davidmoten.util.navigation.Position.to180;
+import static com.github.davidmoten.geo.Position.longitudeDiff;
+import static com.github.davidmoten.geo.Position.to180;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -14,8 +14,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.davidmoten.util.navigation.Position;
-import com.github.davidmoten.util.navigation.Position.LongitudePair;
+import com.github.davidmoten.geo.Position;
+import com.github.davidmoten.geo.Position.LongitudePair;
 
 /**
  * @author sxo

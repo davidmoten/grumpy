@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,32 +19,30 @@ import org.apache.log4j.Logger;
 
 import com.github.davidmoten.geo.wms.InfoProvider.Format;
 
-public abstract class WmsServlet extends javax.servlet.http.HttpServlet {
+public class WmsServlet {
 
 	private static Logger log = Logger.getLogger(WmsServlet.class);
 
-	private static final long serialVersionUID = -6924929494493016997L;
 	private static final String REQUEST_GET_MAP = "GetMap";
 	private static final String PARAMETER_REQUEST = "REQUEST";
 	private static final Object REQUEST_GET_CAPABILITIES = "GetCapabilities";
 	private static final Object REQUEST_GET_FEATURE_INFO = "GetFeatureInfo";
 
-	public abstract WmsGetCapabilitiesProvider getCapabilitiesProvider();
+	private final WmsGetCapabilitiesProvider getCapabilitiesProvider;
 
-	public abstract Layers getLayers();
+	private final ImageCache imageCache;
 
-	public abstract ImageCache getImageCache();
+	private final LayerManager layerManager;
 
-	public LayerManager layerManager = new LayerManager(getLayers());
-
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		log.info("initializing");
+	public WmsServlet(WmsGetCapabilitiesProvider getCapabilitiesProvider,
+			Layers layers, ImageCache imageCache) {
+		this.getCapabilitiesProvider = getCapabilitiesProvider;
+		this.imageCache = imageCache;
+		this.layerManager = new LayerManager(layers);
 	}
 
-	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		long t = System.currentTimeMillis();
 		try {
 			log.info("httpGetUrl=" + request.getRequestURL() + "?"
@@ -99,8 +96,7 @@ public abstract class WmsServlet extends javax.servlet.http.HttpServlet {
 	private void writeCapabilities(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml");
-		String capabilities = getCapabilitiesProvider()
-				.getCapabilities(request);
+		String capabilities = getCapabilitiesProvider.getCapabilities(request);
 		response.getOutputStream().write(capabilities.getBytes());
 
 	}
@@ -116,7 +112,7 @@ public abstract class WmsServlet extends javax.servlet.http.HttpServlet {
 		// check the cache for the bytes of the image converted to the
 		// appropriate format. Note that the critical bottleneck is
 		// ImageIO.write rather than the layerManager.getImage call
-		bytes = getImageCache().get(wmsRequest);
+		bytes = imageCache.get(wmsRequest);
 
 		// if cacheImage=false then don't use cache
 		if ("false".equals(request.getParameter("cacheImage")))
@@ -142,7 +138,7 @@ public abstract class WmsServlet extends javax.servlet.http.HttpServlet {
 			writeImage(image, byteOs, imageType);
 			log.info("ImageIoWriteTimeMs=  " + (System.currentTimeMillis() - t));
 			bytes = byteOs.toByteArray();
-			getImageCache().put(wmsRequest, bytes);
+			imageCache.put(wmsRequest, bytes);
 		} else
 			log.info("obtained image from cache");
 

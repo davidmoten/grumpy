@@ -15,9 +15,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import com.github.davidmoten.geo.Position;
 import com.github.davidmoten.geo.projection.FeatureUtil;
 import com.github.davidmoten.geo.projection.Projector;
-import com.github.davidmoten.util.navigation.Position;
 
 public class RendererUtil {
 

@@ -1,4 +1,4 @@
-package com.github.davidmoten.util.navigation;
+package com.github.davidmoten.geo;
 
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
