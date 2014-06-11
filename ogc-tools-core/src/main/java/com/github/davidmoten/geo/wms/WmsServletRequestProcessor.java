@@ -17,8 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.LoggerFactory;
 
-import com.github.davidmoten.geo.wms.InfoProvider.Format;
-
 public class WmsServletRequestProcessor {
 
 	private static org.slf4j.Logger log = LoggerFactory
@@ -35,8 +33,9 @@ public class WmsServletRequestProcessor {
 
 	private final LayerManager layerManager;
 
-	public WmsServletRequestProcessor(WmsGetCapabilitiesProvider getCapabilitiesProvider,
-			Layers layers, ImageCache imageCache) {
+	public WmsServletRequestProcessor(
+			WmsGetCapabilitiesProvider getCapabilitiesProvider, Layers layers,
+			ImageCache imageCache) {
 		this.getCapabilitiesProvider = getCapabilitiesProvider;
 		this.imageCache = imageCache;
 		this.layerManager = new LayerManager(layers);
@@ -172,7 +171,7 @@ public class WmsServletRequestProcessor {
 				response.getOutputStream());
 		Map<String, String> infos = layerManager.getInfos(new Date(),
 				wmsRequest, new Point(i, j),
-				Format.decode(wmsRequest.getInfoFormat()));
+				InfoFormat.decode(wmsRequest.getInfoFormat()));
 
 		for (Entry<String, String> entry : infos.entrySet()) {
 			log.debug(entry.getKey() + "=" + entry.getValue());
