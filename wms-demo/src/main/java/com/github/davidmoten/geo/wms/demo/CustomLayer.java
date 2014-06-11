@@ -19,69 +19,68 @@ import com.github.davidmoten.geo.wms.WmsUtil;
 
 public class CustomLayer implements Layer {
 
-	private static final String CANBERRA = "Canberra";
-	private static final double CANBERRA_LAT = -35.3075;
-	private static final double CANBERRA_LON = 149.1244;
+    private static final String CANBERRA = "Canberra";
+    private static final double CANBERRA_LAT = -35.3075;
+    private static final double CANBERRA_LON = 149.1244;
 
-	@Override
-	public void render(Graphics2D g, WmsRequest request) {
+    @Override
+    public void render(Graphics2D g, WmsRequest request) {
 
-		RendererUtil.useAntialiasing(g);
+        RendererUtil.useAntialiasing(g);
 
-		Projector projector = WmsUtil.getProjector(request);
-		{
-			// draw a border around Canberra and shade it.
-			List<Position> list = new ArrayList<Position>();
-			list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON - 4));
-			list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON - 4));
-			list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON + 4));
-			list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON + 4));
-			list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON - 4));
+        Projector projector = WmsUtil.getProjector(request);
+        {
+            // draw a border around Canberra and shade it.
+            List<Position> list = new ArrayList<Position>();
+            list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON - 4));
+            list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON - 4));
+            list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON + 4));
+            list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON + 4));
+            list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON - 4));
 
-			// join the positions using great circle paths
-			Shape shape = RendererUtil.getPath(projector, list);
-			g.setColor(Color.white);
+            // join the positions using great circle paths
+            Shape shape = RendererUtil.getPath(projector, list);
+            g.setColor(Color.white);
 
-			// fill the box with white
-			g.fill(shape);
+            // fill the box with white
+            g.fill(shape);
 
-			// draw border in blue
-			g.setColor(Color.blue);
-			g.draw(shape);
-		}
+            // draw border in blue
+            g.setColor(Color.blue);
+            g.draw(shape);
+        }
 
-		{
-			// draw a border around Canberra and shade it.
-			List<Position> list = new ArrayList<Position>();
-			list.add(Position.create(CANBERRA_LAT - 2, 176));
-			list.add(Position.create(CANBERRA_LAT + 2, 176));
-			list.add(Position.create(CANBERRA_LAT + 2, -176));
-			list.add(Position.create(CANBERRA_LAT - 2, -176));
-			list.add(Position.create(CANBERRA_LAT - 2, 176));
+        {
+            // draw a border around Canberra and shade it.
+            List<Position> list = new ArrayList<Position>();
+            list.add(Position.create(CANBERRA_LAT - 2, 176));
+            list.add(Position.create(CANBERRA_LAT + 2, 176));
+            list.add(Position.create(CANBERRA_LAT + 2, -176));
+            list.add(Position.create(CANBERRA_LAT - 2, -176));
+            list.add(Position.create(CANBERRA_LAT - 2, 176));
 
-			// join the positions using great circle paths
-			Shape shape = RendererUtil.getPath(projector, list);
-			g.setColor(Color.green);
+            // join the positions using great circle paths
+            Shape shape = RendererUtil.getPath(projector, list);
+            g.setColor(Color.green);
 
-			// fill the box with white
-			g.fill(shape);
+            // fill the box with white
+            g.fill(shape);
 
-			// draw border in blue
-			g.setColor(Color.blue);
-			g.draw(shape);
-		}
-		// label Canberra
-		Point p = projector.toPoint(CANBERRA_LAT, CANBERRA_LON);
-		g.setColor(Color.RED);
-		g.setFont(g.getFont().deriveFont(24.0f).deriveFont(Font.BOLD));
-		g.drawString(CANBERRA, p.x + 5, p.y);
+            // draw border in blue
+            g.setColor(Color.blue);
+            g.draw(shape);
+        }
+        // label Canberra
+        Point p = projector.toPoint(CANBERRA_LAT, CANBERRA_LON);
+        g.setColor(Color.RED);
+        g.setFont(g.getFont().deriveFont(24.0f).deriveFont(Font.BOLD));
+        g.drawString(CANBERRA, p.x + 5, p.y);
 
-	}
+    }
 
-	@Override
-	public String getInfo(Date time, WmsRequest request, Point point,
-			InfoFormat format) {
-		return "<html><p>Some information about the point you clicked on</p></html>";
-	}
+    @Override
+    public String getInfo(Date time, WmsRequest request, Point point, InfoFormat format) {
+        return "<html><p>Some information about the point you clicked on</p></html>";
+    }
 
 }
