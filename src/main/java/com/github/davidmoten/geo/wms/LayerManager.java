@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 
 import com.github.davidmoten.geo.wms.InfoProvider.Format;
 
-public class LayerManager {
+public class LayerManager implements InfosProvider {
 
 	private static Logger log = Logger.getLogger(LayerManager.class);
 
@@ -178,6 +178,7 @@ public class LayerManager {
 				.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 	}
 
+	@Override
 	public Map<String, String> getInfos(Date time, WmsRequest request,
 			Point point, Format format) {
 		Map<String, String> map = new HashMap<String, String>();
