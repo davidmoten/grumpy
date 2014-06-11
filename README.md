@@ -18,4 +18,4 @@ Go to [http://localhost:8080](http://localhost:8080) with a browser.
 
 And at the map link you will see this:
 
-<img>
+<img src="https://raw.githubusercontent.com/davidmoten/ogc-tools/master/src/docs/demo.png"/>
