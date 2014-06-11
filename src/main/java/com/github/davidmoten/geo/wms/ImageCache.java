@@ -17,6 +17,12 @@ import org.apache.log4j.Logger;
  */
 public class ImageCache {
 
+	private static ImageCache instance = new ImageCache();
+
+	public static ImageCache instance() {
+		return instance;
+	}
+
 	public ImageCache() {
 		log.info("constructed");
 	}
