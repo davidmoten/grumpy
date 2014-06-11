@@ -24,24 +24,22 @@ public class WmsServlet extends HttpServlet {
 	public WmsServlet() {
 
 		// get capabilities xml from the classpath
-		WmsGetCapabilitiesProvider getCapabilitiesProvider = fromClasspath("/wms-capabilities.xml");
+		WmsGetCapabilitiesProvider capabilities = fromClasspath("/wms-capabilities.xml");
 
 		// add a single layer
-		Layers layers = LayersBuilder
-		// get a builder
-				.builder()
-				// add our custom layer (the name should match the name in
-				// capabilities.xml
+		Layers layers = LayersBuilder.builder()
+		// add our custom layer (the name should match the name in
+		// capabilities.xml
 				.add("Custom", new CustomLayer())
-				// build the Layers
+				// build the layers
 				.build();
 
 		// create and configure the cache for max 200 images
 		ImageCache imageCache = ImageCache.create(200).add("Custom");
 
 		// initialize the request processor
-		processor = new WmsServletRequestProcessor(getCapabilitiesProvider,
-				layers, imageCache);
+		processor = new WmsServletRequestProcessor(capabilities, layers,
+				imageCache);
 	}
 
 	@Override
