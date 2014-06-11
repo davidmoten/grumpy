@@ -42,5 +42,9 @@ See [wms-capabilities.xml](https://github.com/davidmoten/ogc-tools/blob/master/w
 
 See [WmsServlet.java](https://github.com/davidmoten/ogc-tools/blob/master/wms-demo%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgithub%2Fdavidmoten%2Fgeo%2Fwms%2Fdemo%2FWmsServlet.java) for how an ```HttpServlet``` is created to server WMS requests. You do need to register this servlet against a url of course in web.xml.
 
+From this point you have a working WMS service against the url for the ```WmsServlet```!
+
+To see it all in the browser, ```wms-demo``` project uses [OpenLayers](http://openlayers.org/) javascript libraries and google maps to display the world and the custom layer.
+
 
 
