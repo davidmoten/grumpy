@@ -14,7 +14,6 @@ cd ogc-tools
 mvn clean install
 ```
 
-
 Demonstration
 -----------------
 ```
@@ -46,7 +45,7 @@ See [WmsServlet.java](https://github.com/davidmoten/ogc-tools/blob/master/wms-de
 
 From this point you have a working WMS service against the url for the ```WmsServlet```!
 
-To see it all in the browser, ```wms-demo``` project uses [OpenLayers](http://openlayers.org/) javascript libraries and google maps to display the world and the custom layer.
+To see it all in the browser, ```wms-demo``` project uses [OpenLayers](http://openlayers.org/) javascript libraries and google maps to display the world and the custom layer using the Spherical Mercator projection (EPSG 3857). See OpenLayers documentation and examples to play with this client as you see fit.
 
 
 
