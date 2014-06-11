@@ -19,10 +19,10 @@ import org.slf4j.LoggerFactory;
 
 import com.github.davidmoten.geo.wms.InfoProvider.Format;
 
-public class WmsServlet {
+public class WmsServletRequestProcessor {
 
 	private static org.slf4j.Logger log = LoggerFactory
-			.getLogger(WmsServlet.class);
+			.getLogger(WmsServletRequestProcessor.class);
 
 	private static final String REQUEST_GET_MAP = "GetMap";
 	private static final String PARAMETER_REQUEST = "REQUEST";
@@ -35,7 +35,7 @@ public class WmsServlet {
 
 	private final LayerManager layerManager;
 
-	public WmsServlet(WmsGetCapabilitiesProvider getCapabilitiesProvider,
+	public WmsServletRequestProcessor(WmsGetCapabilitiesProvider getCapabilitiesProvider,
 			Layers layers, ImageCache imageCache) {
 		this.getCapabilitiesProvider = getCapabilitiesProvider;
 		this.imageCache = imageCache;

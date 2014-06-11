@@ -18,16 +18,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ImageCache {
 
-	private static ImageCache instance = new ImageCache();
-
-	public static ImageCache instance() {
-		return instance;
-	}
-
-	public ImageCache() {
-		log.info("constructed");
-	}
-
 	private static Logger log = LoggerFactory.getLogger(ImageCache.class);
 
 	private static int MAX_SIZE = 250;// 50MB at 200K per image
@@ -41,6 +31,10 @@ public class ImageCache {
 	private volatile Set<String> layers = new HashSet<String>();
 
 	private volatile Map<String, byte[]> cache = new ConcurrentHashMap<String, byte[]>();
+
+	public ImageCache() {
+		log.info("constructed");
+	}
 
 	public void clear(String layerName) {
 		synchronized (this) {

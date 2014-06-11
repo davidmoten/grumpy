@@ -82,6 +82,7 @@
 
     <modules>
 		<module>ogc-tools-core</module>
+		<module>wms-demo</module>
     </modules>
 	
 	<build>
