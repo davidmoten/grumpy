@@ -5,6 +5,12 @@ grumpy
 
 Status: *pre-alpha*
 
+Features
+----------
+* Great circle navigation utilities in ```grumpy-core```
+* Map projection utilities in ```grumpy-projection```
+* WMS Server utilities in ```grumpy-ogc```
+
 Todo
 ---------
 * draw box over 180 longitude, -180 longitude
