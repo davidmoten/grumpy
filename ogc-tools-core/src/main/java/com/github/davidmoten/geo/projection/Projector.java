@@ -72,19 +72,38 @@ public class Projector {
 		try {
 			point = (com.vividsolutions.jts.geom.Point) JTS.transform(point,
 					transform);
+
+			System.out.println("lon=" + lon + ",lat=" + lat + "x="
+					+ point.getX() + " y=" + point.getY());
+			double maxX;
+
+			double proportionX;
+			if (point.getX() > bounds.getMaxX()
+					|| point.getX() < bounds.getMinX()) {
+				Coordinate c = new Coordinate(180, 0);
+				com.vividsolutions.jts.geom.Point pt = (com.vividsolutions.jts.geom.Point) JTS
+						.transform(geometryFactory.createPoint(c), transform);
+				double maximumX = pt.getX();
+				if (point.getX() > bounds.getMaxX())
+					proportionX = (point.getX() - 2 * maximumX - bounds
+							.getMinX()) / (bounds.getMaxX() - bounds.getMinX());
+				else
+					proportionX = (point.getX() + 2 * maximumX - bounds
+							.getMinX()) / (bounds.getMaxX() - bounds.getMinX());
+			} else {
+				proportionX = (point.getX() - bounds.getMinX())
+						/ (bounds.getMaxX() - bounds.getMinX());
+			}
+			double proportionY = (bounds.getMaxY() - point.getY())
+					/ (bounds.getMaxY() - bounds.getMinY());
+			Point2D.Double point2D = new Point2D.Double(proportionX
+					* target.getWidth(), proportionY * target.getHeight());
+			return point2D;
 		} catch (MismatchedDimensionException e) {
 			throw new RuntimeException(e);
 		} catch (TransformException e) {
 			throw new RuntimeException(e);
 		}
-
-		double proportionX = (point.getX() - bounds.getMinX())
-				/ (bounds.getMaxX() - bounds.getMinX());
-		double proportionY = (bounds.getMaxY() - point.getY())
-				/ (bounds.getMaxY() - bounds.getMinY());
-		Point2D.Double point2D = new Point2D.Double(proportionX
-				* target.getWidth(), proportionY * target.getHeight());
-		return point2D;
 	}
 
 	public Position toPosition(double targetX, double targetY) {
