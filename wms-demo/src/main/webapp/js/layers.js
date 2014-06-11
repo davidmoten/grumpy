@@ -35,7 +35,6 @@ function init() {
                 {layers: 'Custom',transparent: "true", format: "image/png",styles:"Standard"},
                 {gutter:15,singleTile:true, visibility:true,opacity: 0.5,animationEnabled: false});
     map.addLayer(layer);
-
     
     map.addControl(new OpenLayers.Control.LayerSwitcher());
     
