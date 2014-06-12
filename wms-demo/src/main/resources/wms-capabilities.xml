@@ -1,120 +1,127 @@
 <?xml version="1.0"?>
-<WMS_Capabilities version="1.3.0" xmlns="http://www.opengis.net/wms" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd">
-	<!-- Service Metadata -->
-	<Service>
-		<!-- The WMT-defined name for this type of service -->
-		<Name>Custom WMS services</Name>
-		<!-- Human-readable title for pick lists -->
-		<Title>Custom WMS Group</Title>
-		<!-- Narrative description providing additional information -->
+<WMS_Capabilities version="1.3.0" xmlns="http://www.opengis.net/wms"
+    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd">
+    <!-- Service Metadata -->
+    <Service>
+        <!-- The WMT-defined name for this type of service -->
+        <Name>Custom WMS services</Name>
+        <!-- Human-readable title for pick lists -->
+        <Title>Custom WMS Group</Title>
+        <!-- Narrative description providing additional information -->
 
-		<Abstract>Demonstration of custom rendered wms layer</Abstract>
-		<!-- Top-level web address of service or service provider.  See also OnlineResource
-  elements under <DCPType>. -->
-		<OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://www.amsa.gov.au"/>
-		<!-- Contact information -->
-		<ContactInformation>
-			<ContactPersonPrimary>
-				<ContactPerson>Fred Nurk</ContactPerson>
-				<ContactOrganization>Australian Nurk Organisation</ContactOrganization>
-			</ContactPersonPrimary>
-			<ContactPosition>Developer</ContactPosition>
-			<ContactAddress>
-				<AddressType>None</AddressType>
-				<Address>Canberra</Address>
-				<City>Canberra</City>
-				<StateOrProvince>ACT</StateOrProvince>
-				<PostCode>2600</PostCode>
-				<Country>Australia</Country>
-			</ContactAddress>
-			<ContactVoiceTelephone>0123456789</ContactVoiceTelephone>
-			<ContactElectronicMailAddress>fred.nurk@somewhere.com</ContactElectronicMailAddress>
-		</ContactInformation>
-		<!-- Fees or access constraints imposed. -->
+        <Abstract>Demonstration of custom rendered wms layer</Abstract>
+        <!-- Top-level web address of service or service provider. See also 
+            OnlineResource elements under <DCPType>. -->
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple" xlink:href="http://www.amsa.gov.au" />
+        <!-- Contact information -->
+        <ContactInformation>
+            <ContactPersonPrimary>
+                <ContactPerson>Fred Nurk</ContactPerson>
+                <ContactOrganization>Australian Nurk Organisation
+                </ContactOrganization>
+            </ContactPersonPrimary>
+            <ContactPosition>Developer</ContactPosition>
+            <ContactAddress>
+                <AddressType>None</AddressType>
+                <Address>Canberra</Address>
+                <City>Canberra</City>
+                <StateOrProvince>ACT</StateOrProvince>
+                <PostCode>2600</PostCode>
+                <Country>Australia</Country>
+            </ContactAddress>
+            <ContactVoiceTelephone>0123456789</ContactVoiceTelephone>
+            <ContactElectronicMailAddress>fred.nurk@somewhere.com
+            </ContactElectronicMailAddress>
+        </ContactInformation>
+        <!-- Fees or access constraints imposed. -->
 
-		<Fees>none</Fees>
-		<AccessConstraints>none</AccessConstraints>
-		<LayerLimit>20</LayerLimit>
-		<MaxWidth>2000</MaxWidth>
-		<MaxHeight>2000</MaxHeight>
-	</Service>
+        <Fees>none</Fees>
+        <AccessConstraints>none</AccessConstraints>
+        <LayerLimit>20</LayerLimit>
+        <MaxWidth>2000</MaxWidth>
+        <MaxHeight>2000</MaxHeight>
+    </Service>
 
-	<Capability>
-		<Request>
-			<GetCapabilities>
-				<Format>text/xml</Format>
-				<DCPType>
-					<HTTP>
-						<Get>
-							<OnlineResource 
-							xmlns:xlink="http://www.w3.org/1999/xlink" 
-							xlink:type="simple" 
-							xlink:href="${wmsUrl}"/>
-						</Get>
-					</HTTP>
-				</DCPType>
-			</GetCapabilities>
-			<GetMap>
-				<Format>image/png</Format>
-				<DCPType>
-					<HTTP>
-						<Get>
-							<OnlineResource 
-							xmlns:xlink="http://www.w3.org/1999/xlink" 
-							xlink:type="simple" 
-							xlink:href="${wmsUrl}"/>
-						</Get>
-					</HTTP>
-				</DCPType>
-			</GetMap>
-			<GetFeatureInfo>
-				<!-- 
-				<Format>text/plain</Format>
-				<Format>text/swf</Format>
-				-->
-				<Format>application/vnd.ogc.gml</Format>
-				<Format>text/xml</Format>
-				<Format>text/html</Format>
-				<DCPType>
-					<HTTP>
-						<Get>
-							<OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" 
-							xlink:href="${proxyUrl}"/>
-						</Get>
-					</HTTP>
-				</DCPType>
-			</GetFeatureInfo>
-		</Request>
-		<Exception>
-			<Format>XML</Format>
+    <Capability>
+        <Request>
+            <GetCapabilities>
+                <Format>text/xml</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource
+                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                                xlink:type="simple" xlink:href="${wmsUrl}" />
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetCapabilities>
+            <GetMap>
+                <Format>image/png</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource
+                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                                xlink:type="simple" xlink:href="${wmsUrl}" />
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetMap>
+            <GetFeatureInfo>
+                <!-- <Format>text/plain</Format> <Format>text/swf</Format> -->
+                <Format>application/vnd.ogc.gml</Format>
+                <Format>text/xml</Format>
+                <Format>text/html</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource
+                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                                xlink:type="simple" xlink:href="${proxyUrl}" />
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetFeatureInfo>
+        </Request>
+        <Exception>
+            <Format>XML</Format>
 
-			<Format>INIMAGE</Format>
-			<Format>BLANK</Format>
-		</Exception>
+            <Format>INIMAGE</Format>
+            <Format>BLANK</Format>
+        </Exception>
 
-		<Layer>
-			<Title>Miscellaneous</Title>
-			<CRS>EPSG:4326</CRS>
-			<!-- <CRS>EPSG:3785</CRS> -->
-			<!-- all layers are available in at least this CRS -->
- 
-			<EX_GeographicBoundingBox>
-				<westBoundLongitude>-180</westBoundLongitude>
-				<eastBoundLongitude>180</eastBoundLongitude>
-				<southBoundLatitude>-90</southBoundLatitude>
-				<northBoundLatitude>90</northBoundLatitude>
-			</EX_GeographicBoundingBox>
-			<BoundingBox CRS="EPSG:4326" minx="-180" miny="-90" maxx="180" maxy="90"/>
-			
-			<Layer queryable="1" opaque="1">
+        <Layer>
+            <Title>Miscellaneous</Title>
+            <CRS>EPSG:4326</CRS>
+            <!-- <CRS>EPSG:3785</CRS> -->
+            <!-- all layers are available in at least this CRS -->
+
+            <EX_GeographicBoundingBox>
+                <westBoundLongitude>-180</westBoundLongitude>
+                <eastBoundLongitude>180</eastBoundLongitude>
+                <southBoundLatitude>-90</southBoundLatitude>
+                <northBoundLatitude>90</northBoundLatitude>
+            </EX_GeographicBoundingBox>
+            <BoundingBox CRS="EPSG:4326" minx="-180" miny="-90"
+                maxx="180" maxy="90" />
+
+            <Layer queryable="1" opaque="1">
                 <Name>Custom</Name>
                 <Title>Custom wms layer</Title>
-                <BoundingBox CRS="EPSG:4326" minx="-180" miny="-90" maxx="180" maxy="90"/>
+                <BoundingBox CRS="EPSG:4326" minx="-180"
+                    miny="-90" maxx="180" maxy="90" />
                 <MaxScaleDenominator>500000000</MaxScaleDenominator>
-                <Style><Name>Standard</Name></Style>
-                <Style><Name>Super</Name></Style>
+                <Style>
+                    <Name>Standard</Name>
+                </Style>
+                <Style>
+                    <Name>Super</Name>
+                </Style>
             </Layer>
-		</Layer>
-	</Capability>
+        </Layer>
+    </Capability>
 </WMS_Capabilities>
 
