@@ -30,26 +30,25 @@ public class CustomLayer implements Layer {
 		RendererUtil.useAntialiasing(g);
 
 		Projector projector = WmsUtil.getProjector(request);
-		{
-			// draw a border around Canberra and shade it.
-			List<Position> list = new ArrayList<Position>();
-			list.add(position(CANBERRA_LAT - 2, CANBERRA_LON - 4));
-			list.add(position(CANBERRA_LAT + 2, CANBERRA_LON - 4));
-			list.add(position(CANBERRA_LAT + 2, CANBERRA_LON + 4));
-			list.add(position(CANBERRA_LAT - 2, CANBERRA_LON + 4));
-			list.add(position(CANBERRA_LAT - 2, CANBERRA_LON - 4));
+		// draw a border around Canberra and shade it.
+		List<Position> list = new ArrayList<Position>();
+		list.add(position(CANBERRA_LAT - 2, CANBERRA_LON - 4));
+		list.add(position(CANBERRA_LAT + 2, CANBERRA_LON - 4));
+		list.add(position(CANBERRA_LAT + 2, CANBERRA_LON + 4));
+		list.add(position(CANBERRA_LAT - 2, CANBERRA_LON + 4));
+		list.add(position(CANBERRA_LAT - 2, CANBERRA_LON - 4));
 
-			// join the positions using great circle paths
-			Shape shape = RendererUtil.getPath(projector, list);
-			g.setColor(Color.white);
+		// join the positions using great circle paths
+		Shape shape = RendererUtil.getPath(projector, list);
+		g.setColor(Color.white);
 
-			// fill the box with white
-			g.fill(shape);
+		// fill the box with white
+		// transparency is deferred to the wms client framework
+		g.fill(shape);
 
-			// draw border in blue
-			g.setColor(Color.blue);
-			g.draw(shape);
-		}
+		// draw border in blue
+		g.setColor(Color.blue);
+		g.draw(shape);
 
 		// label Canberra
 		Point p = projector.toPoint(CANBERRA_LAT, CANBERRA_LON);
