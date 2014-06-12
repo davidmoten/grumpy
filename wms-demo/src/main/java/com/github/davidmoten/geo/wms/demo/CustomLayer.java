@@ -1,5 +1,7 @@
 package com.github.davidmoten.geo.wms.demo;
 
+import static com.github.davidmoten.grumpy.core.Position.position;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -31,11 +33,11 @@ public class CustomLayer implements Layer {
 		{
 			// draw a border around Canberra and shade it.
 			List<Position> list = new ArrayList<Position>();
-			list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON - 4));
-			list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON - 4));
-			list.add(Position.create(CANBERRA_LAT + 2, CANBERRA_LON + 4));
-			list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON + 4));
-			list.add(Position.create(CANBERRA_LAT - 2, CANBERRA_LON - 4));
+			list.add(position(CANBERRA_LAT - 2, CANBERRA_LON - 4));
+			list.add(position(CANBERRA_LAT + 2, CANBERRA_LON - 4));
+			list.add(position(CANBERRA_LAT + 2, CANBERRA_LON + 4));
+			list.add(position(CANBERRA_LAT - 2, CANBERRA_LON + 4));
+			list.add(position(CANBERRA_LAT - 2, CANBERRA_LON - 4));
 
 			// join the positions using great circle paths
 			Shape shape = RendererUtil.getPath(projector, list);
@@ -50,13 +52,13 @@ public class CustomLayer implements Layer {
 		}
 
 		{
-			// draw a border around Canberra and shade it.
+			// draw a border around Auckland and shade it.
 			List<Position> list = new ArrayList<Position>();
-			list.add(Position.create(CANBERRA_LAT - 2, 176));
-			list.add(Position.create(CANBERRA_LAT + 2, 176));
-			list.add(Position.create(CANBERRA_LAT + 2, -176));
-			list.add(Position.create(CANBERRA_LAT - 2, -176));
-			list.add(Position.create(CANBERRA_LAT - 2, 176));
+			list.add(position(CANBERRA_LAT - 2, 176));
+			list.add(position(CANBERRA_LAT + 2, 176));
+			list.add(position(CANBERRA_LAT + 2, -176));
+			list.add(position(CANBERRA_LAT - 2, -176));
+			list.add(position(CANBERRA_LAT - 2, 176));
 
 			// join the positions using great circle paths
 			Shape shape = RendererUtil.getPath(projector, list);
