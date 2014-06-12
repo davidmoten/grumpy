@@ -36,7 +36,8 @@ public class LayerManager {
 		for (String name : gEnv.getAvailableFontFamilyNames())
 			log.debug(name);
 		log.info("constructed");
-		executor = Executors.newFixedThreadPool(30);
+		executor = Executors.newFixedThreadPool(Runtime.getRuntime()
+				.availableProcessors() + 1);
 	}
 
 	private static final ImageObserver noActionImageObserver = new ImageObserver() {

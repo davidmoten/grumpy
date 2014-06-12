@@ -19,7 +19,6 @@ import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.FeatureUtil;
 import com.github.davidmoten.grumpy.projection.Projector;
 import com.github.davidmoten.grumpy.projection.ProjectorBounds;
-import com.github.davidmoten.grumpy.projection.ProjectorTarget;
 import com.github.davidmoten.grumpy.util.NearBSpline;
 
 public class RendererUtil {
@@ -77,16 +76,6 @@ public class RendererUtil {
 			list.add(b);
 		}
 		return list;
-	}
-
-	private static boolean pointsOutsideTarget(Point a, Point b,
-			ProjectorTarget target) {
-		return pointOutsideTarget(a, target) && pointOutsideTarget(b, target);
-	}
-
-	private static boolean pointOutsideTarget(Point p, ProjectorTarget target) {
-		return p.x < 0 || p.x > target.getWidth() || p.y < 0
-				|| p.y > target.getHeight();
 	}
 
 	public static List<Position> joinPixels(Projector projector,
