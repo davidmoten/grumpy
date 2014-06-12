@@ -51,26 +51,6 @@ public class CustomLayer implements Layer {
 			g.draw(shape);
 		}
 
-		{
-			// draw a border around Auckland and shade it.
-			List<Position> list = new ArrayList<Position>();
-			list.add(position(CANBERRA_LAT - 2, 176));
-			list.add(position(CANBERRA_LAT + 2, 176));
-			list.add(position(CANBERRA_LAT + 2, -176));
-			list.add(position(CANBERRA_LAT - 2, -176));
-			list.add(position(CANBERRA_LAT - 2, 176));
-
-			// join the positions using great circle paths
-			Shape shape = RendererUtil.getPath(projector, list);
-			g.setColor(Color.green);
-
-			// fill the box with white
-			g.fill(shape);
-
-			// draw border in blue
-			g.setColor(Color.blue);
-			g.draw(shape);
-		}
 		// label Canberra
 		Point p = projector.toPoint(CANBERRA_LAT, CANBERRA_LON);
 		g.setColor(Color.RED);

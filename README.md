@@ -13,10 +13,8 @@ Features
 
 Todo
 ---------
-* draw box over 180 longitude, -180 longitude
-* draw shape over pole
+* handle region/line discontinuities over 180 longitude line (tricky but would be nice utility to offer).
 * demo get info on click in openlayers client
-* use guava cache with expiry on time by layer and total size in ``ImageCache```
 
 Getting started
 -------------------
