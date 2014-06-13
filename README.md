@@ -7,6 +7,8 @@ Status: *released to Maven Central*
 
 [Release Notes](RELEASE_NOTES.md)
 
+Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/). <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
+
 Features
 ----------
 * Great circle navigation utilities in ```grumpy-core```
