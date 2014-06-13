@@ -34,10 +34,19 @@ public class ImageCache {
 
 	private final int maxSize;
 
+	/**
+	 * Constructor.
+	 */
 	public ImageCache() {
 		this(DEFAULT_SIZE);
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param size
+	 *            the maximum number of elements in the cache
+	 */
 	public ImageCache(int size) {
 		this.maxSize = size;
 	}
