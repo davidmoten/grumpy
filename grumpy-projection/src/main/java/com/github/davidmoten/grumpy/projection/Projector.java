@@ -15,7 +15,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
- * Uses geotools libraries to perform transformations between coordinate
+ * Uses GeoTools and JTS libraries to perform transformations between coordinate
  * reference systems
  * 
  * @author dxm
