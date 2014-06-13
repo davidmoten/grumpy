@@ -18,6 +18,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.LoggerFactory;
 
+/**
+ * Processes a WMS {@link HttpServletRequest} and returns a
+ * {@link HttpServletResponse}.
+ */
 public class WmsServletRequestProcessor {
 
 	private static org.slf4j.Logger log = LoggerFactory
@@ -36,6 +40,14 @@ public class WmsServletRequestProcessor {
 
 	private final ImageWriter imageWriter;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param capabilitiesProvider
+	 * @param layers
+	 * @param imageCache
+	 * @param imageWriter
+	 */
 	public WmsServletRequestProcessor(
 			WmsGetCapabilitiesProvider capabilitiesProvider, Layers layers,
 			ImageCache imageCache, ImageWriter imageWriter) {
