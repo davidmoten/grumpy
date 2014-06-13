@@ -15,6 +15,7 @@ Features
 * Map projection utilities in ```grumpy-projection```
 * WMS Server utilities in ```grumpy-ogc```
 * Create a lightweight WMS server (about 12MB war)
+* Supports WMS 1.1.1 and 1.3
 
 Demonstration
 -----------------
