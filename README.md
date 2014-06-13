@@ -45,7 +45,7 @@ How is it done? Easy!
 
 ###Create a layer:
 
-See [CustomLayer.java](https://github.com/davidmoten/grumpy/blob/master/wms-demo/src/main/java/com/github/davidmoten/geo/wms/demo/CustomLayer.java) for how to render a layer using a ```Projector``` and a ```RendererUtil```.
+See [CustomLayer.java](https://github.com/davidmoten/grumpy/blob/master/wms-demo/src/main/java/com/github/davidmoten/grumpy/wms/demo/CustomLayer.java) for how to render a layer using a ```Projector``` and a ```RendererUtil```.
 
 ###Define the service capabilities:
 
@@ -53,7 +53,7 @@ See [wms-capabilities.xml](https://github.com/davidmoten/grumpy/blob/master/wms-
 
 ###Create a servlet to serve the layer and capabilities:
 
-See [WmsServlet.java](https://github.com/davidmoten/grumpy/blob/master/wms-demo%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgithub%2Fdavidmoten%2Fgeo%2Fwms%2Fdemo%2FWmsServlet.java) for how an ```HttpServlet``` is created to server WMS requests. You do need to register this servlet against a url of course in [web.xml](https://github.com/davidmoten/grumpy/blob/master/wms-demo/src/main/webapp/WEB-INF/web.xml).
+See [WmsServlet.java](https://github.com/davidmoten/grumpy/blob/master/wms-demo%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgithub%2Fdavidmoten%2Fgrumpy%2Fwms%2Fdemo%2FWmsServlet.java) for how an ```HttpServlet``` is created to server WMS requests. You do need to register this servlet against a url of course in [web.xml](https://github.com/davidmoten/grumpy/blob/master/wms-demo/src/main/webapp/WEB-INF/web.xml).
 
 From this point you have a working WMS service against the url for the ```WmsServlet```!
 
