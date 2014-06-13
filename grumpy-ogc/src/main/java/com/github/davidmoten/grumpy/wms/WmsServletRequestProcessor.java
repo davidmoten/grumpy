@@ -6,7 +6,9 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -26,7 +28,7 @@ public class WmsServletRequestProcessor {
 	private static final Object REQUEST_GET_CAPABILITIES = "GetCapabilities";
 	private static final Object REQUEST_GET_FEATURE_INFO = "GetFeatureInfo";
 
-	private final WmsGetCapabilitiesProvider getCapabilitiesProvider;
+	private final WmsGetCapabilitiesProvider capabilitiesProvider;
 
 	private final ImageCache imageCache;
 
@@ -35,12 +37,83 @@ public class WmsServletRequestProcessor {
 	private final ImageWriter imageWriter;
 
 	public WmsServletRequestProcessor(
-			WmsGetCapabilitiesProvider getCapabilitiesProvider, Layers layers,
+			WmsGetCapabilitiesProvider capabilitiesProvider, Layers layers,
 			ImageCache imageCache, ImageWriter imageWriter) {
-		this.getCapabilitiesProvider = getCapabilitiesProvider;
+		this.capabilitiesProvider = capabilitiesProvider;
 		this.imageCache = imageCache;
 		this.imageWriter = imageWriter;
 		this.layerManager = new LayerManager(layers);
+	}
+
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public static class Builder {
+
+		private WmsGetCapabilitiesProvider capabilitiesProvider;
+		private ImageCache imageCache = new ImageCache();
+		private Layers layers;
+		private final LayersBuilder layersBuilder = LayersBuilder.builder();
+		private final List<String> layersToCache = new ArrayList<String>();
+		private ImageWriter imageWriter = new ImageWriterDefault();
+		private Integer imageCacheSize;
+
+		private Builder() {
+		}
+
+		public Builder capabilities(
+				WmsGetCapabilitiesProvider capabilitiesProvider) {
+			this.capabilitiesProvider = capabilitiesProvider;
+			return this;
+		}
+
+		public Builder capabilitiesFromClasspath(String resource) {
+			this.capabilitiesProvider = WmsGetCapabilitiesProviderFromClasspath
+					.fromClasspath(resource);
+			return this;
+		}
+
+		public Builder imageCache(int size) {
+			this.imageCacheSize = size;
+			return this;
+		}
+
+		public Builder addCachedLayer(String name, Layer layer) {
+			return addLayer(name, layer, true);
+		}
+
+		public Builder addLayer(String name, Layer layer) {
+			return addLayer(name, layer, false);
+		}
+
+		public Builder addLayer(String name, Layer layer, boolean cache) {
+			layersBuilder.add(name, layer);
+			if (cache)
+				layersToCache.add(name);
+			return this;
+		}
+
+		public Builder layers(Layers layers) {
+			this.layers = layers;
+			return this;
+		}
+
+		public Builder imageWriter(ImageWriter imageWriter) {
+			this.imageWriter = imageWriter;
+			return this;
+		}
+
+		public WmsServletRequestProcessor build() {
+			if (imageCacheSize != null)
+				imageCache = new ImageCache(imageCacheSize);
+			for (String layer : layersToCache)
+				imageCache.add(layer);
+			if (layers == null)
+				layers = layersBuilder.build();
+			return new WmsServletRequestProcessor(capabilitiesProvider, layers,
+					imageCache, imageWriter);
+		}
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -98,7 +171,7 @@ public class WmsServletRequestProcessor {
 	private void writeCapabilities(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml");
-		String capabilities = getCapabilitiesProvider.getCapabilities(request);
+		String capabilities = capabilitiesProvider.getCapabilities(request);
 		response.getOutputStream().write(capabilities.getBytes());
 
 	}
