@@ -79,3 +79,7 @@ Todo
 ---------
 * handle region/line discontinuities over 180 longitude line (tricky but would be nice utility to offer).
 * demo EPSG:4326 in OpenLayers client
+
+Why Grumpy?
+---------------
+The project name was chosen at random and is no hint at the disposition of the primary developer! I'm very happy to receive contribution on this. Just raise an issue.
