@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.davidmoten.grumpy.wms.WmsServletRequestProcessor;
-import com.github.davidmoten.grumpy.wms.layer.EarthShadowLayer;
+import com.github.davidmoten.grumpy.wms.layer.shadow.EarthShadowLayer;
 
 public class WmsServlet extends HttpServlet {
 

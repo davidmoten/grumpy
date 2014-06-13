@@ -1,4 +1,4 @@
-package com.github.davidmoten.grumpy.wms.layer;
+package com.github.davidmoten.grumpy.wms.layer.shadow;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -16,7 +16,7 @@ import com.github.davidmoten.grumpy.projection.ProjectorBounds;
 import com.github.davidmoten.grumpy.wms.Layer;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
-import com.github.davidmoten.grumpy.wms.layer.Sun.Twilight;
+import com.github.davidmoten.grumpy.wms.layer.shadow.Sun.Twilight;
 
 public class EarthShadowLayer implements Layer {
 
