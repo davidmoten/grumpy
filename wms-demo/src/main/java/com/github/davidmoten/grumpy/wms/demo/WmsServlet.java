@@ -1,4 +1,4 @@
-package com.github.davidmoten.geo.wms.demo;
+package com.github.davidmoten.grumpy.wms.demo;
 
 import static com.github.davidmoten.grumpy.wms.WmsGetCapabilitiesProviderFromClasspath.fromClasspath;
 

@@ -6,7 +6,7 @@
 
     <servlet>
         <servlet-name>Wms</servlet-name>
-        <servlet-class>com.github.davidmoten.geo.wms.demo.WmsServlet</servlet-class>
+        <servlet-class>com.github.davidmoten.grumpy.wms.demo.WmsServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

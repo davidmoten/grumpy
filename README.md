@@ -15,7 +15,6 @@ Features
 Todo
 ---------
 * handle region/line discontinuities over 180 longitude line (tricky but would be nice utility to offer).
-* demo ```getInfo``` on click in OpenLayers client
 * demo EPSG:4326 in OpenLayers client
 
 Getting started

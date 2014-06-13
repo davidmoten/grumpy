@@ -1,4 +1,4 @@
-package com.github.davidmoten.geo.wms.demo;
+package com.github.davidmoten.grumpy.wms.demo;
 
 import static com.github.davidmoten.grumpy.core.Position.position;
 
@@ -61,7 +61,7 @@ public class CustomLayer implements Layer {
 	@Override
 	public String getInfo(Date time, WmsRequest request, Point point,
 			String mimeType) {
-		return "<html><p>Some information about the point you clicked on</p></html>";
+		return "<p>Some information about the point you clicked on</p>";
 	}
 
 }
