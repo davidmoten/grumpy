@@ -10,7 +10,7 @@ Features
 * Great circle navigation utilities in ```grumpy-core```
 * Map projection utilities in ```grumpy-projection```
 * WMS Server utilities in ```grumpy-ogc```
-* Lightweight WMS server (about 12MB war)
+* Create a lightweight WMS server (about 12MB war)
 
 Todo
 ---------
