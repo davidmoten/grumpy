@@ -46,7 +46,7 @@ To make your own WMS service add this dependency to the pom.xml of your war proj
 
 How to make your own WMS
 ---------------------------
-Using a war project (you could just copy the wms-demo project and change its artifact and group id, remove the parent reference as well):
+Using a war project (you could just copy the ```wms-demo``` project and change its artifact and group id, remove the parent reference as well):
 
 ###Create a layer:
 
