@@ -21,7 +21,7 @@ import java.util.concurrent.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LayerManager {
+class LayerManager {
 
 	private static Logger log = LoggerFactory.getLogger(LayerManager.class);
 
@@ -29,7 +29,9 @@ public class LayerManager {
 
 	private final ExecutorService executor;
 
-	public LayerManager(Layers layers) {
+	private static final boolean DRAW_IN_PARALLEL = true;
+
+	LayerManager(Layers layers) {
 		this.layers = layers;
 		GraphicsEnvironment gEnv = GraphicsEnvironment
 				.getLocalGraphicsEnvironment();
@@ -40,17 +42,7 @@ public class LayerManager {
 				.availableProcessors() + 1);
 	}
 
-	private static final ImageObserver noActionImageObserver = new ImageObserver() {
-		@Override
-		public boolean imageUpdate(Image img, int infoflags, int x, int y,
-				int width, int height) {
-			return false;
-		}
-	};
-
-	private static final boolean DRAW_IN_PARALLEL = true;
-
-	public BufferedImage getImage(WmsRequest request) {
+	BufferedImage getImage(WmsRequest request) {
 		MyGraphics graphics = createGraphics(request);
 		Graphics2D g = graphics.graphics;
 
@@ -62,6 +54,29 @@ public class LayerManager {
 		log.info("image finished");
 		return graphics.image;
 	}
+
+	Map<String, String> getInfos(Date time, WmsRequest request, Point point,
+			String mimeType) {
+		Map<String, String> map = new HashMap<String, String>();
+		for (String layerName : request.getLayers()) {
+			Layer layer = layers.getLayer(layerName);
+			if (layer != null) {
+				String info = layer.getInfo(time, request, point, mimeType);
+				if (info != null)
+					map.put(layerName, info);
+			} else
+				log.warn("no getInfo implementation for layer: " + layerName);
+		}
+		return map;
+	}
+
+	private static final ImageObserver noActionImageObserver = new ImageObserver() {
+		@Override
+		public boolean imageUpdate(Image img, int infoflags, int x, int y,
+				int width, int height) {
+			return false;
+		}
+	};
 
 	private static class MyGraphics {
 		public MyGraphics(BufferedImage image, Graphics2D graphics) {
@@ -175,21 +190,6 @@ public class LayerManager {
 		g.fillRect(0, 0, 100, 100);
 		g.setComposite(AlphaComposite
 				.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-	}
-
-	public Map<String, String> getInfos(Date time, WmsRequest request,
-			Point point, String mimeType) {
-		Map<String, String> map = new HashMap<String, String>();
-		for (String layerName : request.getLayers()) {
-			Layer layer = layers.getLayer(layerName);
-			if (layer != null) {
-				String info = layer.getInfo(time, request, point, mimeType);
-				if (info != null)
-					map.put(layerName, info);
-			} else
-				log.warn("no getInfo implementation for layer: " + layerName);
-		}
-		return map;
 	}
 
 }
