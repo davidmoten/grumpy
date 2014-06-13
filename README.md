@@ -5,6 +5,8 @@ grumpy
 
 Status: *released to Maven Central*
 
+[Release Notes](RELEASE_NOTES.md)
+
 Features
 ----------
 * Great circle navigation utilities in ```grumpy-core```
