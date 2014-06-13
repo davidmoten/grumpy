@@ -31,8 +31,9 @@ public class Position {
     private final double lat;
     private final double lon;
     private final double alt;
-    private static final double radiusEarthKm = 6371.01;
-    private static final double circumferenceEarthKm = 2.0 * PI * radiusEarthKm;
+
+    public static final double EARTH_RADIUS_KM = 6371.01;
+    public static final double EARTH_CIRCUMFERENCE_KM = 2.0 * PI * EARTH_RADIUS_KM;
 
     /**
      * @param lat
@@ -101,7 +102,7 @@ public class Position {
      */
     public final Position predict(double distanceKm, double courseDegrees) {
         assertWithMsg(alt == 0.0, "Predictions only valid for Earth's surface");
-        double dr = distanceKm / radiusEarthKm;
+        double dr = distanceKm / EARTH_RADIUS_KM;
         double latR = toRadians(lat);
         double lonR = toRadians(lon);
         double courseR = toRadians(courseDegrees);
@@ -236,7 +237,7 @@ public class Position {
 
         double radialDegrees = 0.0;
         double incDegrees = 360.0 / radials;
-        double quarterEarthKm = circumferenceEarthKm / 4.0;
+        double quarterEarthKm = EARTH_CIRCUMFERENCE_KM / 4.0;
         Position surfacePosition = new Position(this.lat, this.lon, 0.0);
 
         // Assert( this.alt>0.0, "getEarthLimb() requires Position a positive
@@ -272,7 +273,7 @@ public class Position {
         double cosDeltaLon = cos(deltaLon);
         double top = sqrt(sqr(cosLat2 * sin(deltaLon)) + sqr(cosLat1 * sinLat2 - sinLat1 * cosLat2 * cosDeltaLon));
         double bottom = sinLat1 * sinLat2 + cosLat1 * cosLat2 * cosDeltaLon;
-        double distance = radiusEarthKm * atan2(top, bottom);
+        double distance = EARTH_RADIUS_KM * atan2(top, bottom);
         return abs(distance);
     }
 
@@ -329,8 +330,8 @@ public class Position {
      * @return
      */
     public final double getDistanceKmToPath(Position p1, Position p2) {
-        double d = radiusEarthKm
-                * asin(sin(getDistanceToKm(p1) / radiusEarthKm)
+        double d = EARTH_RADIUS_KM
+                * asin(sin(getDistanceToKm(p1) / EARTH_RADIUS_KM)
                         * sin(toRadians(getBearingDegrees(p1) - p1.getBearingDegrees(p2))));
         return abs(d);
     }

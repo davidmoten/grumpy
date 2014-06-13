@@ -121,6 +121,14 @@
                     <Name>Super</Name>
                 </Style>
             </Layer>
+            
+            <Layer queryable="1" opaque="1">
+                <Name>Darkness</Name>
+                <Title>Darkness</Title>
+                <BoundingBox CRS="EPSG:4326" minx="-180"
+                    miny="-90" maxx="180" maxy="90" />
+                <MaxScaleDenominator>500000000</MaxScaleDenominator>
+            </Layer>
         </Layer>
     </Capability>
 </WMS_Capabilities>

@@ -8,12 +8,19 @@ function addLayers(map) {
 
     var customWmsUrl = "http://localhost:8080/wms-demo/wms";
     
-    var layer = new OpenLayers.Layer.WMS( "Custom WMS Layer",
+    var layer1 = new OpenLayers.Layer.WMS( "Custom WMS Layer",
                 customWmsUrl, 
                 {layers: 'Custom',transparent: "true", format: "image/png",styles:"Standard"},
                 {gutter:15,singleTile:true, visibility:true,opacity: 0.5,animationEnabled: false});
                 
-    map.addLayer(layer);
+    map.addLayer(layer1);
+    
+    var layer2 = new OpenLayers.Layer.WMS( "Darkness",
+                customWmsUrl, 
+                {layers: 'Darkness',transparent: "true", format: "image/png",styles:"Standard"},
+                {gutter:15,singleTile:true, visibility:true,opacity: 0.5,animationEnabled: false});
+                
+    map.addLayer(layer2);
     
     ////////////////////////////////////////////////////
     // setup getFeatureInfo on click for custom layer
@@ -22,7 +29,7 @@ function addLayers(map) {
     var click = new OpenLayers.Control.WMSGetFeatureInfo({
                 url: customWmsUrl, 
                 title: 'Identify features by clicking',
-                layers: [layer],
+                layers: [layer1],
                 queryVisible: true
             })
     click.events.register("getfeatureinfo", this, showInfo);
