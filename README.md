@@ -17,17 +17,6 @@ Todo
 * handle region/line discontinuities over 180 longitude line (tricky but would be nice utility to offer).
 * demo EPSG:4326 in OpenLayers client
 
-Getting started
--------------------
-To make your own WMS service add this dependency to the pom.xml of your war project:
-```xml
-<dependency>
-  <groupId>com.github.davidmoten</groupId>
-  <artifactId>grumpy-ogc</artifactId>
-  <version>0.1</version>
-</dependency>
-```
-
 Demonstration
 -----------------
 ```
@@ -44,6 +33,17 @@ And at the map link you will see this:
 This demonstrates a custom filled shape and some text that is placed with transparency over the position of Canberra on the map. Notice that the borders are great circle paths.
 
 How is it done? Easy!
+
+Getting started
+-------------------
+To make your own WMS service add this dependency to the pom.xml of your war project:
+```xml
+<dependency>
+  <groupId>com.github.davidmoten</groupId>
+  <artifactId>grumpy-ogc</artifactId>
+  <version>0.1</version>
+</dependency>
+```
 
 How to make your own WMS
 ---------------------------
