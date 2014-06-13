@@ -61,7 +61,10 @@ public class CustomLayer implements Layer {
 	@Override
 	public String getInfo(Date time, WmsRequest request, Point point,
 			String mimeType) {
-		return "<p>Some information about the point you clicked on</p>";
+		return "<div style=\"width:250px\">"
+				+ "<p>Some information about the point you clicked on would be put here if you wanted it.</p>"
+				+ "<img src=\"http://international.cit.edu.au/__data/assets/image/0006/27636/Canberra-Aerial-view-of-lake.jpg\" width=\"200\"/>"
+				+ "</div>";
 	}
 
 }

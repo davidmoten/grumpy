@@ -65,6 +65,13 @@ function init() {
     
 }
 
-function showInfo(evt) {
-   window.alert(evt.text);   
+function showInfo(event) {
+    map.addPopup(new OpenLayers.Popup.FramedCloud(
+        "chicken", 
+        map.getLonLatFromPixel(event.xy),
+        null,
+        event.text,
+        null,
+        true
+    ));
 };
