@@ -14,14 +14,13 @@ import com.github.davidmoten.grumpy.projection.ProjectorTarget;
 
 public class RendererUtilTest {
 
-	@Test
-	public void testGetPath() {
-		ProjectorTarget target = new ProjectorTarget(300, 200);
-		ProjectorBounds bounds = new ProjectorBounds("EPSG:3857",
-				18924313.4349, -4865942.2795, -18924313.4349, -3503549.8435);
-		Projector projector = new Projector(bounds, target);
-		List<Position> list = RendererUtil.joinPixels(projector, 20,
-				asList(position(-35, 175), position(-35, -175)));
-		System.out.println(list);
-	}
+    @Test
+    public void testGetPath() {
+        ProjectorTarget target = new ProjectorTarget(300, 200);
+        ProjectorBounds bounds = new ProjectorBounds("EPSG:3857", 18924313.4349, -4865942.2795, -18924313.4349,
+                -3503549.8435);
+        Projector projector = new Projector(bounds, target);
+        List<Position> list = RendererUtil.joinPixels(projector, 20, asList(position(-35, 175), position(-35, -175)));
+        System.out.println(list);
+    }
 }
