@@ -3,7 +3,7 @@ grumpy
 
 [OGC WMS](http://www.opengeospatial.org/standards/wms) Server in java allowing custom rendering of WMS layers using projection utilities and Graphics2D.
 
-Status: *pre-alpha*
+Status: *released to Maven Central*
 
 Features
 ----------
@@ -19,11 +19,13 @@ Todo
 
 Getting started
 -------------------
-
-```
-git clone https://github.com/davidmoten/grumpy.git
-cd grumpy
-mvn clean install
+To make your own WMS service add this dependency to the pom.xml of your war project:
+```xml
+<dependency>
+  <groupId>com.github.davidmoten</groupId>
+  <artifactId>grumpy-ogc</artifactId>
+  <version>0.1</version>
+</dependency>
 ```
 
 Demonstration
@@ -43,6 +45,8 @@ This demonstrates a custom filled shape and some text that is placed with transp
 
 How is it done? Easy!
 
+How to make your own WMS
+---------------------------
 ###Create a layer:
 
 See [CustomLayer.java](https://github.com/davidmoten/grumpy/blob/master/wms-demo/src/main/java/com/github/davidmoten/grumpy/wms/demo/CustomLayer.java) for how to render a layer using a ```Projector``` and a ```RendererUtil```.
@@ -62,5 +66,11 @@ An example WMS client is included in ```wms-demo``` in [map.jsp](https://github.
 
 ```wms-demo``` project uses [OpenLayers](http://openlayers.org/) javascript libraries and google maps v3 to display the world and the custom layer using the Spherical Mercator projection (EPSG 3857). See OpenLayers [documentation](http://docs.openlayers.org/) and [examples](http://openlayers.org/dev/examples/) to play with this client as you see fit.
 
-
+How to build
+----------------
+```
+git clone https://github.com/davidmoten/grumpy.git
+cd grumpy
+mvn clean install
+```
 
