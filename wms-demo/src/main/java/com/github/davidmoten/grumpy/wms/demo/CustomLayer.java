@@ -25,6 +25,7 @@ public class CustomLayer implements Layer {
 	private final ArrayList<Position> box;
 
 	public CustomLayer() {
+		// prepare a box around Canberra
 		box = new ArrayList<Position>();
 		box.add(position(CANBERRA_LAT - 2, CANBERRA_LON - 4));
 		box.add(position(CANBERRA_LAT + 2, CANBERRA_LON - 4));
@@ -39,9 +40,8 @@ public class CustomLayer implements Layer {
 		RendererUtil.useAntialiasing(g);
 
 		Projector projector = WmsUtil.getProjector(request);
-		// draw a border around Canberra and shade it.
 
-		// join the positions using great circle paths
+		// get the box around Canberra as a shape
 		Shape shape = RendererUtil.getPath(projector, box);
 		g.setColor(Color.white);
 
@@ -65,8 +65,12 @@ public class CustomLayer implements Layer {
 	public String getInfo(Date time, WmsRequest request, Point point,
 			String mimeType) {
 
+		// if user clicks within Canberra box then return some info, otherwise
+		// return blank string
+
 		Projector projector = WmsUtil.getProjector(request);
 		Position position = projector.toPosition(point.x, point.y);
+
 		if (position.isWithin(box))
 			return "<div style=\"width:250px\">"
 					+ "<p>Canberra is the capital city of Australia. With a population of 381,488, it is Australia's largest inland city and the eighth-largest city overall.</p>"
