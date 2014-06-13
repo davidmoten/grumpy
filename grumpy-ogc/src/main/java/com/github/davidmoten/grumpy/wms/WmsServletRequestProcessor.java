@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,11 +32,14 @@ public class WmsServletRequestProcessor {
 
 	private final LayerManager layerManager;
 
+	private final ImageWriter imageWriter;
+
 	public WmsServletRequestProcessor(
 			WmsGetCapabilitiesProvider getCapabilitiesProvider, Layers layers,
-			ImageCache imageCache) {
+			ImageCache imageCache, ImageWriter imageWriter) {
 		this.getCapabilitiesProvider = getCapabilitiesProvider;
 		this.imageCache = imageCache;
+		this.imageWriter = imageWriter;
 		this.layerManager = new LayerManager(layers);
 	}
 
@@ -135,7 +137,7 @@ public class WmsServletRequestProcessor {
 					wmsRequest.getFormat().indexOf('/') + 1);
 			// This call is slow!!
 			long t = System.currentTimeMillis();
-			writeImage(image, byteOs, imageType);
+			imageWriter.writeImage(image, byteOs, imageType);
 			log.info("ImageIoWriteTimeMs=  " + (System.currentTimeMillis() - t));
 			bytes = byteOs.toByteArray();
 			imageCache.put(wmsRequest, bytes);
@@ -147,16 +149,6 @@ public class WmsServletRequestProcessor {
 		response.getOutputStream().flush();
 		log.info("imageSizeK="
 				+ new DecimalFormat("0.000").format(bytes.length / 1000.0));
-	}
-
-	private void writeImage(BufferedImage image, ByteArrayOutputStream os,
-			String imageType) throws IOException {
-		if (imageType.equalsIgnoreCase("PNG")) {
-			ImageIO.write(image, imageType, os);
-			// encoder.setColorType(PngEncoder.COLOR_TRUECOLOR_ALPHA);
-			// encoder.encode(image, os);
-		} else
-			ImageIO.write(image, imageType, os);
 	}
 
 	private void writeFeatureInfo(HttpServletRequest request,

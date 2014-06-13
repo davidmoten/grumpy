@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.davidmoten.grumpy.wms.ImageCache;
+import com.github.davidmoten.grumpy.wms.ImageWriterDefault;
 import com.github.davidmoten.grumpy.wms.Layers;
 import com.github.davidmoten.grumpy.wms.LayersBuilder;
 import com.github.davidmoten.grumpy.wms.WmsGetCapabilitiesProvider;
@@ -37,9 +38,14 @@ public class WmsServlet extends HttpServlet {
 		// create and configure the cache for max 200 images
 		ImageCache imageCache = ImageCache.create(200).add("Custom");
 
+		// set the image writer to be the default which uses ImageIO
+		// ImageIO is slow so consider using an encoder like ObjectPlanet
+		// PngEncoder
+		ImageWriterDefault imageWriter = new ImageWriterDefault();
+
 		// initialize the request processor
 		processor = new WmsServletRequestProcessor(capabilities, layers,
-				imageCache);
+				imageCache, imageWriter);
 	}
 
 	@Override
