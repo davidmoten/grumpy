@@ -26,8 +26,6 @@ import org.apache.commons.math3.util.FastMath;
  * atan,atan2 (see <a
  * href="https://issues.apache.org/jira/browse/MATH-740">here</a>).
  * 
- * @author dxm
- * 
  */
 public class Position {
 	private final double lat;

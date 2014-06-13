@@ -4,6 +4,9 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.Date;
 
+/**
+ * Renders or displays info about positions on a WMS layer.
+ */
 public interface Layer {
 
 	/**
@@ -21,6 +24,9 @@ public interface Layer {
 	public void render(Graphics2D g, WmsRequest request);
 
 	/**
+	 * Returns info about the given point on the layer formatted as per the
+	 * requested mimeType.
+	 * 
 	 * @param time
 	 * @param request
 	 * @param point
