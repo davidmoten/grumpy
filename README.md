@@ -12,11 +12,6 @@ Features
 * WMS Server utilities in ```grumpy-ogc```
 * Create a lightweight WMS server (about 12MB war)
 
-Todo
----------
-* handle region/line discontinuities over 180 longitude line (tricky but would be nice utility to offer).
-* demo EPSG:4326 in OpenLayers client
-
 Demonstration
 -----------------
 ```
@@ -74,3 +69,7 @@ cd grumpy
 mvn clean install
 ```
 
+Todo
+---------
+* handle region/line discontinuities over 180 longitude line (tricky but would be nice utility to offer).
+* demo EPSG:4326 in OpenLayers client
