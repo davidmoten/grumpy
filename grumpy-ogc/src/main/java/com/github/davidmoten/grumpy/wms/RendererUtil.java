@@ -169,4 +169,72 @@ public class RendererUtil {
 
         return r;
     }
+
+    public static class ShapePair {
+
+        private final Shape shape1;
+        private final Shape shape2;
+
+        public ShapePair(Shape shape1, Shape shape2) {
+            if (shape1 == null)
+                throw new NullPointerException("shape1 cannot be null");
+            this.shape1 = shape1;
+            this.shape2 = shape2;
+        }
+
+        public Shape getShape1() {
+            return shape1;
+        }
+
+        public Shape getShape2() {
+            return shape2;
+        }
+
+    }
+
+    public static class ProjectedPositions {
+
+        private final List<Point2D.Double> list1;
+        private final List<Point2D.Double> list2;
+
+        public ProjectedPositions(List<Point2D.Double> list1, List<Point2D.Double> list2) {
+
+            if (list1 == null || list2 == null)
+                throw new NullPointerException("parameters cannot be null");
+            this.list1 = list1;
+            this.list2 = list2;
+        }
+
+        public List<Point2D.Double> getList1() {
+            return list1;
+        }
+
+        public List<Point2D.Double> getList2() {
+            return list2;
+        }
+
+    }
+
+    public static ProjectedPositions getProjectedPath(Projector projector, List<Position> positions) {
+        // TODO implement
+        return null;
+    }
+
+    public static Shape getPath(List<Point2D.Double> projectedPoints) {
+        // TODO implement
+        return null;
+    }
+
+    /**
+     * Returns a single {@link Shape} if all points within X bounds otherwise
+     * returns two {@link Shape}s.
+     * 
+     * @param projector
+     * @param positions
+     * @return
+     */
+    public static ShapePair getPathShapes(Projector projector, List<Position> positions) {
+        // TODO implement
+        return null;
+    }
 }

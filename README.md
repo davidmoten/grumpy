@@ -78,7 +78,7 @@ mvn clean install
 
 Todo
 ---------
-* handle region/line discontinuities over 180 longitude line (tricky but would be nice utility to offer).
+* handle region/line discontinuities over longitude boundaries by returning one to two shape regions for each path.
 * demo EPSG:4326 in OpenLayers client
 
 Why Grumpy?
