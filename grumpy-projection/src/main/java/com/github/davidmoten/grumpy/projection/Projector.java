@@ -103,6 +103,17 @@ public class Projector {
         return new Point2D.Double(x, y);
     }
 
+    public com.vividsolutions.jts.geom.Point getFirstXAfter(Projector projector, double lat, double lon, double x) {
+        com.vividsolutions.jts.geom.Point point = projector.getGeometryPointInSrs(lat, lon);
+        double x2 = point.getX();
+        double periodX = periodAtLat(lat);
+        while (x2 - periodX > x)
+            x2 -= periodX;
+        while (x2 + periodX < x)
+            x2 += periodX;
+        return createPoint(x2, point.getY());
+    }
+
     public Point2D.Double getTargetPoint(com.vividsolutions.jts.geom.Point point) {
         return getTargetPoint(point, 0);
     }

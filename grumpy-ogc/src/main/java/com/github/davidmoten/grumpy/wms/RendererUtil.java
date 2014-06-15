@@ -10,7 +10,6 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -93,6 +92,47 @@ public class RendererUtil {
     }
 
     public static Shape getPath(Projector projector, List<Position> positions) {
+        GeneralPath path = new GeneralPath();
+        if (positions.size() < 2)
+            throw new RuntimeException("must provide at least two positions");
+
+        addToPath(projector, positions, path, 0);
+        addToPath(projector, positions, path, projector.periodAtLat(0));
+
+        return path;
+    }
+
+    private static void addToPath(Projector projector, List<Position> positions, GeneralPath path, double deltaX) {
+        Position firstPosition = positions.get(0);
+        com.vividsolutions.jts.geom.Point first = projector.getGeometryPointInSrs(firstPosition.getLat(),
+                firstPosition.getLon());// projected values
+        Double currentLat = null;
+        Double currentLon = null;
+        com.vividsolutions.jts.geom.Point currentPoint = null;
+        for (Position p : positions) {
+            if (currentPoint == null) {
+                currentPoint = projector.getFirstXAfter(projector, p.getLat(), p.getLon(), projector.getBounds()
+                        .getMinX() - deltaX);
+                currentLat = p.getLat();
+                currentLon = p.getLon();
+                Point2D.Double pt = projector.getTargetPoint(currentPoint);
+                path.moveTo(pt.x, pt.y);
+            } else {
+                com.vividsolutions.jts.geom.Point point = projector.getGeometryPointInSrsRelativeTo(p.getLat(),
+                        p.getLon(), currentLat, currentLon, currentPoint.getX(), currentPoint.getY());
+                Point2D.Double pt = projector.getTargetPoint(point);
+                path.lineTo(pt.x, pt.y);
+            }
+            // GeneralPath line = new NearBSpline(getPoints(projector,
+            // positions)).getPath();
+            //
+            // path.append(line.getPathIterator(AffineTransform.getTranslateInstance(0,
+            // 0)), true);
+
+        }
+    }
+
+    public static Shape getPath2(Projector projector, List<Position> positions) {
         return getPath(projector, DEFAULT_MAX_DISTANCE_BETWEEN_POINTS_IN_PIXELS, positions);
     }
 
@@ -171,98 +211,4 @@ public class RendererUtil {
         return r;
     }
 
-    public static class ShapePair {
-
-        private final Shape shape1;
-        private final Shape shape2;
-
-        public ShapePair(Shape shape1, Shape shape2) {
-            if (shape1 == null)
-                throw new NullPointerException("shape1 cannot be null");
-            this.shape1 = shape1;
-            this.shape2 = shape2;
-        }
-
-        public Shape getShape1() {
-            return shape1;
-        }
-
-        public Shape getShape2() {
-            return shape2;
-        }
-
-    }
-
-    public static class ProjectedPositions {
-
-        private final List<Point2D.Double> list1;
-        private final List<Point2D.Double> list2;
-
-        public ProjectedPositions(List<Point2D.Double> list1, List<Point2D.Double> list2) {
-
-            if (list1 == null || list2 == null)
-                throw new NullPointerException("parameters cannot be null");
-            this.list1 = list1;
-            this.list2 = list2;
-        }
-
-        public List<Point2D.Double> getList1() {
-            return list1;
-        }
-
-        public List<Point2D.Double> getList2() {
-            return list2;
-        }
-
-    }
-
-    public static class PointPair {
-
-        private final Point2D.Double point1;
-        private final Point2D.Double point2;
-
-        public PointPair(Double point1, Double point2) {
-            this.point1 = point1;
-            this.point2 = point2;
-        }
-
-        public Point2D.Double getPoint1() {
-            return point1;
-        }
-
-        public Point2D.Double getPoint2() {
-            return point2;
-        }
-
-    }
-
-    public static PointPair getProjectedPointsBeforeAndAfter(Projector projector, double referenceX, double lat,
-            double lon) {
-        // TODO
-        return null;
-
-    }
-
-    public static ProjectedPositions getProjectedPath(Projector projector, List<Position> positions) {
-        // TODO implement
-        return null;
-    }
-
-    public static Shape getPath(List<Point2D.Double> projectedPoints) {
-        // TODO implement
-        return null;
-    }
-
-    /**
-     * Returns a single {@link Shape} if all points within X bounds otherwise
-     * returns two {@link Shape}s.
-     * 
-     * @param projector
-     * @param positions
-     * @return
-     */
-    public static ShapePair getPathShapes(Projector projector, List<Position> positions) {
-        // TODO implement
-        return null;
-    }
 }

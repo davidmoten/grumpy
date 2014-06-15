@@ -76,7 +76,12 @@
             <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
-       
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava-base</artifactId>
+            <version>r03</version>
+        </dependency>
 	</dependencies>
 
 	<build>
