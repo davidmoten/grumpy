@@ -87,7 +87,7 @@ public class Projector {
         return geometryFactory.createPoint(new Coordinate(x, point.getY()));
     }
 
-    private double periodAtLat(double lat) {
+    public double periodAtLat(double lat) {
         return getGeometryPointInSrs(lat, 180).getX() - getGeometryPointInSrs(lat, -180).getX();
     }
 
