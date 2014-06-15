@@ -50,7 +50,7 @@ public class Projector {
         return target;
     }
 
-    private com.vividsolutions.jts.geom.Point getGeometryPointInSrs(double lat, double lon) {
+    public com.vividsolutions.jts.geom.Point getGeometryPointInSrs(double lat, double lon) {
         Coordinate coordinate = new Coordinate(lon, lat);
         com.vividsolutions.jts.geom.Point point = geometryFactory.createPoint(coordinate);
         try {
@@ -84,19 +84,27 @@ public class Projector {
             while (x + periodAtLat >= relativeX)
                 x += periodAtLat;
 
-        return geometryFactory.createPoint(new Coordinate(x, point.getY()));
+        return createPoint(x, point.getY());
+    }
+
+    public com.vividsolutions.jts.geom.Point createPoint(double x, double y) {
+        return geometryFactory.createPoint(new Coordinate(x, y));
     }
 
     public double periodAtLat(double lat) {
         return getGeometryPointInSrs(lat, 180).getX() - getGeometryPointInSrs(lat, -180).getX();
     }
 
-    private Point2D.Double getTargetPoint(com.vividsolutions.jts.geom.Point point) {
-        double proportionX = (point.getX() - bounds.getMinX()) / (bounds.getMaxX() - bounds.getMinX());
+    public Point2D.Double getTargetPoint(com.vividsolutions.jts.geom.Point point, double diffX) {
+        double proportionX = (point.getX() + diffX - bounds.getMinX()) / (bounds.getMaxX() - bounds.getMinX());
         double proportionY = (bounds.getMaxY() - point.getY()) / (bounds.getMaxY() - bounds.getMinY());
         double x = proportionX * target.getWidth();
         double y = proportionY * target.getHeight();
         return new Point2D.Double(x, y);
+    }
+
+    public Point2D.Double getTargetPoint(com.vividsolutions.jts.geom.Point point) {
+        return getTargetPoint(point, 0);
     }
 
     public Point toPoint(double lat, double lon) {
