@@ -35,6 +35,7 @@ public class Projector {
         try {
             transform = CRS.findMathTransform(FeatureUtil.getCrs(FeatureUtil.EPSG_4326),
                     FeatureUtil.getCrs(bounds.getSrs()));
+
         } catch (FactoryException e) {
             throw new RuntimeException(e);
         }
@@ -49,6 +50,55 @@ public class Projector {
         return target;
     }
 
+    private com.vividsolutions.jts.geom.Point getGeometryPointInSrs(double lat, double lon) {
+        Coordinate coordinate = new Coordinate(lon, lat);
+        com.vividsolutions.jts.geom.Point point = geometryFactory.createPoint(coordinate);
+        try {
+            return (com.vividsolutions.jts.geom.Point) JTS.transform(point, transform);
+        } catch (MismatchedDimensionException e) {
+            throw new RuntimeException(e);
+        } catch (TransformException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public com.vividsolutions.jts.geom.Point getGeometryPointInSrsRelativeTo(double lat, double lon,
+            double relativeLat, double relativeLon, double relativeX, double relativeY) {
+
+        double diffLon1 = lon - relativeLon;
+        double diffLon2 = lon - relativeLon + 360;
+        if (Math.abs(diffLon1) > Math.abs(diffLon2))
+            lon = lon + 360;
+        double sign = Math.signum(lon - relativeLon);
+
+        com.vividsolutions.jts.geom.Point point = getGeometryPointInSrs(lat, lon);
+        double periodAtLat = periodAtLat(lat);
+        double x = point.getX();
+        // makes the assumption that increasing lon = increasing X
+        // which is probably valid for most common projections
+        // TODO determine when invalid or handle
+        if (sign >= 0)
+            while (x - periodAtLat >= relativeX)
+                x -= periodAtLat;
+        else
+            while (x + periodAtLat >= relativeX)
+                x += periodAtLat;
+
+        return geometryFactory.createPoint(new Coordinate(x, point.getY()));
+    }
+
+    private double periodAtLat(double lat) {
+        return getGeometryPointInSrs(lat, 180).getX() - getGeometryPointInSrs(lat, -180).getX();
+    }
+
+    private Point2D.Double getTargetPoint(com.vividsolutions.jts.geom.Point point) {
+        double proportionX = (point.getX() - bounds.getMinX()) / (bounds.getMaxX() - bounds.getMinX());
+        double proportionY = (bounds.getMaxY() - point.getY()) / (bounds.getMaxY() - bounds.getMinY());
+        double x = proportionX * target.getWidth();
+        double y = proportionY * target.getHeight();
+        return new Point2D.Double(x, y);
+    }
+
     public Point toPoint(double lat, double lon) {
         Point2D point2D = toPoint2D(lat, lon);
         Point p = new Point();
@@ -58,16 +108,8 @@ public class Projector {
     }
 
     public Point2D.Double toPointInSrs(double lat, double lon) {
-        Coordinate coordinate = new Coordinate(lon, lat);
-        com.vividsolutions.jts.geom.Point point = geometryFactory.createPoint(coordinate);
-        try {
-            point = (com.vividsolutions.jts.geom.Point) JTS.transform(point, transform);
-            return new Point2D.Double(point.getX(), point.getY());
-        } catch (MismatchedDimensionException e) {
-            throw new RuntimeException(e);
-        } catch (TransformException e) {
-            throw new RuntimeException(e);
-        }
+        com.vividsolutions.jts.geom.Point point = getGeometryPointInSrs(lat, lon);
+        return new Point2D.Double(point.getX(), point.getY());
     }
 
     public Point2D.Double toPoint2D(double lat, double lon) {

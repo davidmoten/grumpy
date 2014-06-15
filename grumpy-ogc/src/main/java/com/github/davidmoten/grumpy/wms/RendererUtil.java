@@ -10,6 +10,7 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -212,6 +213,33 @@ public class RendererUtil {
         public List<Point2D.Double> getList2() {
             return list2;
         }
+
+    }
+
+    public static class PointPair {
+
+        private final Point2D.Double point1;
+        private final Point2D.Double point2;
+
+        public PointPair(Double point1, Double point2) {
+            this.point1 = point1;
+            this.point2 = point2;
+        }
+
+        public Point2D.Double getPoint1() {
+            return point1;
+        }
+
+        public Point2D.Double getPoint2() {
+            return point2;
+        }
+
+    }
+
+    public static PointPair getProjectedPointsBeforeAndAfter(Projector projector, double referenceX, double lat,
+            double lon) {
+        // TODO
+        return null;
 
     }
 

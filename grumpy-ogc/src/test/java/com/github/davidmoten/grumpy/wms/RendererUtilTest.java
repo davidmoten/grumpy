@@ -23,4 +23,16 @@ public class RendererUtilTest {
         List<Position> list = RendererUtil.joinPixels(projector, 20, asList(position(-35, 175), position(-35, -175)));
         System.out.println(list);
     }
+
+    @Test
+    public void testTransformWrapping() {
+        ProjectorTarget target = new ProjectorTarget(300, 200);
+        ProjectorBounds bounds = new ProjectorBounds("EPSG:3857", 18924313.4349, -4865942.2795, -18924313.4349,
+                -3503549.8435);
+        Projector projector = new Projector(bounds, target);
+        System.out.println("p1=" + projector.toPointInSrs(0, 100));
+        System.out.println("p2=" + projector.toPointInSrs(0, 460));
+        System.out.println("p3=" + projector.toPointInSrs(0, -260));
+
+    }
 }
