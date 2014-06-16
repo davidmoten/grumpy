@@ -9,6 +9,9 @@ import java.awt.geom.Ellipse2D;
 import java.util.Date;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.FeatureUtil;
 import com.github.davidmoten.grumpy.projection.Projector;
@@ -20,6 +23,8 @@ import com.github.davidmoten.grumpy.wms.WmsUtil;
 import com.github.davidmoten.grumpy.wms.layer.shadow.Sun.Twilight;
 
 public class EarthShadowLayer implements Layer {
+
+    private static final Logger log = LoggerFactory.getLogger(EarthShadowLayer.class);
 
     private static HashMap<Twilight, Color> shades = new HashMap<Twilight, Color>();
 
@@ -67,8 +72,11 @@ public class EarthShadowLayer implements Layer {
         Point point = projector.toPoint(latLon.lat(), latLon.lon());
         spot.setFrame(point.x, point.y, 20.0, 20.0);
         g.fill(spot);
+
+        log.info("rendering circle");
         g.setColor(Color.RED);
         g.draw(RendererUtil.getPath(projector, RendererUtil.getCircle(subSolarPoint, 1000, 20)));
+        log.info("rendered circle");
     }
 
     private void renderTwilight(Graphics2D g, Position subSolarPoint, Projector projector, Bounds geoBounds) {

@@ -190,13 +190,25 @@ public class RendererUtil {
         return points.toArray(new Point2D[] {});
     }
 
-    public static List<Position> getCircle(Position position, double radiusKm, double numPoints) {
+    public static List<Position> getCircleOld(Position position, double radiusKm, double numPoints) {
 
         List<Position> positions = new ArrayList<Position>();
         for (int i = 0; i < numPoints; i++) {
             double bearing = 360.0 * i / numPoints;
             Position p = position.predict(radiusKm, bearing).normalizeLongitude();
             p = p.ensureContinuous(position.normalizeLongitude());
+            positions.add(p);
+        }
+        positions.add(positions.get(0));
+        return positions;
+    }
+
+    public static List<Position> getCircle(Position position, double radiusKm, double numPoints) {
+
+        List<Position> positions = new ArrayList<Position>();
+        for (int i = 0; i < numPoints; i++) {
+            double bearing = 360.0 * i / numPoints;
+            Position p = position.predict(radiusKm, bearing).normalizeLongitude();
             positions.add(p);
         }
         positions.add(positions.get(0));
