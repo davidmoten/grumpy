@@ -14,6 +14,7 @@ import com.github.davidmoten.grumpy.projection.FeatureUtil;
 import com.github.davidmoten.grumpy.projection.Projector;
 import com.github.davidmoten.grumpy.projection.ProjectorBounds;
 import com.github.davidmoten.grumpy.wms.Layer;
+import com.github.davidmoten.grumpy.wms.RendererUtil;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
 import com.github.davidmoten.grumpy.wms.layer.shadow.Sun.Twilight;
@@ -49,39 +50,13 @@ public class EarthShadowLayer implements Layer {
 
         Graphics2D g2d = (Graphics2D) g;
         Position subSolarPoint = Sun.getPosition(null);
-        // Epsg4326LatLongProjector projector = new Epsg4326LatLongProjector(
-        // projection, bounds, width, height);
 
         Color color = g.getColor();
-        // renderTerminator(g2d, subSolarPoint, projector);
         renderSubSolarPoint(g2d, subSolarPoint, projector);
-        renderTwilight(g2d, subSolarPoint, projector, bounds);
-        // renderFig8(g2d, projector);
+        // renderTwilight(g2d, subSolarPoint, projector, bounds);
         g.setColor(color);
 
     }
-
-    // private void renderTerminator(Graphics2D g, Position subSolarPoint,
-    // Epsg4326LatLongProjector projector) {
-    // // Graphics g = this.getContentPane().getGraphics();
-    //
-    // Position[] terminator = subSolarPoint.getEarthLimb(360);
-    //
-    // Color color = g.getColor();
-    //
-    // g.setColor(Color.DARK_GRAY);
-    //
-    // Point lastPoint = null;
-    // for (Position pos : terminator) {
-    // LatLon latLon = new LatLon(pos.getLat(), pos.getLon());
-    // Point point = projector.toPoint(latLon, true);
-    // if (lastPoint != null)
-    // g.drawLine(lastPoint.x, lastPoint.y, point.x, point.y);
-    // lastPoint = point;
-    //
-    // }
-    //
-    // }
 
     private void renderSubSolarPoint(Graphics2D g, Position subSolarPoint, Projector projector) {
 
@@ -92,32 +67,9 @@ public class EarthShadowLayer implements Layer {
         Point point = projector.toPoint(latLon.lat(), latLon.lon());
         spot.setFrame(point.x, point.y, 20.0, 20.0);
         g.fill(spot);
+        g.setColor(Color.RED);
+        g.draw(RendererUtil.getPath(projector, RendererUtil.getCircle(subSolarPoint, 1000, 20)));
     }
-
-    // private void renderFig8(Graphics2D g, Epsg4326LatLongProjector projector)
-    // {
-    //
-    // Ellipse2D spot = new Ellipse2D.Double();
-    //
-    // SimpleDateFormat df = new SimpleDateFormat();
-    //
-    // GregorianCalendar t = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-    // int dayInc = 20;
-    // for (int d = 0; d < 365; d += dayInc) {
-    // Position sunPoint = Sun.getPosition(t);
-    // g.setColor(Color.MAGENTA);
-    // LatLon latLon = new LatLon(sunPoint.getLat(), sunPoint.getLon());
-    // Point point = projector.toPoint(latLon, true);
-    // spot.setFrame(point.x, point.y, 5.0, 5.0);
-    // g.fill(spot);
-    //
-    // System.out.println(df.format(t.getTime()));
-    //
-    // t.add(GregorianCalendar.DAY_OF_YEAR, dayInc);
-    // t.add(GregorianCalendar.SECOND,
-    // (int) ((86164.0905 - 86400.0) * dayInc));
-    // }
-    // }
 
     private void renderTwilight(Graphics2D g, Position subSolarPoint, Projector projector, Bounds geoBounds) {
 
