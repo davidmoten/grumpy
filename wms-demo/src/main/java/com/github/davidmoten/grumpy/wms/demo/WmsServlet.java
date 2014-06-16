@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.davidmoten.grumpy.wms.WmsServletRequestProcessor;
-import com.github.davidmoten.grumpy.wms.layer.shadow.EarthShadowLayer;
 
 public class WmsServlet extends HttpServlet {
 
@@ -26,7 +25,7 @@ public class WmsServlet extends HttpServlet {
                 // add custom layer as cached
                 .addCachedLayer("Custom", new CustomLayer())
                 // add darkness
-                .addLayer("Darkness", new EarthShadowLayer())
+                // .addLayer("Darkness", new EarthShadowLayer())
                 // build it up
                 .build();
     }

@@ -108,21 +108,21 @@ public class RendererUtil {
                 firstPosition.getLon());// projected values
         Double currentLat = null;
         Double currentLon = null;
-        com.vividsolutions.jts.geom.Point currentPoint = null;
+        com.vividsolutions.jts.geom.Point firstPoint = null;
         for (Position p : positions) {
-            if (currentPoint == null) {
-                currentPoint = projector.getFirstXAfter(projector, p.getLat(), p.getLon(), projector.getBounds()
+            if (firstPoint == null) {
+                firstPoint = projector.getFirstXAfter(projector, p.getLat(), p.getLon(), projector.getBounds()
                         .getMinX() - deltaX);
-                currentLat = p.getLat();
-                currentLon = p.getLon();
-                Point2D.Double pt = projector.getTargetPoint(currentPoint);
+                Point2D.Double pt = projector.getTargetPoint(firstPoint);
                 path.moveTo(pt.x, pt.y);
             } else {
                 com.vividsolutions.jts.geom.Point point = projector.getGeometryPointInSrsRelativeTo(p.getLat(),
-                        p.getLon(), currentLat, currentLon, currentPoint.getX(), currentPoint.getY());
+                        p.getLon(), currentLat, currentLon, firstPoint.getX(), firstPoint.getY());
                 Point2D.Double pt = projector.getTargetPoint(point);
                 path.lineTo(pt.x, pt.y);
             }
+            currentLat = p.getLat();
+            currentLon = p.getLon();
             // GeneralPath line = new NearBSpline(getPoints(projector,
             // positions)).getPath();
             //

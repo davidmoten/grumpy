@@ -59,6 +59,9 @@ public class CustomLayer implements Layer {
         g.setFont(g.getFont().deriveFont(24.0f).deriveFont(Font.BOLD));
         g.drawString(CANBERRA, p.x + 5, p.y);
 
+        g.setColor(Color.red);
+        g.draw(RendererUtil.getPath(projector, RendererUtil.getCircle(position(CANBERRA_LAT, CANBERRA_LON), 400, 36)));
+
     }
 
     @Override

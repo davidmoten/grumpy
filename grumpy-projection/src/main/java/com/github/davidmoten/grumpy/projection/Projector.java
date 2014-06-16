@@ -81,7 +81,7 @@ public class Projector {
             while (x - periodAtLat >= relativeX)
                 x -= periodAtLat;
         else
-            while (x + periodAtLat >= relativeX)
+            while (x + periodAtLat < relativeX)
                 x += periodAtLat;
 
         return createPoint(x, point.getY());

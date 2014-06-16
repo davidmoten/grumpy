@@ -45,4 +45,14 @@ public class RendererUtilTest {
         System.out.println("x4=" + x4 + " point=" + point4);
 
     }
+
+    @Test
+    public void testGetCircle() {
+        ProjectorTarget target = new ProjectorTarget(300, 200);
+        ProjectorBounds bounds = new ProjectorBounds("EPSG:3857", 18924313.4349, -4865942.2795, -18924313.4349,
+                -3503549.8435);
+        Projector projector = new Projector(bounds, target);
+
+        RendererUtil.getPath(projector, RendererUtil.getCircle(position(-35, 149), 400, 36));
+    }
 }
