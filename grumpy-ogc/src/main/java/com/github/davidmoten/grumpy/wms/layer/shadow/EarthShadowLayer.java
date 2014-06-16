@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -75,7 +76,8 @@ public class EarthShadowLayer implements Layer {
 
         log.info("rendering circle");
         g.setColor(Color.RED);
-        g.draw(RendererUtil.getPath(projector, RendererUtil.getCircle(subSolarPoint, 1000, 20)));
+        for (GeneralPath path : RendererUtil.getPath(projector, RendererUtil.getCircle(subSolarPoint, 1000, 20)))
+            g.draw(path);
         log.info("rendered circle");
     }
 

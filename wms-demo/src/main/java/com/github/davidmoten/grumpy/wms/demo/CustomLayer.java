@@ -7,8 +7,10 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
+import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.Projector;
@@ -41,17 +43,20 @@ public class CustomLayer implements Layer {
 
         Projector projector = WmsUtil.getProjector(request);
 
-        // get the box around Canberra as a shape
-        Shape shape = RendererUtil.getPath(projector, box);
         g.setColor(Color.white);
+
+        // get the box around Canberra as a shape
+        List<GeneralPath> shapes = RendererUtil.getPath(projector, box);
 
         // fill the box with white
         // transparency is deferred to the wms client framework
-        g.fill(shape);
+        for (Shape shape : shapes)
+            g.fill(shape);
 
         // draw border in blue
         g.setColor(Color.blue);
-        g.draw(shape);
+        for (Shape shape : shapes)
+            g.draw(shape);
 
         // label Canberra
         Point p = projector.toPoint(CANBERRA_LAT, CANBERRA_LON);
@@ -60,7 +65,9 @@ public class CustomLayer implements Layer {
         g.drawString(CANBERRA, p.x + 5, p.y);
 
         g.setColor(Color.red);
-        g.draw(RendererUtil.getPath(projector, RendererUtil.getCircle(position(CANBERRA_LAT, CANBERRA_LON), 400, 36)));
+        for (Shape path : RendererUtil.getPath(projector,
+                RendererUtil.getCircle(position(CANBERRA_LAT, CANBERRA_LON), 400, 36)))
+            g.draw(path);
 
     }
 

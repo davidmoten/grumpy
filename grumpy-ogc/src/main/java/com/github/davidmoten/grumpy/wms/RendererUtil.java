@@ -91,18 +91,20 @@ public class RendererUtil {
         return positions;
     }
 
-    public static Shape getPath(Projector projector, List<Position> positions) {
-        GeneralPath path = new GeneralPath();
+    public static List<GeneralPath> getPath(Projector projector, List<Position> positions) {
+        List<GeneralPath> list = new ArrayList<GeneralPath>();
+
         if (positions.size() < 2)
             throw new RuntimeException("must provide at least two positions");
 
-        addToPath(projector, positions, path, 0);
-        addToPath(projector, positions, path, projector.periodAtLat(0));
+        list.add(createPath(projector, positions, 0));
+        list.add(createPath(projector, positions, projector.periodAtLat(0)));
 
-        return path;
+        return list;
     }
 
-    private static void addToPath(Projector projector, List<Position> positions, GeneralPath path, double deltaX) {
+    private static GeneralPath createPath(Projector projector, List<Position> positions, double deltaX) {
+        GeneralPath path = new GeneralPath();
         Position firstPosition = positions.get(0);
         com.vividsolutions.jts.geom.Point first = projector.getGeometryPointInSrs(firstPosition.getLat(),
                 firstPosition.getLon());// projected values
@@ -130,6 +132,7 @@ public class RendererUtil {
             // 0)), true);
 
         }
+        return path;
     }
 
     public static Shape getPath2(Projector projector, List<Position> positions) {
