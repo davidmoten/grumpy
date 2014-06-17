@@ -57,7 +57,7 @@ public class RendererUtilTest {
         ProjectorBounds bounds = new ProjectorBounds("EPSG:3857", 14288114.828624, -6061227.593083,
                 18907357.32131, -2348222.5076192);
         Projector projector = new Projector(bounds, target);
-        List<GeneralPath> paths = RendererUtil.getPath(projector,
+        List<GeneralPath> paths = RendererUtil.toPath(projector,
                 RendererUtil.getCircle(position(-35.3075, 149.1244), 400, 36));
         for (GeneralPath path : paths) {
             System.out.println("Path");

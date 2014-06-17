@@ -154,7 +154,7 @@ public class DarknessLayer implements Layer {
             box.add(position(geoBounds.getMin().lat(), geoBounds.getMin().lon()));
 
             // use multiple paths to handle boundary weirdness
-            List<GeneralPath> path = RendererUtil.getPath(projector, box);
+            List<GeneralPath> path = RendererUtil.toPath(projector, box);
 
             // fill the region
             g.setColor(shades.get(twilight));

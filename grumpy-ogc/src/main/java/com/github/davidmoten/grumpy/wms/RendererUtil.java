@@ -94,7 +94,12 @@ public class RendererUtil {
         return positions;
     }
 
-    public static List<GeneralPath> getPath(Projector projector, List<Position> positions) {
+    public static List<GeneralPath> toPathGreatCircle(Projector projector, List<Position> positions) {
+        // TODO implement great circle interpolation
+        return toPath(projector, positions);
+    }
+
+    public static List<GeneralPath> toPath(Projector projector, List<Position> positions) {
         List<GeneralPath> list = new ArrayList<GeneralPath>();
 
         if (positions.size() < 2)

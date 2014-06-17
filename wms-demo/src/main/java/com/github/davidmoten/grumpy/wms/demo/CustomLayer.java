@@ -3,7 +3,7 @@ package com.github.davidmoten.grumpy.wms.demo;
 import static com.github.davidmoten.grumpy.core.Position.position;
 import static com.github.davidmoten.grumpy.wms.RendererUtil.draw;
 import static com.github.davidmoten.grumpy.wms.RendererUtil.fill;
-import static com.github.davidmoten.grumpy.wms.RendererUtil.getPath;
+import static com.github.davidmoten.grumpy.wms.RendererUtil.toPathGreatCircle;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -46,7 +46,7 @@ public class CustomLayer implements Layer {
         Projector projector = WmsUtil.getProjector(request);
 
         // get the box around place as a shape
-        List<GeneralPath> shapes = getPath(projector, box);
+        List<GeneralPath> shapes = toPathGreatCircle(projector, box);
 
         // fill the box with white
         // transparency is deferred to the wms client framework
