@@ -12,7 +12,8 @@ import javax.imageio.ImageIO;
 public class ImageWriterDefault implements ImageWriter {
 
     @Override
-    public void writeImage(BufferedImage image, ByteArrayOutputStream os, String imageType) throws IOException {
+    public void writeImage(BufferedImage image, ByteArrayOutputStream os, String imageType)
+            throws IOException {
         ImageIO.write(image, imageType, os);
     }
 

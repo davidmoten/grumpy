@@ -33,8 +33,9 @@ public class SunCalculatorTest {
 
             Calendar c = new GregorianCalendar(2009, 2, 18, 1, 49, 17);
             // assert equal within one second
-            Assert.assertEquals(c.getTime().getTime(), SunCalculator.convertJulianDateToCalendar(2454908.61756)
-                    .getTime().getTime(), 1000);
+            Assert.assertEquals(c.getTime().getTime(),
+                    SunCalculator.convertJulianDateToCalendar(2454908.61756).getTime().getTime(),
+                    1000);
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SSSZ");
             sdf.setTimeZone(TimeZone.getTimeZone("America/Chicago"));
@@ -58,8 +59,9 @@ public class SunCalculatorTest {
 
             for (int i = -180; i < 180; i += 10) {
                 SunCalculatorResult a = SunCalculator.calculate(calendar, -35, i);
-                System.out.println(i + "\t" + a.getHourAngleDegrees() + "\t" + a.getRise().getTime() + "|"
-                        + a.getTransit().getTime() + "|" + calendar.getTime() + "|" + a.getSet().getTime());
+                System.out.println(i + "\t" + a.getHourAngleDegrees() + "\t"
+                        + a.getRise().getTime() + "|" + a.getTransit().getTime() + "|"
+                        + calendar.getTime() + "|" + a.getSet().getTime());
             }
         }
 

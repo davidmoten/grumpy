@@ -36,10 +36,12 @@ public class FeatureUtil {
                 return crs.get(epsg);
 
             if (epsg.equals(EPSG_900913)) {
-                String wkt = IOUtils.toString(FeatureUtil.class.getResourceAsStream("/epsg/EPSG_900913.txt"));
+                String wkt = IOUtils.toString(FeatureUtil.class
+                        .getResourceAsStream("/epsg/EPSG_900913.txt"));
                 crs.put(epsg, CRS.parseWKT(wkt));
             } else if (epsg.equals(EPSG_102100)) {
-                String wkt = IOUtils.toString(FeatureUtil.class.getResourceAsStream("/epsg/EPSG_102100.txt"));
+                String wkt = IOUtils.toString(FeatureUtil.class
+                        .getResourceAsStream("/epsg/EPSG_102100.txt"));
                 crs.put(epsg, CRS.parseWKT(wkt));
             } else
                 crs.put(epsg, CRS.decode(epsg));

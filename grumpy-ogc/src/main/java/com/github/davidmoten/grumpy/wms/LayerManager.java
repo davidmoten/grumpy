@@ -91,7 +91,8 @@ class LayerManager {
 
     private MyGraphics createGraphics(WmsRequest request) {
         log.info("creating buffered image");
-        BufferedImage image = new BufferedImage(request.getWidth(), request.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage image = new BufferedImage(request.getWidth(), request.getHeight(),
+                BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = (Graphics2D) image.getGraphics();
 
         // set rendering options
@@ -139,7 +140,8 @@ class LayerManager {
         }
     }
 
-    private Callable<BufferedImage> createWorker(final Layers layers, final String layerName, final WmsRequest request) {
+    private Callable<BufferedImage> createWorker(final Layers layers, final String layerName,
+            final WmsRequest request) {
         return new Callable<BufferedImage>() {
             @Override
             public BufferedImage call() throws Exception {

@@ -165,8 +165,10 @@ public class PositionTest {
         // &lon_min1=25+min&lon_sec1=29.5244+sec&f_az_deg=306+deg&f_az_min=52+min&f_az_sec=5.37+sec&Submit=Submit+Data
         // Note that we are not using Vincenty formula but we are close to the
         // answer (within 0.2 degrees). That's sufficient!
-        Position p1 = new Position(-(37 + 57.0 / 60 + 3.72030 / 3600), 144 + 25.0 / 60 + 29.52440 / 3600);
-        Position p2 = new Position(-(37 + 39.0 / 60 + 10.15718 / 3600), 143 + 55.0 / 60 + 35.38564 / 3600);
+        Position p1 = new Position(-(37 + 57.0 / 60 + 3.72030 / 3600), 144 + 25.0 / 60 + 29.52440
+                / 3600);
+        Position p2 = new Position(-(37 + 39.0 / 60 + 10.15718 / 3600), 143 + 55.0 / 60 + 35.38564
+                / 3600);
         Assert.assertEquals(Position.toDegrees(306, 52, 5.37), p1.getBearingDegrees(p2), 0.2);
     }
 
@@ -216,15 +218,23 @@ public class PositionTest {
     public final void testLatLonPresentation() {
         char d = 0x00B0;
         char m = '\'';
-        Assert.assertEquals("25" + d + "30.00" + m + "S", Position.toDegreesMinutesDecimalMinutesLatitude(-25.5));
-        Assert.assertEquals("0" + d + "00.00" + m + "N", Position.toDegreesMinutesDecimalMinutesLatitude(0));
-        Assert.assertEquals("0" + d + "30.00" + m + "S", Position.toDegreesMinutesDecimalMinutesLatitude(-0.5));
-        Assert.assertEquals("0" + d + "30.00" + m + "N", Position.toDegreesMinutesDecimalMinutesLatitude(0.5));
-        Assert.assertEquals("1" + d + "30.00" + m + "N", Position.toDegreesMinutesDecimalMinutesLatitude(1.5));
-        Assert.assertEquals("1" + d + "00.00" + m + "N", Position.toDegreesMinutesDecimalMinutesLatitude(1.0));
+        Assert.assertEquals("25" + d + "30.00" + m + "S",
+                Position.toDegreesMinutesDecimalMinutesLatitude(-25.5));
+        Assert.assertEquals("0" + d + "00.00" + m + "N",
+                Position.toDegreesMinutesDecimalMinutesLatitude(0));
+        Assert.assertEquals("0" + d + "30.00" + m + "S",
+                Position.toDegreesMinutesDecimalMinutesLatitude(-0.5));
+        Assert.assertEquals("0" + d + "30.00" + m + "N",
+                Position.toDegreesMinutesDecimalMinutesLatitude(0.5));
+        Assert.assertEquals("1" + d + "30.00" + m + "N",
+                Position.toDegreesMinutesDecimalMinutesLatitude(1.5));
+        Assert.assertEquals("1" + d + "00.00" + m + "N",
+                Position.toDegreesMinutesDecimalMinutesLatitude(1.0));
 
-        Assert.assertEquals("1" + d + "00.00" + m + "E", Position.toDegreesMinutesDecimalMinutesLongitude(1.0));
-        Assert.assertEquals("1" + d + "00.00" + m + "W", Position.toDegreesMinutesDecimalMinutesLongitude(-1.0));
+        Assert.assertEquals("1" + d + "00.00" + m + "E",
+                Position.toDegreesMinutesDecimalMinutesLongitude(1.0));
+        Assert.assertEquals("1" + d + "00.00" + m + "W",
+                Position.toDegreesMinutesDecimalMinutesLongitude(-1.0));
     }
 
     @Test
@@ -372,7 +382,8 @@ public class PositionTest {
     @Test
     public void testGetClosestIntersectionWithSegment1() {
         Position p = new Position(-30, 120);
-        Position r = p.getClosestIntersectionWithSegment(new Position(-20, 110), new Position(-20, 130));
+        Position r = p.getClosestIntersectionWithSegment(new Position(-20, 110), new Position(-20,
+                130));
 
         log.info(r.getLon() + "");
         log.info(r.getLat() + "");
@@ -388,7 +399,8 @@ public class PositionTest {
     @Test
     public void testGetClosestIntersectionWithSegment2() {
         Position p = new Position(-30, 110);
-        Position r = p.getClosestIntersectionWithSegment(new Position(-20, 100), new Position(-20, 130));
+        Position r = p.getClosestIntersectionWithSegment(new Position(-20, 100), new Position(-20,
+                130));
 
         log.info(r.getLon() + "");
         log.info(r.getLat() + "");
@@ -404,7 +416,8 @@ public class PositionTest {
     @Test
     public void testGetClosestIntersectionWithSegment3() {
         Position p = new Position(-30, 120);
-        Position r = p.getClosestIntersectionWithSegment(new Position(-20, 110), new Position(-20, 130));
+        Position r = p.getClosestIntersectionWithSegment(new Position(-20, 110), new Position(-20,
+                130));
 
         log.info(r.getLon() + "");
         log.info(r.getLat() + "");
@@ -420,7 +433,8 @@ public class PositionTest {
     @Test
     public void testGetClosestIntersectionWithSegment4() {
         Position p = new Position(-30, 110);
-        Position r = p.getClosestIntersectionWithSegment(new Position(-20, 100), new Position(-20, 130));
+        Position r = p.getClosestIntersectionWithSegment(new Position(-20, 100), new Position(-20,
+                130));
 
         // log.info(r.getLon());
         // log.info(r.getLat());

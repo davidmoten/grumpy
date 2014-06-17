@@ -54,8 +54,8 @@ public class ProjectorBounds {
 
     @Override
     public String toString() {
-        return "ProjectorBounds [srs=" + srs + ", minX=" + minX + ", minY=" + minY + ", maxX=" + maxX + ", maxY="
-                + maxY + "]";
+        return "ProjectorBounds [srs=" + srs + ", minX=" + minX + ", minY=" + minY + ", maxX="
+                + maxX + ", maxY=" + maxY + "]";
     }
 
 }

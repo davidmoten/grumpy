@@ -41,9 +41,10 @@ public class WmsRequest {
 
     private final Date time;
 
-    public WmsRequest(List<String> layers, List<String> queryLayers, List<String> styles, ProjectorBounds bounds,
-            String format, int width, int height, boolean transparent, Color backgroundColor, String version,
-            String infoFormat, Map<String, String> parameters, String url, Date time) {
+    public WmsRequest(List<String> layers, List<String> queryLayers, List<String> styles,
+            ProjectorBounds bounds, String format, int width, int height, boolean transparent,
+            Color backgroundColor, String version, String infoFormat,
+            Map<String, String> parameters, String url, Date time) {
         super();
         this.layers = layers;
         this.queryLayers = queryLayers;
@@ -63,15 +64,18 @@ public class WmsRequest {
 
     public WmsRequest(HttpServletRequest request) throws MissingMandatoryParameterException {
 
-        this(getList(request, "LAYERS", true), getList(request, "QUERY_LAYERS", false),
-                getList(request, "STYLES", true), getBounds(getCrs(request), getParameter(request, "BBOX", true),
-                        getVersion(request)), getParameter(request, "FORMAT", true), Integer.parseInt(getParameter(
-                        request, "WIDTH", true)), Integer.parseInt(getParameter(request, "HEIGHT", true)),
-                isTransparent(request), getBackgroundColor(request), getVersion(request), getParameter(request,
-                        "INFO_FORMAT", false), getParameters(request), getUrl(request), getTime(request));
+        this(getList(request, "LAYERS", true), getList(request, "QUERY_LAYERS", false), getList(
+                request, "STYLES", true), getBounds(getCrs(request),
+                getParameter(request, "BBOX", true), getVersion(request)), getParameter(request,
+                "FORMAT", true), Integer.parseInt(getParameter(request, "WIDTH", true)), Integer
+                .parseInt(getParameter(request, "HEIGHT", true)), isTransparent(request),
+                getBackgroundColor(request), getVersion(request), getParameter(request,
+                        "INFO_FORMAT", false), getParameters(request), getUrl(request),
+                getTime(request));
     }
 
-    private static Date getTime(HttpServletRequest request) throws MissingMandatoryParameterException {
+    private static Date getTime(HttpServletRequest request)
+            throws MissingMandatoryParameterException {
         String s = getParameter(request, "TIME", false);
         if (s != null) {
             SimpleDateFormat sdf = new SimpleDateFormat(DATETIME_FORMAT_ISO_8601);
@@ -104,8 +108,8 @@ public class WmsRequest {
     }
 
     public WmsRequest modifySize(int w, int h) {
-        return new WmsRequest(layers, queryLayers, styles, bounds, format, w, h, transparent, backgroundColor, version,
-                infoFormat, parameters, url, time);
+        return new WmsRequest(layers, queryLayers, styles, bounds, format, w, h, transparent,
+                backgroundColor, version, infoFormat, parameters, url, time);
     }
 
     public String getVersion() {
@@ -113,13 +117,13 @@ public class WmsRequest {
     }
 
     public WmsRequest modifyStyles(List<String> newStyles) {
-        return new WmsRequest(layers, queryLayers, newStyles, bounds, format, width, height, transparent,
-                backgroundColor, version, infoFormat, parameters, url, time);
+        return new WmsRequest(layers, queryLayers, newStyles, bounds, format, width, height,
+                transparent, backgroundColor, version, infoFormat, parameters, url, time);
     }
 
     public WmsRequest modifyBounds(ProjectorBounds newBounds) {
-        return new WmsRequest(layers, queryLayers, styles, newBounds, format, width, height, transparent,
-                backgroundColor, version, infoFormat, parameters, url, time);
+        return new WmsRequest(layers, queryLayers, styles, newBounds, format, width, height,
+                transparent, backgroundColor, version, infoFormat, parameters, url, time);
     }
 
     public List<String> getQueryLayers() {
@@ -137,15 +141,18 @@ public class WmsRequest {
         return parameters.keySet();
     }
 
-    private static boolean isTransparent(HttpServletRequest request) throws MissingMandatoryParameterException {
+    private static boolean isTransparent(HttpServletRequest request)
+            throws MissingMandatoryParameterException {
         return "true".equalsIgnoreCase(getParameter(request, "TRANSPARENT", false));
     }
 
-    private static String getVersion(HttpServletRequest request) throws MissingMandatoryParameterException {
+    private static String getVersion(HttpServletRequest request)
+            throws MissingMandatoryParameterException {
         return getParameter(request, "VERSION", false);
     }
 
-    private static Color getBackgroundColor(HttpServletRequest request) throws MissingMandatoryParameterException {
+    private static Color getBackgroundColor(HttpServletRequest request)
+            throws MissingMandatoryParameterException {
         String s = getParameter(request, "BGCOLOR", false);
         if (s != null)
             return new Color(Integer.valueOf(s.substring(2), 16));
@@ -153,7 +160,8 @@ public class WmsRequest {
             return Color.white;
     }
 
-    private static String getCrs(HttpServletRequest request) throws MissingMandatoryParameterException {
+    private static String getCrs(HttpServletRequest request)
+            throws MissingMandatoryParameterException {
         String srs = RequestUtil.getParameter(request, "SRS", false);
         String crs = ObjectUtils.firstNonNull(RequestUtil.getParameter(request, "CRS", false), srs,
                 FeatureUtil.EPSG_4326);
@@ -162,10 +170,11 @@ public class WmsRequest {
 
     @Override
     public String toString() {
-        return "WmsRequest [layers=" + layers + ", queryLayers=" + queryLayers + ", styles=" + styles + ", bounds="
-                + bounds + ", format=" + format + ", width=" + width + ", height=" + height + ", transparent="
-                + transparent + ", backgroundColor=" + backgroundColor + ", version=" + version + ", infoFormat="
-                + infoFormat + ", parameters=" + parameters + ", url=" + url + "]";
+        return "WmsRequest [layers=" + layers + ", queryLayers=" + queryLayers + ", styles="
+                + styles + ", bounds=" + bounds + ", format=" + format + ", width=" + width
+                + ", height=" + height + ", transparent=" + transparent + ", backgroundColor="
+                + backgroundColor + ", version=" + version + ", infoFormat=" + infoFormat
+                + ", parameters=" + parameters + ", url=" + url + "]";
     }
 
     /**

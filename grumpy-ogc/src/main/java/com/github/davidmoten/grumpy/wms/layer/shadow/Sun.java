@@ -116,8 +116,8 @@ public final class Sun {
         double L = L0 + DL;
 
         // obliquity eps of ecliptic in degrees:
-        double eps = 23.0 + 26.0 / 60.0 + 21.448 / 3600.0 - (46.8150 * T + 0.00059 * T * T - 0.001813 * T * T * T)
-                / 3600.0;
+        double eps = 23.0 + 26.0 / 60.0 + 21.448 / 3600.0
+                - (46.8150 * T + 0.00059 * T * T - 0.001813 * T * T * T) / 3600.0;
 
         double X = Math.cos(Math.toRadians(L));
         double Y = Math.cos(Math.toRadians(eps)) * Math.sin(Math.toRadians(L));
@@ -131,8 +131,8 @@ public final class Sun {
 
         // sidereal time (in hours)
 
-        double theta0 = 280.46061837 + 360.98564736629 * (jd - 2451545.0) + 0.000387933 * T * T - T * T * T
-                / 38710000.0;
+        double theta0 = 280.46061837 + 360.98564736629 * (jd - 2451545.0) + 0.000387933 * T * T - T
+                * T * T / 38710000.0;
         double sidTime = (theta0 % 360) / 15.0;
 
         // lon and lat of sun
@@ -146,8 +146,8 @@ public final class Sun {
         }
         double lat = delta;
 
-        log.info("Sidereal time is " + sidTime + ", Sun RA/Dec is " + RA + "/" + delta + ", subSolar lat/long is "
-                + lat + "/" + lon);
+        log.info("Sidereal time is " + sidTime + ", Sun RA/Dec is " + RA + "/" + delta
+                + ", subSolar lat/long is " + lat + "/" + lon);
 
         return new Position(lat, lon);
 

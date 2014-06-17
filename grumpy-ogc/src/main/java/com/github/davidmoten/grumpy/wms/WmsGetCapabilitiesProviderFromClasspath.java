@@ -21,7 +21,8 @@ public class WmsGetCapabilitiesProviderFromClasspath implements WmsGetCapabiliti
     @Override
     public String getCapabilities(HttpServletRequest request) {
         try {
-            return IOUtils.toString(WmsGetCapabilitiesProviderFromClasspath.class.getResourceAsStream(resource));
+            return IOUtils.toString(WmsGetCapabilitiesProviderFromClasspath.class
+                    .getResourceAsStream(resource));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

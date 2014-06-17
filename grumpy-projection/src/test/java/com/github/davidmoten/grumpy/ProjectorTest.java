@@ -18,15 +18,16 @@ public class ProjectorTest {
     @Test
     public void testTransformWrapping() {
         ProjectorTarget target = new ProjectorTarget(300, 200);
-        ProjectorBounds bounds = new ProjectorBounds("EPSG:3857", 18924313.4349, -4865942.2795, -18924313.4349,
-                -3503549.8435);
+        ProjectorBounds bounds = new ProjectorBounds("EPSG:3857", 18924313.4349, -4865942.2795,
+                -18924313.4349, -3503549.8435);
         Projector projector = new Projector(bounds, target);
         Point p = projector.getGeometryPointInSrs(-35, 140);
         Double point = projector.getTargetPoint(p);
         System.out.println("x1=" + p.getX() + " point=" + point);
         assertEquals(26.470588235578038, point.getX(), PRECISION);
         assertEquals(96.93701801560695, point.getY(), PRECISION);
-        Point p2 = projector.getGeometryPointInSrsRelativeTo(-35, 141, -35, 140, p.getX(), p.getY());
+        Point p2 = projector
+                .getGeometryPointInSrsRelativeTo(-35, 141, -35, 140, p.getX(), p.getY());
         System.out.println("x2=" + p2.getX());
         assertEquals(1.5696048201851575E7, p2.getX(), PRECISION);
         double x3 = p.getX() - projector.periodAtLat(-35);

@@ -1,12 +1,15 @@
 package com.github.davidmoten.grumpy.wms.layer.shadow;
 
+import static com.github.davidmoten.grumpy.wms.RendererUtil.draw;
+import static com.github.davidmoten.grumpy.wms.RendererUtil.getCircle;
+import static com.github.davidmoten.grumpy.wms.RendererUtil.getPath;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.GeneralPath;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -18,7 +21,6 @@ import com.github.davidmoten.grumpy.projection.FeatureUtil;
 import com.github.davidmoten.grumpy.projection.Projector;
 import com.github.davidmoten.grumpy.projection.ProjectorBounds;
 import com.github.davidmoten.grumpy.wms.Layer;
-import com.github.davidmoten.grumpy.wms.RendererUtil;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
 import com.github.davidmoten.grumpy.wms.layer.shadow.Sun.Twilight;
@@ -59,7 +61,7 @@ public class EarthShadowLayer implements Layer {
 
         Color color = g.getColor();
         renderSubSolarPoint(g2d, subSolarPoint, projector);
-        // renderTwilight(g2d, subSolarPoint, projector, bounds);
+        renderTwilight(g2d, subSolarPoint, projector, bounds);
         g.setColor(color);
 
     }
@@ -71,17 +73,18 @@ public class EarthShadowLayer implements Layer {
         g.setColor(Color.YELLOW);
         LatLon latLon = new LatLon(subSolarPoint.getLat(), subSolarPoint.getLon());
         Point point = projector.toPoint(latLon.lat(), latLon.lon());
-        spot.setFrame(point.x, point.y, 20.0, 20.0);
+        spot.setFrame(point.x - 10, point.y - 10, 20.0, 20.0);
         g.fill(spot);
 
         log.info("rendering circle");
         g.setColor(Color.RED);
-        for (GeneralPath path : RendererUtil.getPath(projector, RendererUtil.getCircle(subSolarPoint, 1000, 20)))
-            g.draw(path);
+        draw(g, getPath(projector, getCircle(subSolarPoint, 1000, 20)));
+
         log.info("rendered circle");
     }
 
-    private void renderTwilight(Graphics2D g, Position subSolarPoint, Projector projector, Bounds geoBounds) {
+    private void renderTwilight(Graphics2D g, Position subSolarPoint, Projector projector,
+            Bounds geoBounds) {
 
         Point min = projector.toPoint(geoBounds.getMin().lat(), geoBounds.getMin().lon());
         Point max = projector.toPoint(geoBounds.getMax().lat(), geoBounds.getMax().lon());
@@ -91,8 +94,8 @@ public class EarthShadowLayer implements Layer {
 
     }
 
-    private void renderTwilightRegion(Graphics2D g, Position subSolarPoint, Projector projector, Bounds geoBounds,
-            Rectangle xyBounds) {
+    private void renderTwilightRegion(Graphics2D g, Position subSolarPoint, Projector projector,
+            Bounds geoBounds, Rectangle xyBounds) {
 
         // g.setColor(Color.CYAN);
         // g.draw(xyBounds);
@@ -105,7 +108,8 @@ public class EarthShadowLayer implements Layer {
 
             // region is indivisible, so fill it
 
-            twilight = Sun.getTwilight(subSolarPoint, new Position(geoBounds.getMin().lat(), geoBounds.getMin().lon()));
+            twilight = Sun.getTwilight(subSolarPoint, new Position(geoBounds.getMin().lat(),
+                    geoBounds.getMin().lon()));
         } else {
             twilight = Sun.getRegionTwilight(geoBounds, subSolarPoint);
         }
@@ -132,13 +136,14 @@ public class EarthShadowLayer implements Layer {
                 // divide into 4 sub regions
 
                 rectangles = new Rectangle[4];
-                rectangles[0] = new Rectangle(xyBounds.x, xyBounds.y, xyBounds.width / 2, xyBounds.height / 2);
-                rectangles[1] = new Rectangle(xyBounds.x + rectangles[0].width, xyBounds.y, xyBounds.width
-                        - rectangles[0].width, rectangles[0].height);
-                rectangles[2] = new Rectangle(rectangles[1].x, xyBounds.y + rectangles[1].height, rectangles[1].width,
-                        xyBounds.height - rectangles[1].height);
-                rectangles[3] = new Rectangle(xyBounds.x, xyBounds.y + rectangles[0].height, rectangles[0].width,
-                        rectangles[2].height);
+                rectangles[0] = new Rectangle(xyBounds.x, xyBounds.y, xyBounds.width / 2,
+                        xyBounds.height / 2);
+                rectangles[1] = new Rectangle(xyBounds.x + rectangles[0].width, xyBounds.y,
+                        xyBounds.width - rectangles[0].width, rectangles[0].height);
+                rectangles[2] = new Rectangle(rectangles[1].x, xyBounds.y + rectangles[1].height,
+                        rectangles[1].width, xyBounds.height - rectangles[1].height);
+                rectangles[3] = new Rectangle(xyBounds.x, xyBounds.y + rectangles[0].height,
+                        rectangles[0].width, rectangles[2].height);
 
             } else if (xyBounds.height > 1) {
 
@@ -147,8 +152,8 @@ public class EarthShadowLayer implements Layer {
                 rectangles = new Rectangle[2];
 
                 rectangles[0] = new Rectangle(xyBounds.x, xyBounds.y, 1, xyBounds.height / 2);
-                rectangles[1] = new Rectangle(xyBounds.x, xyBounds.y + rectangles[0].height, 1, xyBounds.height
-                        - rectangles[0].height);
+                rectangles[1] = new Rectangle(xyBounds.x, xyBounds.y + rectangles[0].height, 1,
+                        xyBounds.height - rectangles[0].height);
 
             } else {
 
@@ -157,8 +162,8 @@ public class EarthShadowLayer implements Layer {
                 rectangles = new Rectangle[2];
 
                 rectangles[0] = new Rectangle(xyBounds.x, xyBounds.y, xyBounds.width / 2, 1);
-                rectangles[1] = new Rectangle(xyBounds.x + rectangles[0].width, xyBounds.y, xyBounds.width
-                        - rectangles[0].width, 1);
+                rectangles[1] = new Rectangle(xyBounds.x + rectangles[0].width, xyBounds.y,
+                        xyBounds.width - rectangles[0].width, 1);
 
             }
 
@@ -168,8 +173,8 @@ public class EarthShadowLayer implements Layer {
                 Position min = projector.toPosition(rect.x, rect.y + rect.height);
                 Position max = projector.toPosition(rect.x + rect.width, rect.y);
 
-                Bounds bounds = new Bounds(new LatLon(min.getLat(), min.getLon()), new LatLon(max.getLat(),
-                        max.getLon()));
+                Bounds bounds = new Bounds(new LatLon(min.getLat(), min.getLon()), new LatLon(
+                        max.getLat(), max.getLon()));
                 renderTwilightRegion(g, subSolarPoint, projector, bounds, rect);
             }
         }
@@ -181,7 +186,8 @@ public class EarthShadowLayer implements Layer {
         ProjectorBounds b = request.getBounds();
         Position min = FeatureUtil.convertToLatLon(b.getMinX(), b.getMinY(), request.getCrs());
         Position max = FeatureUtil.convertToLatLon(b.getMaxX(), b.getMaxY(), request.getCrs());
-        Bounds bounds = new Bounds(new LatLon(min.getLat(), min.getLon()), new LatLon(max.getLat(), max.getLon()));
+        Bounds bounds = new Bounds(new LatLon(min.getLat(), min.getLon()), new LatLon(max.getLat(),
+                max.getLon()));
         render(g, projector, bounds, request.getWidth(), request.getHeight());
     }
 

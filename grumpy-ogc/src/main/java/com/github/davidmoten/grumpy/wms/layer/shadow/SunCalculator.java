@@ -29,19 +29,22 @@ public class SunCalculator {
         double jStar = 2451545 + 0.0009 - longitudeDegrees / 360 + n;
         double m = (357.5291 + 0.98560028 * (jStar - 2451545)) % 360;
         double mRadians = Math.toRadians(m);
-        double c = 1.9148 * Math.sin(mRadians) + 0.02 * Math.sin(mRadians * 2) + 0.0003 * Math.sin(3 * mRadians);
+        double c = 1.9148 * Math.sin(mRadians) + 0.02 * Math.sin(mRadians * 2) + 0.0003
+                * Math.sin(3 * mRadians);
         double lambda = (m + 102.9372 + c + 180) % 360;
         double lambdaRadians = Math.toRadians(lambda);
         double jTransit = jStar + 0.0053 * Math.sin(mRadians) - 0.0069 * Math.sin(lambdaRadians);
-        double declinationRadians = Math.asin(Math.sin(lambdaRadians) * Math.sin(Math.toRadians(23.45)));
+        double declinationRadians = Math.asin(Math.sin(lambdaRadians)
+                * Math.sin(Math.toRadians(23.45)));
         double latitudeRadians = Math.toRadians(latitudeDegrees);
-        double numerator = Math.sin(Math.toRadians(-0.83)) - Math.sin(latitudeRadians) * Math.sin(declinationRadians);
+        double numerator = Math.sin(Math.toRadians(-0.83)) - Math.sin(latitudeRadians)
+                * Math.sin(declinationRadians);
         double denominator = Math.cos(latitudeRadians) * Math.cos(declinationRadians);
         double hourAngleRadians = Math.acos(numerator / denominator);
         double hourAngleDegrees = Math.toDegrees(hourAngleRadians);
         double declinationDegrees = Math.toDegrees(declinationRadians);
-        double jSet = 2451545 + 0.0009 + (hourAngleDegrees - longitudeDegrees) / 360 + n + 0.0053 * Math.sin(mRadians)
-                - 0.0069 * Math.sin(2 * lambdaRadians);
+        double jSet = 2451545 + 0.0009 + (hourAngleDegrees - longitudeDegrees) / 360 + n + 0.0053
+                * Math.sin(mRadians) - 0.0069 * Math.sin(2 * lambdaRadians);
         double jRise = jTransit - (jSet - jTransit);
 
         SunCalculatorResult result = new SunCalculatorResult();
@@ -88,7 +91,8 @@ public class SunCalculator {
 
         @Override
         public final String toString() {
-            return "hourAngleDegrees=" + getHourAngleDegrees() + ", declinationDegrees=" + getDeclinationDegrees();
+            return "hourAngleDegrees=" + getHourAngleDegrees() + ", declinationDegrees="
+                    + getDeclinationDegrees();
         }
 
         public final void setjRise(double jRise) {

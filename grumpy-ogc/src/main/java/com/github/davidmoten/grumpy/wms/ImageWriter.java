@@ -24,5 +24,6 @@ public interface ImageWriter {
      *            {@link ImageIO#write(java.awt.image.RenderedImage, String, OutputStream)}
      * @throws IOException
      */
-    void writeImage(BufferedImage image, ByteArrayOutputStream os, String imageType) throws IOException;
+    void writeImage(BufferedImage image, ByteArrayOutputStream os, String imageType)
+            throws IOException;
 }
