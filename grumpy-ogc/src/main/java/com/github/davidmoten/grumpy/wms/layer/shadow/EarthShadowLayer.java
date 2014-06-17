@@ -61,8 +61,32 @@ public class EarthShadowLayer implements Layer {
 
         Color color = g.getColor();
         renderSubSolarPoint(g2d, subSolarPoint, projector);
-        renderTwilight(g2d, subSolarPoint, projector, bounds);
+
+        renderTwilightSimple(g2d, subSolarPoint, projector, bounds);
+
+        // renderTwilight(g2d, subSolarPoint, projector, bounds);
         g.setColor(color);
+
+    }
+
+    private void renderTwilightSimple(Graphics2D g, Position subSolarPoint, Projector projector,
+            Bounds bounds) {
+        log.info("rendering twilight");
+        ProjectorBounds b = projector.getBounds();
+        for (int i = 0; i < projector.getTarget().getWidth(); i++) {
+            for (int j = 0; j < projector.getTarget().getHeight(); j++) {
+                double propX = (double) i / projector.getTarget().getWidth();
+                double propY = (double) i / projector.getTarget().getHeight();
+                double x = b.getMinX() + propX * (b.getMaxX() - b.getMinX());
+                double y = b.getMaxY() - propY * (b.getMaxY() - b.getMinY());
+                Position p = projector.toPosition(x, y);
+                Twilight twilight = Sun.getTwilight(subSolarPoint, p);
+                Color shade = shades.get(twilight);
+                g.setColor(shade);
+                g.fillRect(j, j, i + 1, j + 1);
+            }
+        }
+        log.info("rendered twilight");
 
     }
 
@@ -78,7 +102,16 @@ public class EarthShadowLayer implements Layer {
 
         log.info("rendering circle");
         g.setColor(Color.RED);
-        draw(g, getPath(projector, getCircle(subSolarPoint, 1000, 20)));
+        draw(g, getPath(projector, getCircle(subSolarPoint, Constants.EARTH_RADIUS_KM, 10)));
+        draw(g,
+                getPath(projector,
+                        getCircle(subSolarPoint, 96 / 90.0 * Constants.EARTH_RADIUS_KM, 10)));
+        draw(g,
+                getPath(projector,
+                        getCircle(subSolarPoint, 102 / 90.0 * Constants.EARTH_RADIUS_KM, 10)));
+        draw(g,
+                getPath(projector,
+                        getCircle(subSolarPoint, 118 / 90.0 * Constants.EARTH_RADIUS_KM, 10)));
 
         log.info("rendered circle");
     }
