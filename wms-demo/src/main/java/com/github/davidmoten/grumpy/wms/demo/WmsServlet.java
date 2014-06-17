@@ -25,15 +25,14 @@ public class WmsServlet extends HttpServlet {
                 .imageCache(200)
                 // add custom layer as cached
                 .addCachedLayer("Custom", new CustomLayer())
-                // add darkness
+                // add darkness, not cached
                 .addLayer("Darkness", new DarknessLayer())
                 // build it up
                 .build();
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-            IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         // use the processor to handle requests
         processor.doGet(req, resp);

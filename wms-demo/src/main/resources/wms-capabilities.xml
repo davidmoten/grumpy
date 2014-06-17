@@ -14,8 +14,9 @@
         <!-- Top-level web address of service or service provider. See also 
             OnlineResource elements under <DCPType>. -->
         <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
-            xlink:type="simple" xlink:href="http://www.amsa.gov.au" />
+            xlink:type="simple" xlink:href="http://github.com/davidmoten/grumpy" />
         <!-- Contact information -->
+        
         <ContactInformation>
             <ContactPersonPrimary>
                 <ContactPerson>Fred Nurk</ContactPerson>
@@ -88,7 +89,6 @@
         </Request>
         <Exception>
             <Format>XML</Format>
-
             <Format>INIMAGE</Format>
             <Format>BLANK</Format>
         </Exception>
