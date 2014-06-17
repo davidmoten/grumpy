@@ -461,6 +461,7 @@ public class Position {
         return interpolateLongitude(positions, DEFAULT_INTERPOLATION_LONGITUDE_THRESHOLD);
     }
 
+    // TODO unit test
     public static List<Position> interpolateLongitude(List<? extends Position> positions, double maxLongitudeDifference) {
         List<Position> result = new ArrayList<Position>();
         Position previous = null;

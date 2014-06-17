@@ -30,8 +30,7 @@ public class RendererUtil {
         RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
         renderHints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        renderHints.put(RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        renderHints.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g.addRenderingHints(renderHints);
     }
 
@@ -59,10 +58,8 @@ public class RendererUtil {
             Position intermediate = a.getPositionAlongPath(b, 0.5);
             // use recursion, O(log(n)) stack calls because of the division by 2
             // above
-            List<Position> segment1 = joinPixels(projector, a, intermediate,
-                    maxDistanceBetweenPointsInPixels);
-            List<Position> segment2 = joinPixels(projector, intermediate, b,
-                    maxDistanceBetweenPointsInPixels);
+            List<Position> segment1 = joinPixels(projector, a, intermediate, maxDistanceBetweenPointsInPixels);
+            List<Position> segment2 = joinPixels(projector, intermediate, b, maxDistanceBetweenPointsInPixels);
             list.addAll(segment1);
             // remove the start of segment 2 because it is the finish of segment
             // 1
@@ -75,8 +72,8 @@ public class RendererUtil {
         return list;
     }
 
-    public static List<Position> joinPixels(Projector projector,
-            double maxDistanceBetweenPointsInPixels, List<Position> mainPositions) {
+    public static List<Position> joinPixels(Projector projector, double maxDistanceBetweenPointsInPixels,
+            List<Position> mainPositions) {
         List<Position> positions = new ArrayList<Position>();
         {
             Position lastPosition = null;
@@ -95,8 +92,7 @@ public class RendererUtil {
     }
 
     public static List<GeneralPath> toPathGreatCircle(Projector projector, List<Position> positions) {
-        // TODO implement great circle interpolation
-        return toPath(projector, positions);
+        return toPath(projector, Position.interpolateLongitude(positions));
     }
 
     public static List<GeneralPath> toPath(Projector projector, List<Position> positions) {
@@ -111,8 +107,8 @@ public class RendererUtil {
         return list;
     }
 
-    private static List<com.vividsolutions.jts.geom.Point> getPathPoints(Projector projector,
-            List<Position> positions, double deltaX) {
+    private static List<com.vividsolutions.jts.geom.Point> getPathPoints(Projector projector, List<Position> positions,
+            double deltaX) {
         List<com.vividsolutions.jts.geom.Point> list = new ArrayList<com.vividsolutions.jts.geom.Point>();
         Double firstPointLat = null;
         Double firstPointLon = null;
@@ -120,16 +116,15 @@ public class RendererUtil {
         for (Position pos : positions) {
             Position p = pos.normalizeLongitude();
             if (firstPoint == null) {
-                firstPoint = projector.getFirstXAfter(projector, p.getLat(), p.getLon(), projector
-                        .getBounds().getMinX() - deltaX);
+                firstPoint = projector.getFirstXAfter(projector, p.getLat(), p.getLon(), projector.getBounds()
+                        .getMinX() - deltaX);
                 firstPointLat = p.getLat();
                 firstPointLon = p.getLon();
                 list.add(firstPoint);
             } else {
                 // TODO create intermediate points on great circle
-                com.vividsolutions.jts.geom.Point point = projector
-                        .getGeometryPointInSrsRelativeTo(p.getLat(), p.getLon(), firstPointLat,
-                                firstPointLon, firstPoint.getX(), firstPoint.getY());
+                com.vividsolutions.jts.geom.Point point = projector.getGeometryPointInSrsRelativeTo(p.getLat(),
+                        p.getLon(), firstPointLat, firstPointLon, firstPoint.getX(), firstPoint.getY());
                 list.add(point);
             }
             // GeneralPath line = new NearBSpline(getPoints(projector,
@@ -142,8 +137,7 @@ public class RendererUtil {
         return list;
     }
 
-    private static GeneralPath createPath(Projector projector, List<Position> positions,
-            double deltaX) {
+    private static GeneralPath createPath(Projector projector, List<Position> positions, double deltaX) {
         List<com.vividsolutions.jts.geom.Point> points = getPathPoints(projector, positions, deltaX);
         GeneralPath path = new GeneralPath();
         boolean first = true;
@@ -162,8 +156,8 @@ public class RendererUtil {
         return getPathObsolete(projector, DEFAULT_MAX_DISTANCE_BETWEEN_POINTS_IN_PIXELS, positions);
     }
 
-    public static Shape getPathObsolete(Projector projector,
-            double maxDistanceBetweenPointsInPixels, List<Position> mainPositions) {
+    public static Shape getPathObsolete(Projector projector, double maxDistanceBetweenPointsInPixels,
+            List<Position> mainPositions) {
 
         if (mainPositions.size() < 2)
             throw new RuntimeException("must provide at least two positions");
@@ -188,12 +182,11 @@ public class RendererUtil {
                 // lines across it.
                 // TODO fix this!
                 if (!differenceIsLarge(lastLon, currentLon, MAX_DISTANCE_BETWEEN_POINTS_IN_DEGREES)) {
-                    List<Position> positions = joinPixels(projector,
-                            maxDistanceBetweenPointsInPixels, asList(lastPosition, position));
+                    List<Position> positions = joinPixels(projector, maxDistanceBetweenPointsInPixels,
+                            asList(lastPosition, position));
                     GeneralPath line = new NearBSpline(getPoints(projector, positions)).getPath();
 
-                    path.append(line.getPathIterator(AffineTransform.getTranslateInstance(0, 0)),
-                            true);
+                    path.append(line.getPathIterator(AffineTransform.getTranslateInstance(0, 0)), true);
                 } else {
                     // move to the next point
                     Point p = projector.toPoint(currentLat, currentLon);
@@ -244,9 +237,8 @@ public class RendererUtil {
 
     public static WmsRequest getAustralianEpsg4326WmsRequest(int width, int height) {
         List<String> e = Collections.emptyList();
-        WmsRequest r = new WmsRequest(e, e, e, new ProjectorBounds(FeatureUtil.EPSG_4326, 90, -61,
-                176, 61), "image/png", width, height, true, Color.white, "1.1.1", null,
-                new HashMap<String, String>(), null, null);
+        WmsRequest r = new WmsRequest(e, e, e, new ProjectorBounds(FeatureUtil.EPSG_4326, 90, -61, 176, 61),
+                "image/png", width, height, true, Color.white, "1.1.1", null, new HashMap<String, String>(), null, null);
 
         return r;
     }
