@@ -91,7 +91,6 @@ mvn clean install
 TODO
 -------------
 * test large circles in various places
-* interpolate great circle paths
 
 Why Grumpy?
 ---------------
