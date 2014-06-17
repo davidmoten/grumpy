@@ -3,7 +3,7 @@ grumpy
 
 [OGC WMS](http://www.opengeospatial.org/standards/wms) Server in java allowing custom rendering of WMS layers using projection utilities and Graphics2D.
 
-Status: *released to Maven Central*, proper handling of longitude wrapping regions and lines happening now 
+Status: *released to Maven Central*, proper handling of longitude wrapping regions and lines happening now (nearly finished and will be released as 0.2 by 21 June 2014). 
 
 [Release Notes](RELEASE_NOTES.md)
 
@@ -16,6 +16,7 @@ Features
 * WMS Server utilities in ```grumpy-ogc```
 * Create a lightweight WMS server (about 12MB war)
 * Supports BBOX parameters handled differently by WMS 1.1.1 and 1.3
+* Handles boundary discontinuities with ```RendererUtil``` methods
 
 Demonstration
 -----------------
@@ -76,11 +77,6 @@ cd grumpy
 mvn clean install
 ```
 
-Todo
----------
-* handle region/line discontinuities over longitude boundaries by returning one to two shape regions for each path.
-* demo EPSG:4326 in OpenLayers client
-
 Why Grumpy?
 ---------------
-The project name was chosen at random and is no hint at the disposition of the primary developer! I'm very happy to receive contribution on this. Just raise an issue.
+The project name was chosen at random and is no hint at the disposition of the primary developer! I'm very happy to receive contributions on this project. Just raise an issue.
