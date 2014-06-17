@@ -93,6 +93,7 @@ mvn clean install
 TODO
 -------------
 * test large circles in various places
+* support large circles over poles
 
 Why Grumpy?
 ---------------
