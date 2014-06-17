@@ -3,7 +3,6 @@ package com.github.davidmoten.grumpy.wms.demo;
 import static com.github.davidmoten.grumpy.core.Position.position;
 import static com.github.davidmoten.grumpy.wms.RendererUtil.draw;
 import static com.github.davidmoten.grumpy.wms.RendererUtil.fill;
-import static com.github.davidmoten.grumpy.wms.RendererUtil.getCircle;
 import static com.github.davidmoten.grumpy.wms.RendererUtil.getPath;
 
 import java.awt.Color;
@@ -24,19 +23,19 @@ import com.github.davidmoten.grumpy.wms.WmsUtil;
 
 public class CustomLayer implements Layer {
 
-    private static final String CANBERRA = "Canberra";
-    private static final double CANBERRA_LAT = -35.3075;
-    private static final double CANBERRA_LON = 149.1244;
+    private static final String PLACE = "Canberra";
+    private static final double PLACE_LAT = -35.3075;
+    private static final double PLACE_LON = 149.1244;
     private final List<Position> box;
 
     public CustomLayer() {
         // prepare a box around Canberra
         box = new ArrayList<Position>();
-        box.add(position(CANBERRA_LAT - 2, CANBERRA_LON - 4));
-        box.add(position(CANBERRA_LAT + 2, CANBERRA_LON - 4));
-        box.add(position(CANBERRA_LAT + 2, CANBERRA_LON + 4));
-        box.add(position(CANBERRA_LAT - 2, CANBERRA_LON + 4));
-        box.add(position(CANBERRA_LAT - 2, CANBERRA_LON - 4));
+        box.add(position(PLACE_LAT - 2, PLACE_LON - 4));
+        box.add(position(PLACE_LAT + 2, PLACE_LON - 4));
+        box.add(position(PLACE_LAT + 2, PLACE_LON + 4));
+        box.add(position(PLACE_LAT - 2, PLACE_LON + 4));
+        box.add(position(PLACE_LAT - 2, PLACE_LON - 4));
     }
 
     @Override
@@ -48,7 +47,7 @@ public class CustomLayer implements Layer {
 
         g.setColor(Color.white);
 
-        // get the box around Canberra as a shape
+        // get the box around place as a shape
         List<GeneralPath> shapes = getPath(projector, box);
 
         // fill the box with white
@@ -59,17 +58,11 @@ public class CustomLayer implements Layer {
         g.setColor(Color.blue);
         draw(g, shapes);
 
-        // label Canberra
-        Point p = projector.toPoint(CANBERRA_LAT, CANBERRA_LON);
+        // label place
+        Point p = projector.toPoint(PLACE_LAT, PLACE_LON);
         g.setColor(Color.RED);
         g.setFont(g.getFont().deriveFont(24.0f).deriveFont(Font.BOLD));
-        g.drawString(CANBERRA, p.x + 5, p.y);
-
-        g.setColor(Color.red);
-        List<GeneralPath> paths = getPath(projector,
-                getCircle(position(CANBERRA_LAT, CANBERRA_LON), 400, 36));
-
-        draw(g, paths);
+        g.drawString(PLACE, p.x + 5, p.y);
 
     }
 

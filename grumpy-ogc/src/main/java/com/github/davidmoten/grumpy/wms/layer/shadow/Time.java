@@ -3,6 +3,7 @@ package com.github.davidmoten.grumpy.wms.layer.shadow;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Utility class to help with time-based calculations in Astronomy
@@ -18,7 +19,7 @@ public final class Time {
     private Time() {
     }
 
-    public static final double MILLISEC_PER_DAY = 86400000.0;
+    public static final double MILLISEC_PER_DAY = TimeUnit.DAYS.toMillis(1);
     public static final double BASE_JD = 2440587.5;
 
     /**

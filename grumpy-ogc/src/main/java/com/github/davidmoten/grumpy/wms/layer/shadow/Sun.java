@@ -69,7 +69,7 @@ public final class Sun {
      * @return the regional twilight or null if different twilights prevail
      * 
      */
-    public static Twilight getRegionTwilight(Bounds region, Position subSolarPoint) {
+    public static Twilight getRegionUniformTwilightValue(Bounds region, Position subSolarPoint) {
 
         Twilight regionTwilight = null;
 
@@ -97,6 +97,10 @@ public final class Sun {
             }
         }
         return regionTwilight;
+    }
+
+    public static Position getPosition() {
+        return getPosition(null);
     }
 
     public static Position getPosition(Calendar time) {

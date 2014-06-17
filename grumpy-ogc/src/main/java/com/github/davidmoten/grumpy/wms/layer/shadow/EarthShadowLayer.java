@@ -14,13 +14,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.FeatureUtil;
 import com.github.davidmoten.grumpy.projection.Projector;
 import com.github.davidmoten.grumpy.projection.ProjectorBounds;
+import com.github.davidmoten.grumpy.projection.ProjectorTarget;
 import com.github.davidmoten.grumpy.wms.Layer;
 import com.github.davidmoten.grumpy.wms.RendererUtil;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
@@ -29,7 +27,7 @@ import com.github.davidmoten.grumpy.wms.layer.shadow.Sun.Twilight;
 
 public class EarthShadowLayer implements Layer {
 
-    private static final Logger log = LoggerFactory.getLogger(EarthShadowLayer.class);
+    private static final double SUB_SOLAR_POINT_SIZE_PIXELS = 20.0;
 
     private static HashMap<Twilight, Color> shades = new HashMap<Twilight, Color>();
 
@@ -59,108 +57,101 @@ public class EarthShadowLayer implements Layer {
     private void render(Graphics g, Projector projector, Bounds bounds, int width, int height) {
 
         Graphics2D g2d = (Graphics2D) g;
-        Position subSolarPoint = Sun.getPosition(null);
-
-        Color color = g.getColor();
+        Position subSolarPoint = Sun.getPosition();
         renderSubSolarPoint(g2d, subSolarPoint, projector);
-
         renderTwilight(g2d, subSolarPoint, projector, bounds);
-        g.setColor(color);
-
     }
 
-    private void renderSubSolarPoint(Graphics2D g, Position subSolarPoint, Projector projector) {
+    private static void renderSubSolarPoint(Graphics2D g, Position subSolarPoint,
+            Projector projector) {
 
         Ellipse2D spot = new Ellipse2D.Double();
-
         g.setColor(Color.YELLOW);
         LatLon latLon = new LatLon(subSolarPoint.getLat(), subSolarPoint.getLon());
         Point point = projector.toPoint(latLon.lat(), latLon.lon());
-        spot.setFrame(point.x - 10, point.y - 10, 20.0, 20.0);
+        spot.setFrame(point.x - SUB_SOLAR_POINT_SIZE_PIXELS / 2, point.y
+                - SUB_SOLAR_POINT_SIZE_PIXELS / 2, SUB_SOLAR_POINT_SIZE_PIXELS,
+                SUB_SOLAR_POINT_SIZE_PIXELS);
         g.fill(spot);
 
     }
 
-    private void renderTwilight(Graphics2D g, Position subSolarPoint, Projector projector,
+    private static void renderTwilight(Graphics2D g, Position subSolarPoint, Projector projector,
             Bounds geoBounds) {
 
-        Point min = projector.toPoint(geoBounds.getMin().lat(), geoBounds.getMin().lon());
-        Point max = projector.toPoint(geoBounds.getMax().lat(), geoBounds.getMax().lon());
-        Rectangle xyBounds = new Rectangle(min.x, max.y, max.x - min.x, min.y - max.y);
-
+        ProjectorTarget t = projector.getTarget();
+        Rectangle xyBounds = new Rectangle(0, 0, t.getWidth(), t.getHeight());
         renderTwilightRegion(g, subSolarPoint, projector, geoBounds, xyBounds);
-
     }
 
-    private void renderTwilightRegion(Graphics2D g, Position subSolarPoint, Projector projector,
-            Bounds geoBounds, Rectangle xyBounds) {
-
-        // g.setColor(Color.CYAN);
-        // g.draw(xyBounds);
+    private static void renderTwilightRegion(Graphics2D g, Position subSolarPoint,
+            Projector projector, Bounds geoBounds, Rectangle xyBounds) {
 
         // check if we need to divide the region
 
         final Twilight twilight;
 
-        if (xyBounds.height == 1 && xyBounds.width == 1) {
+        boolean regionDivisible = xyBounds.height > 1 || xyBounds.width > 1;
 
-            // region is indivisible, so fill it
-
+        if (!regionDivisible) {
+            // region is indivisible, so choose any corner for the twilight
+            // value
             twilight = Sun.getTwilight(subSolarPoint, new Position(geoBounds.getMin().lat(),
                     geoBounds.getMin().lon()));
         } else {
-            twilight = Sun.getRegionTwilight(geoBounds, subSolarPoint);
+            // get the twilight value for the region if common to all sample
+            // points in the region (if no common value returns null)
+            twilight = Sun.getRegionUniformTwilightValue(geoBounds, subSolarPoint);
         }
 
         if (twilight != null) {
-
             // shade the region to represent the twilight
-
-            if (twilight != Twilight.DAYLIGHT) {
-                g.setColor(shades.get(twilight));
-
-                List<Position> box = new ArrayList<Position>();
-                box.add(position(geoBounds.getMin().lat(), geoBounds.getMin().lon()));
-                box.add(position(geoBounds.getMin().lat(), geoBounds.getMax().lon()));
-                box.add(position(geoBounds.getMax().lat(), geoBounds.getMax().lon()));
-                box.add(position(geoBounds.getMax().lat(), geoBounds.getMin().lon()));
-                box.add(position(geoBounds.getMin().lat(), geoBounds.getMin().lon()));
-
-                List<GeneralPath> path = RendererUtil.getPath(projector, box);
-                RendererUtil.fill(g, path);
-                // g.fill(xyBounds);
-                g.setColor(Color.blue);
-                RendererUtil.draw(g, path);
-            }
-
+            shadeRegion(g, projector, geoBounds, twilight);
         } else {
-
             // region is a mix of twilight conditions and is divisble
             // so divide into sub regions ... 2 or 4
             // but only if we can
 
-            final Rectangle[] rectangles = splitRectangles(xyBounds);
-
-            // now render each region
-
-            for (Rectangle rect : rectangles) {
-                Position min = projector.toPosition(rect.x, rect.y + rect.height);
-                Position max = projector.toPosition(rect.x + rect.width, rect.y);
-
-                double minLon;
-                if (min.getLon() > max.getLon())
-                    minLon = min.getLon() - 360;
-                else
-                    minLon = min.getLon();
-
-                Bounds bounds = new Bounds(new LatLon(min.getLat(), minLon), new LatLon(
-                        max.getLat(), max.getLon()));
-                renderTwilightRegion(g, subSolarPoint, projector, bounds, rect);
-            }
+            renderTwilightOnSplitRegions(g, subSolarPoint, projector, xyBounds);
         }
     }
 
-    private Rectangle[] splitRectangles(Rectangle xyBounds) {
+    private static void renderTwilightOnSplitRegions(Graphics2D g, Position subSolarPoint,
+            Projector projector, Rectangle xyBounds) {
+        // split region
+        final Rectangle[] rectangles = splitRectangles(xyBounds);
+
+        // now render each region
+        for (Rectangle rect : rectangles) {
+            Position min = projector.toPosition(rect.x, rect.y + rect.height);
+            Position max = projector.toPosition(rect.x + rect.width, rect.y);
+            Bounds bounds = new Bounds(new LatLon(min.getLat(), min.getLon()), new LatLon(
+                    max.getLat(), max.getLon()));
+            renderTwilightRegion(g, subSolarPoint, projector, bounds, rect);
+        }
+    }
+
+    private static void shadeRegion(Graphics2D g, Projector projector, Bounds geoBounds,
+            final Twilight twilight) {
+        if (twilight != Twilight.DAYLIGHT) {
+
+            List<Position> box = new ArrayList<Position>();
+            box.add(position(geoBounds.getMin().lat(), geoBounds.getMin().lon()));
+            box.add(position(geoBounds.getMin().lat(), geoBounds.getMax().lon()));
+            box.add(position(geoBounds.getMax().lat(), geoBounds.getMax().lon()));
+            box.add(position(geoBounds.getMax().lat(), geoBounds.getMin().lon()));
+            box.add(position(geoBounds.getMin().lat(), geoBounds.getMin().lon()));
+
+            // use multiple paths to handle boundary weirdness
+            List<GeneralPath> path = RendererUtil.getPath(projector, box);
+
+            // fill the region
+            g.setColor(shades.get(twilight));
+            RendererUtil.fill(g, path);
+        }
+    }
+
+    private static Rectangle[] splitRectangles(Rectangle xyBounds) {
         final Rectangle[] rectangles;
 
         if (xyBounds.width > 1 && xyBounds.height > 1) {
