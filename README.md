@@ -7,6 +7,8 @@ Status: *released to Maven Central*, proper handling of longitude wrapping regio
 
 [Release Notes](RELEASE_NOTES.md)
 
+<img src="https://raw.githubusercontent.com/davidmoten/grumpy/master/src/docs/demo2.png"/>
+
 Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/). <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
 
 Features
