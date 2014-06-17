@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.FeatureUtil;
@@ -28,20 +29,14 @@ import com.github.davidmoten.grumpy.wms.layer.darkness.Sun.Twilight;
  * Splits the visible region into rectangles recursively till all sampled points
  * in each rectangle have the same {@link Twilight} value. Once the rectangle
  * has a uniform {@link Twilight} value it is drawn.
+ * 
+ * @author Steven Ring
+ * @author Dave Moten
  */
 public class DarknessLayer implements Layer {
 
     private static final double SUB_SOLAR_POINT_SIZE_PIXELS = 20.0;
-
-    private static HashMap<Twilight, Color> shades = new HashMap<Twilight, Color>();
-
-    static {
-        shades.put(Twilight.NIGHT, Color.BLACK);
-        shades.put(Twilight.ASTRONOMICAL, new Color(50, 50, 50));
-        shades.put(Twilight.NAUTICAL, new Color(100, 100, 100));
-        shades.put(Twilight.CIVIL, new Color(150, 150, 150));
-        shades.put(Twilight.DAYLIGHT, Color.WHITE);
-    }
+    private static final Map<Twilight, Color> shades = createShades();
 
     @Override
     public void render(Graphics2D g, WmsRequest request) {
@@ -204,6 +199,16 @@ public class DarknessLayer implements Layer {
                     - halfWidth, 1);
         }
         return rectangles;
+    }
+
+    private static Map<Twilight, Color> createShades() {
+        Map<Twilight, Color> shades = new HashMap<Twilight, Color>();
+        shades.put(Twilight.NIGHT, Color.BLACK);
+        shades.put(Twilight.ASTRONOMICAL, new Color(50, 50, 50));
+        shades.put(Twilight.NAUTICAL, new Color(100, 100, 100));
+        shades.put(Twilight.CIVIL, new Color(150, 150, 150));
+        shades.put(Twilight.DAYLIGHT, Color.WHITE);
+        return shades;
     }
 
     @Override
