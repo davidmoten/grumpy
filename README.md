@@ -40,7 +40,11 @@ And at the map link you will see this:
 
 This demonstrates a custom filled shape and some text that is placed with transparency over the position of Canberra on the map. Notice that the borders are great circle paths.
 
-How is it done? Easy!
+Click in the Canberra box and you will see a demo of WMS GetFeatureInfo:
+
+<img src="https://raw.githubusercontent.com/davidmoten/grumpy/master/src/docs/demo3.png"/>
+
+How is it all done? Easy!
 
 Getting started
 -------------------
