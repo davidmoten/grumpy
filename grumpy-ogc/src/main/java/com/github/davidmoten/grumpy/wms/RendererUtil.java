@@ -52,17 +52,10 @@ public class RendererUtil {
                 firstPointLon = p.getLon();
                 list.add(firstPoint);
             } else {
-                // TODO create intermediate points on great circle
                 com.vividsolutions.jts.geom.Point point = projector.getGeometryPointInSrsRelativeTo(p.getLat(),
                         p.getLon(), firstPointLat, firstPointLon, firstPoint.getX(), firstPoint.getY());
                 list.add(point);
             }
-            // GeneralPath line = new NearBSpline(getPoints(projector,
-            // positions)).getPath();
-            //
-            // path.append(line.getPathIterator(AffineTransform.getTranslateInstance(0,
-            // 0)), true);
-
         }
         return list;
     }

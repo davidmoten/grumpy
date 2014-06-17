@@ -27,6 +27,13 @@
             <artifactId>grumpy-ogc</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        
+        <!--  Darkness layer comes from here -->
+        <dependency>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>grumpy-ogc-layers</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
