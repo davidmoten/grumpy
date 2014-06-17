@@ -1,6 +1,10 @@
 package com.github.davidmoten.grumpy.wms.demo;
 
 import static com.github.davidmoten.grumpy.core.Position.position;
+import static com.github.davidmoten.grumpy.wms.RendererUtil.draw;
+import static com.github.davidmoten.grumpy.wms.RendererUtil.fill;
+import static com.github.davidmoten.grumpy.wms.RendererUtil.getCircle;
+import static com.github.davidmoten.grumpy.wms.RendererUtil.getPath;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -45,15 +49,15 @@ public class CustomLayer implements Layer {
 		g.setColor(Color.white);
 
 		// get the box around Canberra as a shape
-		List<GeneralPath> shapes = RendererUtil.getPath(projector, box);
+		List<GeneralPath> shapes = getPath(projector, box);
 
 		// fill the box with white
 		// transparency is deferred to the wms client framework
-		RendererUtil.fill(g, shapes);
+		fill(g, shapes);
 
 		// draw border in blue
 		g.setColor(Color.blue);
-		RendererUtil.draw(g, shapes);
+		draw(g, shapes);
 
 		// label Canberra
 		Point p = projector.toPoint(CANBERRA_LAT, CANBERRA_LON);
@@ -62,12 +66,10 @@ public class CustomLayer implements Layer {
 		g.drawString(CANBERRA, p.x + 5, p.y);
 
 		g.setColor(Color.red);
-		List<GeneralPath> paths = RendererUtil.getPath(projector, RendererUtil
-				.getCircle(position(CANBERRA_LAT, CANBERRA_LON), 400, 36));
+		List<GeneralPath> paths = getPath(projector,
+				getCircle(position(CANBERRA_LAT, CANBERRA_LON), 400, 36));
 
-		// for (Shape path : paths)
-		// g.draw(path);
-		RendererUtil.draw(g, paths);
+		draw(g, paths);
 
 	}
 
