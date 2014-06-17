@@ -73,12 +73,18 @@ public final class Sun {
 
         Twilight regionTwilight = null;
 
-        Position[] corners = new Position[4];
+        Position[] corners = new Position[8];
 
+        double midLat = (region.getMin().lat() + region.getMax().lat()) / 2;
+        double midLon = (region.getMin().lon() + region.getMax().lon()) / 2;
         corners[0] = new Position(region.getMin().lat(), region.getMin().lon());
         corners[1] = new Position(region.getMax().lat(), region.getMin().lon());
         corners[2] = new Position(region.getMax().lat(), region.getMax().lon());
         corners[3] = new Position(region.getMin().lat(), region.getMax().lon());
+        corners[4] = new Position(midLat, region.getMax().lon());
+        corners[5] = new Position(midLat, region.getMin().lon());
+        corners[6] = new Position(region.getMin().lat(), midLon);
+        corners[7] = new Position(region.getMax().lat(), midLon);
 
         for (Position corner : corners) {
             double distKm = corner.getDistanceToKm(subSolarPoint);

@@ -19,4 +19,15 @@ public class LatLon {
         return lon;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("LatLon [lat=");
+        builder.append(lat);
+        builder.append(", lon=");
+        builder.append(lon);
+        builder.append("]");
+        return builder.toString();
+    }
+
 }

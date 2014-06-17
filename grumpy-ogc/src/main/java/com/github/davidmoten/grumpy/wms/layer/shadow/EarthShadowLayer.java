@@ -1,8 +1,6 @@
 package com.github.davidmoten.grumpy.wms.layer.shadow;
 
-import static com.github.davidmoten.grumpy.wms.RendererUtil.draw;
-import static com.github.davidmoten.grumpy.wms.RendererUtil.getCircle;
-import static com.github.davidmoten.grumpy.wms.RendererUtil.getPath;
+import static com.github.davidmoten.grumpy.core.Position.position;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -10,8 +8,11 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import com.github.davidmoten.grumpy.projection.FeatureUtil;
 import com.github.davidmoten.grumpy.projection.Projector;
 import com.github.davidmoten.grumpy.projection.ProjectorBounds;
 import com.github.davidmoten.grumpy.wms.Layer;
+import com.github.davidmoten.grumpy.wms.RendererUtil;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
 import com.github.davidmoten.grumpy.wms.layer.shadow.Sun.Twilight;
@@ -62,31 +64,8 @@ public class EarthShadowLayer implements Layer {
         Color color = g.getColor();
         renderSubSolarPoint(g2d, subSolarPoint, projector);
 
-        renderTwilightSimple(g2d, subSolarPoint, projector, bounds);
-
-        // renderTwilight(g2d, subSolarPoint, projector, bounds);
+        renderTwilight(g2d, subSolarPoint, projector, bounds);
         g.setColor(color);
-
-    }
-
-    private void renderTwilightSimple(Graphics2D g, Position subSolarPoint, Projector projector,
-            Bounds bounds) {
-        log.info("rendering twilight");
-        ProjectorBounds b = projector.getBounds();
-        for (int i = 0; i < projector.getTarget().getWidth(); i++) {
-            for (int j = 0; j < projector.getTarget().getHeight(); j++) {
-                double propX = (double) i / projector.getTarget().getWidth();
-                double propY = (double) i / projector.getTarget().getHeight();
-                double x = b.getMinX() + propX * (b.getMaxX() - b.getMinX());
-                double y = b.getMaxY() - propY * (b.getMaxY() - b.getMinY());
-                Position p = projector.toPosition(x, y);
-                Twilight twilight = Sun.getTwilight(subSolarPoint, p);
-                Color shade = shades.get(twilight);
-                g.setColor(shade);
-                g.fillRect(j, j, i + 1, j + 1);
-            }
-        }
-        log.info("rendered twilight");
 
     }
 
@@ -100,20 +79,6 @@ public class EarthShadowLayer implements Layer {
         spot.setFrame(point.x - 10, point.y - 10, 20.0, 20.0);
         g.fill(spot);
 
-        log.info("rendering circle");
-        g.setColor(Color.RED);
-        draw(g, getPath(projector, getCircle(subSolarPoint, Constants.EARTH_RADIUS_KM, 10)));
-        draw(g,
-                getPath(projector,
-                        getCircle(subSolarPoint, 96 / 90.0 * Constants.EARTH_RADIUS_KM, 10)));
-        draw(g,
-                getPath(projector,
-                        getCircle(subSolarPoint, 102 / 90.0 * Constants.EARTH_RADIUS_KM, 10)));
-        draw(g,
-                getPath(projector,
-                        getCircle(subSolarPoint, 118 / 90.0 * Constants.EARTH_RADIUS_KM, 10)));
-
-        log.info("rendered circle");
     }
 
     private void renderTwilight(Graphics2D g, Position subSolarPoint, Projector projector,
@@ -135,7 +100,7 @@ public class EarthShadowLayer implements Layer {
 
         // check if we need to divide the region
 
-        Twilight twilight = null;
+        final Twilight twilight;
 
         if (xyBounds.height == 1 && xyBounds.width == 1) {
 
@@ -153,7 +118,19 @@ public class EarthShadowLayer implements Layer {
 
             if (twilight != Twilight.DAYLIGHT) {
                 g.setColor(shades.get(twilight));
-                g.fill(xyBounds);
+
+                List<Position> box = new ArrayList<Position>();
+                box.add(position(geoBounds.getMin().lat(), geoBounds.getMin().lon()));
+                box.add(position(geoBounds.getMin().lat(), geoBounds.getMax().lon()));
+                box.add(position(geoBounds.getMax().lat(), geoBounds.getMax().lon()));
+                box.add(position(geoBounds.getMax().lat(), geoBounds.getMin().lon()));
+                box.add(position(geoBounds.getMin().lat(), geoBounds.getMin().lon()));
+
+                List<GeneralPath> path = RendererUtil.getPath(projector, box);
+                RendererUtil.fill(g, path);
+                // g.fill(xyBounds);
+                g.setColor(Color.blue);
+                RendererUtil.draw(g, path);
             }
 
         } else {
@@ -162,43 +139,7 @@ public class EarthShadowLayer implements Layer {
             // so divide into sub regions ... 2 or 4
             // but only if we can
 
-            Rectangle[] rectangles = null;
-
-            if (xyBounds.width > 1 && xyBounds.height > 1) {
-
-                // divide into 4 sub regions
-
-                rectangles = new Rectangle[4];
-                rectangles[0] = new Rectangle(xyBounds.x, xyBounds.y, xyBounds.width / 2,
-                        xyBounds.height / 2);
-                rectangles[1] = new Rectangle(xyBounds.x + rectangles[0].width, xyBounds.y,
-                        xyBounds.width - rectangles[0].width, rectangles[0].height);
-                rectangles[2] = new Rectangle(rectangles[1].x, xyBounds.y + rectangles[1].height,
-                        rectangles[1].width, xyBounds.height - rectangles[1].height);
-                rectangles[3] = new Rectangle(xyBounds.x, xyBounds.y + rectangles[0].height,
-                        rectangles[0].width, rectangles[2].height);
-
-            } else if (xyBounds.height > 1) {
-
-                // divide into two vertically
-
-                rectangles = new Rectangle[2];
-
-                rectangles[0] = new Rectangle(xyBounds.x, xyBounds.y, 1, xyBounds.height / 2);
-                rectangles[1] = new Rectangle(xyBounds.x, xyBounds.y + rectangles[0].height, 1,
-                        xyBounds.height - rectangles[0].height);
-
-            } else {
-
-                // divide into two horizontally
-
-                rectangles = new Rectangle[2];
-
-                rectangles[0] = new Rectangle(xyBounds.x, xyBounds.y, xyBounds.width / 2, 1);
-                rectangles[1] = new Rectangle(xyBounds.x + rectangles[0].width, xyBounds.y,
-                        xyBounds.width - rectangles[0].width, 1);
-
-            }
+            final Rectangle[] rectangles = splitRectangles(xyBounds);
 
             // now render each region
 
@@ -206,11 +147,59 @@ public class EarthShadowLayer implements Layer {
                 Position min = projector.toPosition(rect.x, rect.y + rect.height);
                 Position max = projector.toPosition(rect.x + rect.width, rect.y);
 
-                Bounds bounds = new Bounds(new LatLon(min.getLat(), min.getLon()), new LatLon(
+                double minLon;
+                if (min.getLon() > max.getLon())
+                    minLon = min.getLon() - 360;
+                else
+                    minLon = min.getLon();
+
+                Bounds bounds = new Bounds(new LatLon(min.getLat(), minLon), new LatLon(
                         max.getLat(), max.getLon()));
                 renderTwilightRegion(g, subSolarPoint, projector, bounds, rect);
             }
         }
+    }
+
+    private Rectangle[] splitRectangles(Rectangle xyBounds) {
+        final Rectangle[] rectangles;
+
+        if (xyBounds.width > 1 && xyBounds.height > 1) {
+
+            // divide into 4 sub regions
+
+            rectangles = new Rectangle[4];
+            int halfWidth = xyBounds.width / 2;
+            int halfHeight = xyBounds.height / 2;
+            rectangles[0] = new Rectangle(xyBounds.x, xyBounds.y, halfWidth, halfHeight);
+            rectangles[1] = new Rectangle(xyBounds.x + halfWidth, xyBounds.y, xyBounds.width
+                    - halfWidth, halfHeight);
+            rectangles[2] = new Rectangle(xyBounds.x + halfWidth, xyBounds.y + halfHeight,
+                    xyBounds.width - halfWidth, xyBounds.height - halfHeight);
+            rectangles[3] = new Rectangle(xyBounds.x, xyBounds.y + halfHeight, halfWidth,
+                    xyBounds.height - halfHeight);
+
+        } else if (xyBounds.height > 1) {
+
+            // divide into two vertically
+
+            rectangles = new Rectangle[2];
+
+            int halfHeight = xyBounds.height / 2;
+            rectangles[0] = new Rectangle(xyBounds.x, xyBounds.y, 1, halfHeight);
+            rectangles[1] = new Rectangle(xyBounds.x, xyBounds.y + halfHeight, 1, xyBounds.height
+                    - halfHeight);
+
+        } else {
+
+            // divide into two horizontally
+
+            rectangles = new Rectangle[2];
+            int halfWidth = xyBounds.width / 2;
+            rectangles[0] = new Rectangle(xyBounds.x, xyBounds.y, halfWidth, 1);
+            rectangles[1] = new Rectangle(xyBounds.x + halfWidth, xyBounds.y, xyBounds.width
+                    - halfWidth, 1);
+        }
+        return rectangles;
     }
 
     @Override

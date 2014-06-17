@@ -1,21 +1,31 @@
 package com.github.davidmoten.grumpy.wms.layer.shadow;
 
 public class Bounds {
-    private final LatLon a;
-    private final LatLon b;
+    private final LatLon min;
+    private final LatLon max;
 
-    public Bounds(LatLon a, LatLon b) {
-        super();
-        this.a = a;
-        this.b = b;
+    public Bounds(LatLon min, LatLon max) {
+        this.min = min;
+        this.max = max;
     }
 
     public LatLon getMin() {
-        return a;
+        return min;
     }
 
     public LatLon getMax() {
-        return b;
+        return max;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Bounds [min=");
+        builder.append(min);
+        builder.append(", max=");
+        builder.append(max);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

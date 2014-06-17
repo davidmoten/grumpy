@@ -209,23 +209,24 @@ public class WmsServletRequestProcessor {
             // bug:
             // http://bugs.sun.com/bugdatabase/view_bug.do;jsessionid=dc84943191e06dffffffffdf200f5210dd319?bug_id=6967419
             // which is commented on further in JIRA ER-95
-            log.info("writing image to memory");
+            log.info("writing image to memory for layers " + wmsRequest.getLayers());
             ByteArrayOutputStream byteOs = new ByteArrayOutputStream();
             String imageType = wmsRequest.getFormat().substring(
                     wmsRequest.getFormat().indexOf('/') + 1);
             // This call is slow!!
             long t = System.currentTimeMillis();
             imageWriter.writeImage(image, byteOs, imageType);
-            log.info("ImageIoWriteTimeMs=  " + (System.currentTimeMillis() - t));
+            log.info("ImageIoWriteTimeMs=" + (System.currentTimeMillis() - t));
             bytes = byteOs.toByteArray();
             imageCache.put(wmsRequest, bytes);
         } else
-            log.info("obtained image from cache");
+            log.info("obtained image from cache for layers " + wmsRequest.getLayers());
 
-        log.info("writing image to http output stream");
+        log.info("writing image to http output stream for layers " + wmsRequest.getLayers());
         response.getOutputStream().write(bytes);
         response.getOutputStream().flush();
-        log.info("imageSizeK=" + new DecimalFormat("0.000").format(bytes.length / 1000.0));
+        log.info("imageSizeK=" + new DecimalFormat("0.000").format(bytes.length / 1000.0)
+                + " for layers " + wmsRequest.getLayers());
     }
 
     private void writeFeatureInfo(HttpServletRequest request, HttpServletResponse response)
