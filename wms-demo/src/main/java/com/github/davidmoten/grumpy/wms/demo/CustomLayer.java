@@ -6,7 +6,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,13 +49,11 @@ public class CustomLayer implements Layer {
 
 		// fill the box with white
 		// transparency is deferred to the wms client framework
-		for (Shape shape : shapes)
-			g.fill(shape);
+		RendererUtil.fill(g, shapes);
 
 		// draw border in blue
 		g.setColor(Color.blue);
-		for (Shape shape : shapes)
-			g.draw(shape);
+		RendererUtil.draw(g, shapes);
 
 		// label Canberra
 		Point p = projector.toPoint(CANBERRA_LAT, CANBERRA_LON);
@@ -65,9 +62,12 @@ public class CustomLayer implements Layer {
 		g.drawString(CANBERRA, p.x + 5, p.y);
 
 		g.setColor(Color.red);
-		for (Shape path : RendererUtil.getPath(projector, RendererUtil
-				.getCircle(position(CANBERRA_LAT, CANBERRA_LON), 400, 36)))
-			g.draw(path);
+		List<GeneralPath> paths = RendererUtil.getPath(projector, RendererUtil
+				.getCircle(position(CANBERRA_LAT, CANBERRA_LON), 400, 36));
+
+		// for (Shape path : paths)
+		// g.draw(path);
+		RendererUtil.draw(g, paths);
 
 	}
 

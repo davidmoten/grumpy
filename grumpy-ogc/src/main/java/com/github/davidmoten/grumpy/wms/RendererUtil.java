@@ -111,31 +111,31 @@ public class RendererUtil {
 		return list;
 	}
 
-	private static GeneralPath createPath(Projector projector,
-			List<Position> positions, double deltaX) {
-		GeneralPath path = new GeneralPath();
-		Position firstPosition = positions.get(0);
-		com.vividsolutions.jts.geom.Point first = projector
-				.getGeometryPointInSrs(firstPosition.getLat(),
-						firstPosition.getLon());// projected values
+	private static List<com.vividsolutions.jts.geom.Point> getPathPoints(
+			Projector projector, List<Position> positions, double deltaX) {
+		System.out.println("Path points");
+		List<com.vividsolutions.jts.geom.Point> list = new ArrayList<com.vividsolutions.jts.geom.Point>();
 		Double firstPointLat = null;
 		Double firstPointLon = null;
 		com.vividsolutions.jts.geom.Point firstPoint = null;
-		for (Position p : positions) {
+		for (Position pos : positions) {
+			Position p = pos.normalizeLongitude();
 			if (firstPoint == null) {
 				firstPoint = projector.getFirstXAfter(projector, p.getLat(),
 						p.getLon(), projector.getBounds().getMinX() - deltaX);
 				firstPointLat = p.getLat();
 				firstPointLon = p.getLon();
-				Point2D.Double pt = projector.getTargetPoint(firstPoint);
-				path.moveTo(pt.x, pt.y);
+				list.add(firstPoint);
 			} else {
 				com.vividsolutions.jts.geom.Point point = projector
 						.getGeometryPointInSrsRelativeTo(p.getLat(),
 								p.getLon(), firstPointLat, firstPointLon,
 								firstPoint.getX(), firstPoint.getY());
-				Point2D.Double pt = projector.getTargetPoint(point);
-				path.lineTo(pt.x, pt.y);
+				System.out
+						.println("point=" + point.getX() + "," + point.getY());
+				if (Math.abs(point.getX() - -2.3474564412726045E7) < 0.1)
+					System.out.println("here");
+				list.add(point);
 			}
 			// GeneralPath line = new NearBSpline(getPoints(projector,
 			// positions)).getPath();
@@ -144,15 +144,32 @@ public class RendererUtil {
 			// 0)), true);
 
 		}
+		return list;
+	}
+
+	private static GeneralPath createPath(Projector projector,
+			List<Position> positions, double deltaX) {
+		List<com.vividsolutions.jts.geom.Point> points = getPathPoints(
+				projector, positions, deltaX);
+		GeneralPath path = new GeneralPath();
+		boolean first = true;
+		for (com.vividsolutions.jts.geom.Point point : points) {
+			Point2D.Double pt = projector.getTargetPoint(point);
+			if (first) {
+				path.moveTo(pt.x, pt.y);
+				first = false;
+			} else
+				path.lineTo(pt.x, pt.y);
+		}
 		return path;
 	}
 
 	public static Shape getPath2(Projector projector, List<Position> positions) {
-		return getPath(projector,
+		return getPathObsolete(projector,
 				DEFAULT_MAX_DISTANCE_BETWEEN_POINTS_IN_PIXELS, positions);
 	}
 
-	public static Shape getPath(Projector projector,
+	public static Shape getPathObsolete(Projector projector,
 			double maxDistanceBetweenPointsInPixels,
 			List<Position> mainPositions) {
 
@@ -253,6 +270,16 @@ public class RendererUtil {
 				new HashMap<String, String>(), null, null);
 
 		return r;
+	}
+
+	public static void draw(Graphics2D g, List<? extends Shape> shapes) {
+		for (Shape shape : shapes)
+			g.draw(shape);
+	}
+
+	public static void fill(Graphics2D g, List<? extends Shape> shapes) {
+		for (Shape shape : shapes)
+			g.fill(shape);
 	}
 
 }

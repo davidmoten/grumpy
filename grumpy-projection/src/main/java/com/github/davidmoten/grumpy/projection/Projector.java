@@ -83,12 +83,17 @@ public class Projector {
 		// makes the assumption that increasing lon = increasing X
 		// which is probably valid for most common projections
 		// TODO determine when invalid or handle
-		if (sign >= 0)
+		if (sign >= 0) {
 			while (x - periodAtLat >= relativeX)
 				x -= periodAtLat;
-		else
+			while (x < relativeX)
+				x += periodAtLat;
+		} else {
+			while (x >= relativeX)
+				x -= periodAtLat;
 			while (x + periodAtLat < relativeX)
 				x += periodAtLat;
+		}
 
 		return createPoint(x, point.getY());
 	}
@@ -102,9 +107,8 @@ public class Projector {
 				- getGeometryPointInSrs(lat, -180).getX();
 	}
 
-	public Point2D.Double getTargetPoint(
-			com.vividsolutions.jts.geom.Point point, double diffX) {
-		double proportionX = (point.getX() + diffX - bounds.getMinX())
+	public Point2D.Double getTargetPoint(com.vividsolutions.jts.geom.Point point) {
+		double proportionX = (point.getX() - bounds.getMinX())
 				/ (bounds.getMaxX() - bounds.getMinX());
 		double proportionY = (bounds.getMaxY() - point.getY())
 				/ (bounds.getMaxY() - bounds.getMinY());
@@ -124,10 +128,6 @@ public class Projector {
 		while (x2 + periodX < x)
 			x2 += periodX;
 		return createPoint(x2, point.getY());
-	}
-
-	public Point2D.Double getTargetPoint(com.vividsolutions.jts.geom.Point point) {
-		return getTargetPoint(point, 0);
 	}
 
 	public Point toPoint(double lat, double lon) {
