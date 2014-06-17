@@ -29,7 +29,7 @@ public class CustomLayer implements Layer {
     private final List<Position> box;
 
     public CustomLayer() {
-        // prepare a box around Canberra
+        // prepare a box around place
         box = new ArrayList<Position>();
         box.add(position(PLACE_LAT - 2, PLACE_LON - 4));
         box.add(position(PLACE_LAT + 2, PLACE_LON - 4));
@@ -45,13 +45,12 @@ public class CustomLayer implements Layer {
 
         Projector projector = WmsUtil.getProjector(request);
 
-        g.setColor(Color.white);
-
         // get the box around place as a shape
         List<GeneralPath> shapes = getPath(projector, box);
 
         // fill the box with white
         // transparency is deferred to the wms client framework
+        g.setColor(Color.white);
         fill(g, shapes);
 
         // draw border in blue
