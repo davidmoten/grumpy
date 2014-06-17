@@ -25,6 +25,16 @@ function addLayers(map) {
                 
     map.addLayer(layer2);
     
+    ///////////////////////////////////////////
+    // add the Fiddle layer
+    ///////////////////////////////////////////
+    var layer3 = new OpenLayers.Layer.WMS( "Fiddle",
+                wmsUrl, 
+                {layers: 'Fiddle',transparent: "true", format: "image/png"},
+                {gutter:15,singleTile:true, visibility:true,opacity: 0.5,animationEnabled: true});
+                
+    map.addLayer(layer3);
+    
     ////////////////////////////////////////////////////
     // setup getFeatureInfo on click for all layers
     ////////////////////////////////////////////////////s

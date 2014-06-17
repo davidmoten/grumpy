@@ -111,8 +111,7 @@ public class DarknessLayer implements Layer {
         } else {
             // get the twilight value for the region if common to all sample
             // points in the region (if no common value returns null)
-            regionUniformTwilightValue = SunUtil
-                    .getUniformTwilight(geoBounds, subSolarPoint);
+            regionUniformTwilightValue = SunUtil.getUniformTwilight(geoBounds, subSolarPoint);
         }
 
         if (regionUniformTwilightValue != null) {

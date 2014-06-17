@@ -17,7 +17,8 @@ public class RendererUtil {
         RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
         renderHints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        renderHints.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        renderHints.put(RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g.addRenderingHints(renderHints);
     }
 
@@ -32,13 +33,14 @@ public class RendererUtil {
             throw new RuntimeException("must provide at least two positions");
 
         list.add(createPath(projector, positions, 0));
+        list.add(createPath(projector, positions, -projector.periodAtLat(0)));
         list.add(createPath(projector, positions, projector.periodAtLat(0)));
 
         return list;
     }
 
-    private static List<com.vividsolutions.jts.geom.Point> getPathPoints(Projector projector, List<Position> positions,
-            double deltaX) {
+    private static List<com.vividsolutions.jts.geom.Point> getPathPoints(Projector projector,
+            List<Position> positions, double deltaX) {
         List<com.vividsolutions.jts.geom.Point> list = new ArrayList<com.vividsolutions.jts.geom.Point>();
         Double firstPointLat = null;
         Double firstPointLon = null;
@@ -46,21 +48,23 @@ public class RendererUtil {
         for (Position pos : positions) {
             Position p = pos.normalizeLongitude();
             if (firstPoint == null) {
-                firstPoint = projector.getFirstXAfter(projector, p.getLat(), p.getLon(), projector.getBounds()
-                        .getMinX() - deltaX);
+                firstPoint = projector.getFirstXAfter(projector, p.getLat(), p.getLon(), projector
+                        .getBounds().getMinX() + deltaX);
                 firstPointLat = p.getLat();
                 firstPointLon = p.getLon();
                 list.add(firstPoint);
             } else {
-                com.vividsolutions.jts.geom.Point point = projector.getGeometryPointInSrsRelativeTo(p.getLat(),
-                        p.getLon(), firstPointLat, firstPointLon, firstPoint.getX(), firstPoint.getY());
+                com.vividsolutions.jts.geom.Point point = projector
+                        .getGeometryPointInSrsRelativeTo(p.getLat(), p.getLon(), firstPointLat,
+                                firstPointLon, firstPoint.getX(), firstPoint.getY());
                 list.add(point);
             }
         }
         return list;
     }
 
-    private static GeneralPath createPath(Projector projector, List<Position> positions, double deltaX) {
+    private static GeneralPath createPath(Projector projector, List<Position> positions,
+            double deltaX) {
         List<com.vividsolutions.jts.geom.Point> points = getPathPoints(projector, positions, deltaX);
         GeneralPath path = new GeneralPath();
         boolean first = true;

@@ -27,12 +27,15 @@ public class WmsServlet extends HttpServlet {
                 .addCachedLayer("Custom", new CustomLayer())
                 // add darkness, not cached
                 .addLayer("Darkness", new DarknessLayer())
+                // add fiddles layer
+                .addLayer("Fiddle", new FiddleLayer())
                 // build it up
                 .build();
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+            IOException {
 
         // use the processor to handle requests
         processor.doGet(req, resp);
