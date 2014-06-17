@@ -95,7 +95,9 @@ public class ImageCache {
      * Enables/disables a layer for caching.
      * 
      * @param layerName
+     *            name of the WMS layer
      * @param enabled
+     *            is true if want to cache
      */
     public void setEnabled(String layerName, boolean enabled) {
         synchronized (this) {
@@ -128,7 +130,8 @@ public class ImageCache {
      * if no corresponding image exists in the cache.
      * 
      * @param request
-     * @return
+     *            the WMS http request
+     * @return bytes of the image
      */
     public byte[] get(WmsRequest request) {
         synchronized (this) {
@@ -141,7 +144,9 @@ public class ImageCache {
      * Sets the cached image for the request.
      * 
      * @param request
+     *            the WMS http request
      * @param image
+     *            bytes of the image
      */
     public synchronized void put(WmsRequest request, byte[] image) {
         synchronized (this) {
@@ -163,7 +168,8 @@ public class ImageCache {
      * Flags the given layer as a layer to be cached.
      * 
      * @param layerName
-     * @return
+     *            is the name of the WMS layer
+     * @return this
      */
     public ImageCache add(String layerName) {
         setEnabled(layerName, true);
