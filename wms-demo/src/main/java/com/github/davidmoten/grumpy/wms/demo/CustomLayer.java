@@ -27,7 +27,7 @@ public class CustomLayer implements Layer {
 	private static final String CANBERRA = "Canberra";
 	private static final double CANBERRA_LAT = -35.3075;
 	private static final double CANBERRA_LON = 149.1244;
-	private final ArrayList<Position> box;
+	private final List<Position> box;
 
 	public CustomLayer() {
 		// prepare a box around Canberra
