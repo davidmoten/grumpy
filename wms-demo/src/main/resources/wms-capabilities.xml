@@ -96,7 +96,7 @@
         <Layer>
             <Title>Miscellaneous</Title>
             <CRS>EPSG:4326</CRS>
-            <!-- <CRS>EPSG:3785</CRS> -->
+            <CRS>EPSG:3857</CRS> 
             <!-- all layers are available in at least this CRS -->
 
             <EX_GeographicBoundingBox>
