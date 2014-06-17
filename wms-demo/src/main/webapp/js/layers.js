@@ -6,7 +6,7 @@ function addLayers(map) {
     // setup the custom wms layer
     ///////////////////////////////////////////
 
-    var customWmsUrl = "http://localhost:8080/wms-demo/wms";
+    var customWmsUrl = "wms";
     
     var layer1 = new OpenLayers.Layer.WMS( "Custom WMS Layer",
                 customWmsUrl, 
