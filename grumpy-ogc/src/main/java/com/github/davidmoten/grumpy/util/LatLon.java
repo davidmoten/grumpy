@@ -1,4 +1,4 @@
-package com.github.davidmoten.grumpy.wms.layer.darkness;
+package com.github.davidmoten.grumpy.util;
 
 public class LatLon {
 

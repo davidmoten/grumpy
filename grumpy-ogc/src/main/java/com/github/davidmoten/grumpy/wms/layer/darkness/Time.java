@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Utility class to help with time-based calculations in Astronomy
  * 
- * @author smr
+ * @author Steven Ring
  * 
  */
 public final class Time {
@@ -19,7 +19,7 @@ public final class Time {
     private Time() {
     }
 
-    public static final double MILLISEC_PER_DAY = TimeUnit.DAYS.toMillis(1);
+    private static final double MILLISEC_PER_DAY = TimeUnit.DAYS.toMillis(1);
     public static final double BASE_JD = 2440587.5;
 
     /**
@@ -40,12 +40,6 @@ public final class Time {
         double jd = BASE_JD + time.getTimeInMillis() / MILLISEC_PER_DAY;
 
         return jd;
-    }
-
-    public static void main(String[] args) {
-
-        double jd = Time.getJulianDayNumber(null);
-        System.out.println("Julian day number now is: " + jd);
     }
 
 }

@@ -1,14 +1,21 @@
 package com.github.davidmoten.grumpy.wms.layer.darkness;
 
 import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.davidmoten.grumpy.core.Position;
+import com.github.davidmoten.grumpy.util.Bounds;
 
+/**
+ * @author Steven Ring
+ *
+ */
 public final class Sun {
+
+    private static Logger log = LoggerFactory.getLogger(Sun.class);
+    private static final double EARTH_RADIUS_KM = 6378.0;
 
     /**
      * Constructor to prevent inheritance
@@ -16,14 +23,9 @@ public final class Sun {
     private Sun() {
     }
 
-    private static Logger log = LoggerFactory.getLogger(Sun.class);
-
     public static enum Twilight {
         NIGHT, ASTRONOMICAL, NAUTICAL, CIVIL, DAYLIGHT
     }
-
-    public static final double BASE_JD = 2440587.5;
-    public static final double MILLSEC_PER_DAY = TimeUnit.DAYS.toMillis(1);
 
     /**
      * Return the twilight condition for a point which is a given great circle
@@ -52,7 +54,7 @@ public final class Sun {
 
     public static Twilight getTwilight(Position subSolarPoint, Position somePosition) {
         double distKm = somePosition.getDistanceToKm(subSolarPoint);
-        double distRads = distKm / Constants.EARTH_RADIUS_KM;
+        double distRads = distKm / EARTH_RADIUS_KM;
         return getTwilight(distRads);
     }
 
@@ -86,7 +88,7 @@ public final class Sun {
 
         for (Position corner : corners) {
             double distKm = corner.getDistanceToKm(subSolarPoint);
-            double distRads = distKm / Constants.EARTH_RADIUS_KM;
+            double distRads = distKm / EARTH_RADIUS_KM;
             Twilight tl = getTwilight(distRads);
             if (regionTwilight == null) {
                 regionTwilight = tl;
