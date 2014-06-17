@@ -79,6 +79,11 @@ cd grumpy
 mvn clean install
 ```
 
+TODO
+-------------
+* test large circles in various places
+* interpolate great circle paths
+
 Why Grumpy?
 ---------------
 The project name was chosen at random and is no hint at the disposition of the primary developer! I'm very happy to receive contributions on this project. Just raise an issue.
