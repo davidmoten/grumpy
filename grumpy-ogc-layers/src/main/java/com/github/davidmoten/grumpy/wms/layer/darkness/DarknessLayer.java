@@ -25,7 +25,7 @@ import com.github.davidmoten.grumpy.wms.Layer;
 import com.github.davidmoten.grumpy.wms.RendererUtil;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
-import com.github.davidmoten.grumpy.wms.layer.darkness.Sun.Twilight;
+import com.github.davidmoten.grumpy.wms.layer.darkness.SunUtil.Twilight;
 
 /**
  * Splits the visible region into rectangles recursively till all sampled points
@@ -69,7 +69,7 @@ public class DarknessLayer implements Layer {
      */
     private void render(Graphics2D g, Projector projector, Bounds bounds, int width, int height) {
 
-        Position subSolarPoint = Sun.getPosition();
+        Position subSolarPoint = SunUtil.getSubSolarPoint();
         renderSubSolarPoint(g, subSolarPoint, projector);
         renderTwilight(g, subSolarPoint, projector, bounds);
     }
@@ -106,13 +106,13 @@ public class DarknessLayer implements Layer {
         if (!regionDivisible) {
             // region is indivisible, so choose any corner for the twilight
             // value
-            regionUniformTwilightValue = Sun.getTwilight(subSolarPoint, new Position(geoBounds
+            regionUniformTwilightValue = SunUtil.getTwilight(subSolarPoint, new Position(geoBounds
                     .getMin().lat(), geoBounds.getMin().lon()));
         } else {
             // get the twilight value for the region if common to all sample
             // points in the region (if no common value returns null)
-            regionUniformTwilightValue = Sun
-                    .getRegionUniformTwilightValue(geoBounds, subSolarPoint);
+            regionUniformTwilightValue = SunUtil
+                    .getUniformTwilight(geoBounds, subSolarPoint);
         }
 
         if (regionUniformTwilightValue != null) {
