@@ -113,7 +113,6 @@ public class RendererUtil {
 
 	private static List<com.vividsolutions.jts.geom.Point> getPathPoints(
 			Projector projector, List<Position> positions, double deltaX) {
-		System.out.println("Path points");
 		List<com.vividsolutions.jts.geom.Point> list = new ArrayList<com.vividsolutions.jts.geom.Point>();
 		Double firstPointLat = null;
 		Double firstPointLon = null;
@@ -127,14 +126,11 @@ public class RendererUtil {
 				firstPointLon = p.getLon();
 				list.add(firstPoint);
 			} else {
+				// TODO create intermediate points on great circle
 				com.vividsolutions.jts.geom.Point point = projector
 						.getGeometryPointInSrsRelativeTo(p.getLat(),
 								p.getLon(), firstPointLat, firstPointLon,
 								firstPoint.getX(), firstPoint.getY());
-				System.out
-						.println("point=" + point.getX() + "," + point.getY());
-				if (Math.abs(point.getX() - -2.3474564412726045E7) < 0.1)
-					System.out.println("here");
 				list.add(point);
 			}
 			// GeneralPath line = new NearBSpline(getPoints(projector,
