@@ -3,7 +3,6 @@ package com.github.davidmoten.grumpy.wms.layer.darkness;
 import static com.github.davidmoten.grumpy.core.Position.position;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -25,6 +24,11 @@ import com.github.davidmoten.grumpy.wms.WmsRequest;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
 import com.github.davidmoten.grumpy.wms.layer.darkness.Sun.Twilight;
 
+/**
+ * Splits the visible region into rectangles recursively till all sampled points
+ * in each rectangle have the same {@link Twilight} value. Once the rectangle
+ * has a uniform {@link Twilight} value it is drawn.
+ */
 public class DarknessLayer implements Layer {
 
     private static final double SUB_SOLAR_POINT_SIZE_PIXELS = 20.0;
@@ -65,12 +69,11 @@ public class DarknessLayer implements Layer {
      * @param height
      *            - of the graphics area in pixels
      */
-    private void render(Graphics g, Projector projector, Bounds bounds, int width, int height) {
+    private void render(Graphics2D g, Projector projector, Bounds bounds, int width, int height) {
 
-        Graphics2D g2d = (Graphics2D) g;
         Position subSolarPoint = Sun.getPosition();
-        renderSubSolarPoint(g2d, subSolarPoint, projector);
-        renderTwilight(g2d, subSolarPoint, projector, bounds);
+        renderSubSolarPoint(g, subSolarPoint, projector);
+        renderTwilight(g, subSolarPoint, projector, bounds);
     }
 
     private static void renderSubSolarPoint(Graphics2D g, Position subSolarPoint,
@@ -99,27 +102,26 @@ public class DarknessLayer implements Layer {
             Projector projector, Bounds geoBounds, Rectangle xyBounds) {
 
         // check if we need to divide the region
-
-        final Twilight twilight;
-
         boolean regionDivisible = xyBounds.height > 1 || xyBounds.width > 1;
 
+        final Twilight regionUniformTwilightValue;
         if (!regionDivisible) {
             // region is indivisible, so choose any corner for the twilight
             // value
-            twilight = Sun.getTwilight(subSolarPoint, new Position(geoBounds.getMin().lat(),
-                    geoBounds.getMin().lon()));
+            regionUniformTwilightValue = Sun.getTwilight(subSolarPoint, new Position(geoBounds
+                    .getMin().lat(), geoBounds.getMin().lon()));
         } else {
             // get the twilight value for the region if common to all sample
             // points in the region (if no common value returns null)
-            twilight = Sun.getRegionUniformTwilightValue(geoBounds, subSolarPoint);
+            regionUniformTwilightValue = Sun
+                    .getRegionUniformTwilightValue(geoBounds, subSolarPoint);
         }
 
-        if (twilight != null) {
+        if (regionUniformTwilightValue != null) {
             // shade the region to represent the twilight
-            shadeRegion(g, projector, geoBounds, twilight);
+            shadeRegion(g, projector, geoBounds, regionUniformTwilightValue);
         } else {
-            // region is a mix of twilight conditions and is divisble
+            // region is a mix of twilight conditions and is divisible
             // so divide into sub regions ... 2 or 4
             // but only if we can
 
