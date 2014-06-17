@@ -28,6 +28,7 @@ import org.apache.commons.math3.util.FastMath;
  * 
  */
 public class Position {
+    private static final double DEFAULT_INTERPOLATION_LONGITUDE_THRESHOLD = 0.25;
     private final double lat;
     private final double lon;
     private final double alt;
@@ -107,8 +108,7 @@ public class Position {
         double lonR = toRadians(lon);
         double courseR = toRadians(courseDegrees);
         double lat2Radians = asin(sin(latR) * cos(dr) + cos(latR) * sin(dr) * cos(courseR));
-        double lon2Radians = atan2(sin(courseR) * sin(dr) * cos(latR), cos(dr) - sin(latR)
-                * sin(lat2Radians));
+        double lon2Radians = atan2(sin(courseR) * sin(dr) * cos(latR), cos(dr) - sin(latR) * sin(lat2Radians));
         double lon3Radians = mod(lonR + lon2Radians + PI, 2 * PI) - PI;
         return new Position(FastMath.toDegrees(lat2Radians), FastMath.toDegrees(lon3Radians));
     }
@@ -137,8 +137,7 @@ public class Position {
         } else {
             double cosLat1R = cos(lat1R);
             double cosLat2R = cos(lat2R);
-            double numerator = sin(lat1R) * cosLat2R * sin(lonR - lon2R) - sin(lat2R) * cosLat1R
-                    * sin(lonR - lon1R);
+            double numerator = sin(lat1R) * cosLat2R * sin(lonR - lon2R) - sin(lat2R) * cosLat1R * sin(lonR - lon1R);
             double denominator = cosLat1R * cosLat2R * sinDiffLon1RLon2R;
             double radians = atan(numerator / denominator);
             return FastMath.toDegrees(radians);
@@ -273,8 +272,7 @@ public class Position {
         double sinLat1 = sin(lat1);
         double sinLat2 = sin(lat2);
         double cosDeltaLon = cos(deltaLon);
-        double top = sqrt(sqr(cosLat2 * sin(deltaLon))
-                + sqr(cosLat1 * sinLat2 - sinLat1 * cosLat2 * cosDeltaLon));
+        double top = sqrt(sqr(cosLat2 * sin(deltaLon)) + sqr(cosLat1 * sinLat2 - sinLat1 * cosLat2 * cosDeltaLon));
         double bottom = sinLat1 * sinLat2 + cosLat1 * cosLat2 * cosDeltaLon;
         double distance = EARTH_RADIUS_KM * atan2(top, bottom);
         return abs(distance);
@@ -343,8 +341,8 @@ public class Position {
         long degrees = round(signum(lat) * floor(abs(lat)));
         double remaining = abs(lat - degrees);
         remaining *= 60;
-        String result = abs(degrees) + "" + (char) 0x00B0
-                + new DecimalFormat("00.00").format(remaining) + "'" + (lat < 0 ? "S" : "N");
+        String result = abs(degrees) + "" + (char) 0x00B0 + new DecimalFormat("00.00").format(remaining) + "'"
+                + (lat < 0 ? "S" : "N");
         return result;
     }
 
@@ -352,8 +350,8 @@ public class Position {
         long degrees = round(signum(lon) * floor(abs(lon)));
         double remaining = abs(lon - degrees);
         remaining *= 60;
-        String result = abs(degrees) + "" + (char) 0x00B0
-                + new DecimalFormat("00.00").format(remaining) + "'" + (lon < 0 ? "W" : "E");
+        String result = abs(degrees) + "" + (char) 0x00B0 + new DecimalFormat("00.00").format(remaining) + "'"
+                + (lon < 0 ? "W" : "E");
         return result;
     }
 
@@ -457,6 +455,34 @@ public class Position {
 
     private int degreesToArbitraryInteger(double d) {
         return (int) round(d * 3600);
+    }
+
+    public static List<Position> interpolateLongitude(List<? extends Position> positions) {
+        return interpolateLongitude(positions, DEFAULT_INTERPOLATION_LONGITUDE_THRESHOLD);
+    }
+
+    public static List<Position> interpolateLongitude(List<? extends Position> positions, double maxLongitudeDifference) {
+        List<Position> result = new ArrayList<Position>();
+        Position previous = null;
+        for (Position p : positions) {
+            if (previous == null) {
+                result.add(p);
+            } else {
+                double diff = longitudeDiff(p.getLon(), previous.getLon());
+                if (diff > maxLongitudeDifference) {
+                    double delta = maxLongitudeDifference / diff;
+                    double bearing = previous.getBearingDegrees(p);
+                    double distanceKm = previous.getDistanceToKm(p);
+                    for (double d = delta; d < 1.0; d += delta) {
+                        result.add(previous.predict(d * distanceKm, bearing));
+                    }
+                }
+                result.add(p);
+            }
+            previous = p;
+        }
+
+        return result;
     }
 
     @Override
