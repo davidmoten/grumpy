@@ -28,7 +28,8 @@ import com.github.davidmoten.grumpy.wms.layer.darkness.Sun.Twilight;
 /**
  * Splits the visible region into rectangles recursively till all sampled points
  * in each rectangle have the same {@link Twilight} value. Once the rectangle
- * has a uniform {@link Twilight} value it is drawn.
+ * has a uniform {@link Twilight} value it is filled with the shade
+ * corresponding to the {@link Twilight} value.
  * 
  * @author Steven Ring
  * @author Dave Moten
