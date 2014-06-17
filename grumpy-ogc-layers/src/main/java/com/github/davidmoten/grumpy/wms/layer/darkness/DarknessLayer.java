@@ -8,11 +8,15 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.FeatureUtil;
@@ -38,8 +42,13 @@ import com.github.davidmoten.grumpy.wms.layer.darkness.SunUtil.Twilight;
  */
 public class DarknessLayer implements Layer {
 
-    private static final double SUB_SOLAR_POINT_SIZE_PIXELS = 20.0;
+    private static final int SUB_SOLAR_POINT_SIZE_PIXELS = 30;
     private static final Map<Twilight, Color> shades = createShades();
+    private final BufferedImage subSolarImage;
+
+    public DarknessLayer() {
+        subSolarImage = loadSubSolarPointImage();
+    }
 
     @Override
     public void render(Graphics2D g, WmsRequest request) {
@@ -49,7 +58,7 @@ public class DarknessLayer implements Layer {
         Position max = FeatureUtil.convertToLatLon(b.getMaxX(), b.getMaxY(), request.getCrs());
         Bounds bounds = new Bounds(new LatLon(min.getLat(), min.getLon()), new LatLon(max.getLat(),
                 max.getLon()));
-        render(g, projector, bounds, request.getWidth(), request.getHeight());
+        render(g, projector, bounds, request.getWidth(), request.getHeight(), request.getStyles());
     }
 
     /**
@@ -67,25 +76,35 @@ public class DarknessLayer implements Layer {
      * @param height
      *            - of the graphics area in pixels
      */
-    private void render(Graphics2D g, Projector projector, Bounds bounds, int width, int height) {
+    private void render(Graphics2D g, Projector projector, Bounds bounds, int width, int height,
+            List<String> styles) {
 
         Position subSolarPoint = SunUtil.getSubSolarPoint();
-        renderSubSolarPoint(g, subSolarPoint, projector);
+        renderSubSolarPoint(g, subSolarPoint, projector, subSolarImage, styles);
         renderTwilight(g, subSolarPoint, projector, bounds);
     }
 
     private static void renderSubSolarPoint(Graphics2D g, Position subSolarPoint,
-            Projector projector) {
+            Projector projector, BufferedImage subSolarImage, List<String> styles) {
 
-        Ellipse2D spot = new Ellipse2D.Double();
-        g.setColor(Color.YELLOW);
         LatLon latLon = new LatLon(subSolarPoint.getLat(), subSolarPoint.getLon());
         Point point = projector.toPoint(latLon.lat(), latLon.lon());
-        spot.setFrame(point.x - SUB_SOLAR_POINT_SIZE_PIXELS / 2, point.y
-                - SUB_SOLAR_POINT_SIZE_PIXELS / 2, SUB_SOLAR_POINT_SIZE_PIXELS,
-                SUB_SOLAR_POINT_SIZE_PIXELS);
-        g.fill(spot);
+        int size = SUB_SOLAR_POINT_SIZE_PIXELS;
+        if (styles.contains("plain")) {
+            Ellipse2D spot = new Ellipse2D.Double();
+            g.setColor(Color.YELLOW);
+            spot.setFrame(point.x - size / 2, point.y - size / 2, size, size);
+            g.fill(spot);
+        } else
+            g.drawImage(subSolarImage, point.x - size / 2, point.y - size / 2, size, size, null);
+    }
 
+    private static BufferedImage loadSubSolarPointImage() {
+        try {
+            return ImageIO.read(DarknessLayer.class.getResourceAsStream("/sunny.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void renderTwilight(Graphics2D g, Position subSolarPoint, Projector projector,
