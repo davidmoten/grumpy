@@ -51,10 +51,22 @@ public class ImageCache {
         this.maxSize = size;
     }
 
+    /**
+     * Factory method. Returns a new {@link ImageCache} of given maximum size.
+     * 
+     * @param size
+     * @return
+     */
     public static ImageCache create(int size) {
         return new ImageCache(size);
     }
 
+    /**
+     * Clears the cache for the given layer name.
+     * 
+     * @param layerName
+     */
+    // TOOD improve this
     public void clear(String layerName) {
         synchronized (this) {
             log.info("clearing cache for layer " + layerName);
@@ -70,12 +82,21 @@ public class ImageCache {
         log.info("removed cache entry " + key);
     }
 
+    /**
+     * Clears the cache.
+     */
     public void clear() {
         synchronized (this) {
             cache.clear();
         }
     }
 
+    /**
+     * Enables/disables a layer for caching.
+     * 
+     * @param layerName
+     * @param enabled
+     */
     public void setEnabled(String layerName, boolean enabled) {
         synchronized (this) {
             if (enabled)
@@ -102,6 +123,13 @@ public class ImageCache {
         s.append(";");
     }
 
+    /**
+     * Get the bytes of the image returned by a {@link WmsRequest}. Returns null
+     * if no corresponding image exists in the cache.
+     * 
+     * @param request
+     * @return
+     */
     public byte[] get(WmsRequest request) {
         synchronized (this) {
             log.info("cache size=" + cache.size());
@@ -109,6 +137,12 @@ public class ImageCache {
         }
     }
 
+    /**
+     * Sets the cached image for the request.
+     * 
+     * @param request
+     * @param image
+     */
     public synchronized void put(WmsRequest request, byte[] image) {
         synchronized (this) {
             String key = getKey(request);
@@ -125,6 +159,12 @@ public class ImageCache {
         }
     }
 
+    /**
+     * Flags the given layer as a layer to be cached.
+     * 
+     * @param layerName
+     * @return
+     */
     public ImageCache add(String layerName) {
         setEnabled(layerName, true);
         return this;
