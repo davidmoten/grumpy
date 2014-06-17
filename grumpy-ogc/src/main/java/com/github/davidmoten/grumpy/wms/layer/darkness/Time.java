@@ -1,4 +1,4 @@
-package com.github.davidmoten.grumpy.wms.layer.shadow;
+package com.github.davidmoten.grumpy.wms.layer.darkness;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;

@@ -1,4 +1,4 @@
-package com.github.davidmoten.grumpy.wms.layer.shadow;
+package com.github.davidmoten.grumpy.wms.layer.darkness;
 
 import static com.github.davidmoten.grumpy.core.Position.position;
 
@@ -23,9 +23,9 @@ import com.github.davidmoten.grumpy.wms.Layer;
 import com.github.davidmoten.grumpy.wms.RendererUtil;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
-import com.github.davidmoten.grumpy.wms.layer.shadow.Sun.Twilight;
+import com.github.davidmoten.grumpy.wms.layer.darkness.Sun.Twilight;
 
-public class EarthShadowLayer implements Layer {
+public class DarknessLayer implements Layer {
 
     private static final double SUB_SOLAR_POINT_SIZE_PIXELS = 20.0;
 
@@ -37,6 +37,17 @@ public class EarthShadowLayer implements Layer {
         shades.put(Twilight.NAUTICAL, new Color(100, 100, 100));
         shades.put(Twilight.CIVIL, new Color(150, 150, 150));
         shades.put(Twilight.DAYLIGHT, Color.WHITE);
+    }
+
+    @Override
+    public void render(Graphics2D g, WmsRequest request) {
+        Projector projector = WmsUtil.getProjector(request);
+        ProjectorBounds b = request.getBounds();
+        Position min = FeatureUtil.convertToLatLon(b.getMinX(), b.getMinY(), request.getCrs());
+        Position max = FeatureUtil.convertToLatLon(b.getMaxX(), b.getMaxY(), request.getCrs());
+        Bounds bounds = new Bounds(new LatLon(min.getLat(), min.getLon()), new LatLon(max.getLat(),
+                max.getLon()));
+        render(g, projector, bounds, request.getWidth(), request.getHeight());
     }
 
     /**
@@ -191,17 +202,6 @@ public class EarthShadowLayer implements Layer {
                     - halfWidth, 1);
         }
         return rectangles;
-    }
-
-    @Override
-    public void render(Graphics2D g, WmsRequest request) {
-        Projector projector = WmsUtil.getProjector(request);
-        ProjectorBounds b = request.getBounds();
-        Position min = FeatureUtil.convertToLatLon(b.getMinX(), b.getMinY(), request.getCrs());
-        Position max = FeatureUtil.convertToLatLon(b.getMaxX(), b.getMaxY(), request.getCrs());
-        Bounds bounds = new Bounds(new LatLon(min.getLat(), min.getLon()), new LatLon(max.getLat(),
-                max.getLon()));
-        render(g, projector, bounds, request.getWidth(), request.getHeight());
     }
 
     @Override

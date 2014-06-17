@@ -1,8 +1,6 @@
-package com.github.davidmoten.grumpy.wms.layer.shadow;
+package com.github.davidmoten.grumpy.wms.layer.darkness;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -160,16 +158,6 @@ public final class Sun {
                 + ", subSolar lat/long is " + lat + "/" + lon);
 
         return new Position(lat, lon);
-
-    }
-
-    public static void main(String[] args) {
-
-        GregorianCalendar t = new GregorianCalendar(2009, 2, 23, 3, 45);
-        t.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        Position pos = Sun.getPosition(null);
-        System.out.println("Sun position now is: " + pos);
 
     }
 

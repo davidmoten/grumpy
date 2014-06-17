@@ -1,4 +1,4 @@
-package com.github.davidmoten.grumpy.wms.layer.shadow;
+package com.github.davidmoten.grumpy.wms.layer.darkness;
 
 public class Bounds {
     private final LatLon min;
