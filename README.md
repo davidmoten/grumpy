@@ -25,8 +25,8 @@ Demonstration
 Try it [live](http://grumpy.xuml-tools.cloudbees.net/) on cloudbees. 
 
 
-Demonstration (local)
------------------------
+Run demo locally
+------------------
 ```
 cd wms-demo
 mvn jetty:run
