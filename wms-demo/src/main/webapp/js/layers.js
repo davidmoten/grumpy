@@ -26,7 +26,7 @@ function addLayers(map) {
     map.addLayer(layer2);
     
     ////////////////////////////////////////////////////
-    // setup getFeatureInfo on click for custom layer
+    // setup getFeatureInfo on click for all layers
     ////////////////////////////////////////////////////s
     
     var click = new OpenLayers.Control.WMSGetFeatureInfo({
