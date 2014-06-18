@@ -131,14 +131,14 @@ public class DarknessLayer implements Layer {
 				return SunUtil.getTwilight(subSolarPoint, p);
 			}
 		};
-		RegionRenderer<Twilight> regionRenderer = new RegionRenderer<Twilight>() {
+		ValueRenderer<Twilight> regionRenderer = new ValueRenderer<Twilight>() {
 			@Override
-			public void renderRegion(Graphics2D g, Projector projector,
+			public void render(Graphics2D g, Projector projector,
 					Bounds geoBounds, Twilight t) {
 				render(g, projector, geoBounds, t);
 			}
 		};
-		ReducingRenderer.renderRegion(g, function, projector, geoBounds,
+		ReducingValueRenderer.renderRegion(g, function, projector, geoBounds,
 				xyBounds, regionRenderer);
 	}
 

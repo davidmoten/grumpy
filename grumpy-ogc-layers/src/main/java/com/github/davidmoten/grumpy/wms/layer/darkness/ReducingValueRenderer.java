@@ -7,14 +7,15 @@ import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.Projector;
 import com.github.davidmoten.grumpy.util.Bounds;
 import com.github.davidmoten.grumpy.util.LatLon;
+import com.github.davidmoten.grumpy.wms.layer.darkness.SunUtil.Twilight;
 import com.google.common.base.Function;
 
-public class ReducingRenderer {
+public class ReducingValueRenderer {
 
 	public static <T> void renderRegion(Graphics2D g,
 			Function<Position, T> function, Projector projector,
 			Bounds geoBounds, Rectangle xyBounds,
-			RegionRenderer<T> regionRenderer) {
+			ValueRenderer<T> regionRenderer) {
 
 		// check if we need to divide the region
 		boolean regionDivisible = xyBounds.height > 1 || xyBounds.width > 1;
@@ -28,13 +29,12 @@ public class ReducingRenderer {
 		} else {
 			// get the function value for the region if common to all sample
 			// points in the region (if no common value returns null)
-			regionUniformValue = SamplingUtil.getUniformSampledValue(geoBounds,
-					function);
+			regionUniformValue = getUniformSampledValue(geoBounds, function);
 		}
 
 		if (regionUniformValue != null) {
 			// render the region
-			regionRenderer.renderRegion(g, projector, geoBounds,
+			regionRenderer.render(g, projector, geoBounds,
 					regionUniformValue);
 		} else {
 			// region is a mix of values and is divisible
@@ -48,7 +48,7 @@ public class ReducingRenderer {
 
 	private static <T> void splitRegionAndRender(Graphics2D g,
 			Function<Position, T> function, Projector projector,
-			Rectangle xyBounds, RegionRenderer<T> regionRenderer) {
+			Rectangle xyBounds, ValueRenderer<T> regionRenderer) {
 		// split region
 		final Rectangle[] rectangles = splitRectangles(xyBounds);
 
@@ -104,5 +104,45 @@ public class ReducingRenderer {
 					xyBounds.width - halfWidth, 1);
 		}
 		return rectangles;
+	}
+
+	/**
+	 * Computes the twilight condition which prevails across the entire
+	 * specified region by testing sample points. If one of the sample points
+	 * differs in twilight value from the others then null is returned otherwise
+	 * the common {@link Twilight} value is returned.
+	 * 
+	 * @param region
+	 *            of interest
+	 * @param subSolarPoint
+	 *            -- point on the earth's surface where the sun is on the zenith
+	 * @return the regional twilight or null if different twilights prevail
+	 * 
+	 */
+	public static <T> T getUniformSampledValue(Bounds region,
+			Function<Position, T> function) {
+
+		T regionT = null;
+
+		Position[] positions = new Position[4];
+
+		positions[0] = new Position(region.getMin().lat(), region.getMin()
+				.lon());
+		positions[1] = new Position(region.getMax().lat(), region.getMin()
+				.lon());
+		positions[2] = new Position(region.getMax().lat(), region.getMax()
+				.lon());
+		positions[3] = new Position(region.getMin().lat(), region.getMax()
+				.lon());
+
+		for (Position p : positions) {
+			T t = function.apply(p);
+			if (regionT == null) {
+				regionT = t;
+			} else if (!regionT.equals(t)) {
+				return null;
+			}
+		}
+		return regionT;
 	}
 }
