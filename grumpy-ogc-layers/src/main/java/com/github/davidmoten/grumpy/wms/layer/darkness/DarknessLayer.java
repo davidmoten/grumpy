@@ -27,12 +27,13 @@ import com.github.davidmoten.grumpy.util.Bounds;
 import com.github.davidmoten.grumpy.util.LatLon;
 import com.github.davidmoten.grumpy.wms.Layer;
 import com.github.davidmoten.grumpy.wms.LayerFeatures;
-import com.github.davidmoten.grumpy.wms.ReducingValueRenderer;
 import com.github.davidmoten.grumpy.wms.RendererUtil;
-import com.github.davidmoten.grumpy.wms.ValueRenderer;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
 import com.github.davidmoten.grumpy.wms.layer.darkness.SunUtil.Twilight;
+import com.github.davidmoten.grumpy.wms.reduction.BoundsSamplerCorners;
+import com.github.davidmoten.grumpy.wms.reduction.ReducingValueRenderer;
+import com.github.davidmoten.grumpy.wms.reduction.ValueRenderer;
 import com.google.common.base.Function;
 
 /**
@@ -140,8 +141,9 @@ public class DarknessLayer implements Layer {
 				renderBounds(g, projector, geoBounds, t);
 			}
 		};
+		BoundsSamplerCorners sampler = new BoundsSamplerCorners();
 		ReducingValueRenderer.renderRegion(g, function, projector, geoBounds,
-				xyBounds, regionRenderer);
+				xyBounds, sampler, regionRenderer);
 	}
 
 	private static void renderBounds(Graphics2D g, Projector projector,

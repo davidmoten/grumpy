@@ -1,4 +1,4 @@
-package com.github.davidmoten.grumpy.wms;
+package com.github.davidmoten.grumpy.wms.reduction;
 
 import java.awt.Graphics2D;
 

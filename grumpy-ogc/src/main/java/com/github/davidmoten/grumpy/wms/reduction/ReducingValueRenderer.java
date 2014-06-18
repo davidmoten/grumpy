@@ -1,7 +1,8 @@
-package com.github.davidmoten.grumpy.wms;
+package com.github.davidmoten.grumpy.wms.reduction;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.List;
 
 import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.Projector;
@@ -12,7 +13,7 @@ import com.google.common.base.Function;
 public class ReducingValueRenderer {
 
     public static <T> void renderRegion(Graphics2D g, Function<Position, T> function, Projector projector,
-            Bounds geoBounds, Rectangle xyBounds, ValueRenderer<T> regionRenderer) {
+            Bounds geoBounds, Rectangle xyBounds, BoundsSampler sampler, ValueRenderer<T> regionRenderer) {
 
         // check if we need to divide the region
         boolean regionDivisible = xyBounds.height > 1 || xyBounds.width > 1;
@@ -25,7 +26,7 @@ public class ReducingValueRenderer {
         } else {
             // get the function value for the region if common to all sample
             // points in the region (if no common value returns null)
-            regionUniformValue = getUniformSampledValue(geoBounds, function);
+            regionUniformValue = getUniformSampledValue(geoBounds, sampler, function);
         }
 
         if (regionUniformValue != null) {
@@ -36,12 +37,12 @@ public class ReducingValueRenderer {
             // so divide into sub regions ... 2 or 4
             // but only if we can
 
-            splitRegionAndRender(g, function, projector, xyBounds, regionRenderer);
+            splitRegionAndRender(g, function, projector, xyBounds, sampler, regionRenderer);
         }
     }
 
     private static <T> void splitRegionAndRender(Graphics2D g, Function<Position, T> function, Projector projector,
-            Rectangle xyBounds, ValueRenderer<T> regionRenderer) {
+            Rectangle xyBounds, BoundsSampler sampler, ValueRenderer<T> regionRenderer) {
         // split region
         final Rectangle[] rectangles = splitRectangles(xyBounds);
 
@@ -50,7 +51,7 @@ public class ReducingValueRenderer {
             Position min = projector.toPosition(rect.x, rect.y + rect.height);
             Position max = projector.toPosition(rect.x + rect.width, rect.y);
             Bounds bounds = new Bounds(new LatLon(min.getLat(), min.getLon()), new LatLon(max.getLat(), max.getLon()));
-            renderRegion(g, function, projector, bounds, rect, regionRenderer);
+            renderRegion(g, function, projector, bounds, rect, sampler, regionRenderer);
         }
     }
 
@@ -92,29 +93,11 @@ public class ReducingValueRenderer {
         return rectangles;
     }
 
-    /**
-     * Computes the twilight condition which prevails across the entire
-     * specified region by testing sample points. If one of the sample points
-     * differs in twilight value from the others then null is returned otherwise
-     * the common {@link Twilight} value is returned.
-     * 
-     * @param region
-     *            of interest
-     * @param subSolarPoint
-     *            -- point on the earth's surface where the sun is on the zenith
-     * @return the regional twilight or null if different twilights prevail
-     * 
-     */
-    public static <T> T getUniformSampledValue(Bounds region, Function<Position, T> function) {
+    private static <T> T getUniformSampledValue(Bounds region, BoundsSampler sampler, Function<Position, T> function) {
 
         T regionT = null;
 
-        Position[] positions = new Position[4];
-
-        positions[0] = new Position(region.getMin().lat(), region.getMin().lon());
-        positions[1] = new Position(region.getMax().lat(), region.getMin().lon());
-        positions[2] = new Position(region.getMax().lat(), region.getMax().lon());
-        positions[3] = new Position(region.getMin().lat(), region.getMax().lon());
+        List<Position> positions = sampler.sample(region);
 
         for (Position p : positions) {
             T t = function.apply(p);
