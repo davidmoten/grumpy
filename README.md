@@ -71,7 +71,7 @@ See [WmsServlet.java](https://github.com/davidmoten/grumpy/blob/master/wms-demo%
 
 ###Define the service capabilities:
 
-Note that this enables service discovery from wms clients but is not required for an OpenLayers WMS client like in ```wms-demo```.
+Note that this enables service discovery and is required from WMS clients like ArcGIS but is not required for an OpenLayers WMS client like in ```wms-demo```.
 
 There are two options
 
@@ -79,7 +79,6 @@ There are two options
 * Use a classpath resource such as ```/wms-capabilities.xml``` with ```WmsServletRequestProcessor.builder().capabilitiesFromClasspath()```
 
 See [wms-capabilities.xml](https://github.com/davidmoten/grumpy/blob/master/wms-demo%2Fsrc%2Fmain%2Fresources%2Fwms-capabilities.xml) which should conform to the OGC WMS 1.3 schema.
-
 
 From this point you have a working WMS service against the url for the ```WmsServlet```!
 

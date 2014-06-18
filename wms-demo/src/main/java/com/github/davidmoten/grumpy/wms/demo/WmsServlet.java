@@ -20,11 +20,13 @@ public class WmsServlet extends HttpServlet {
 
     public WmsServlet() {
 
+        // instantiate the layers
         CustomLayer custom = new CustomLayer();
         DarknessLayer darkness = new DarknessLayer();
         FiddleLayer fiddle = new FiddleLayer();
 
-        // setup the capabilities of the service
+        // setup the capabilities of the service which will extract features
+        // from the layers to fill in defaults
         Capabilities cap = Capabilities
                 .builder()
                 .serviceName("CustomOgc")
