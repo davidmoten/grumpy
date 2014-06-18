@@ -11,11 +11,11 @@
         <!-- Narrative description providing additional information -->
 
         <Abstract>${serviceAbstract}</Abstract>
-        <!-- Top-level web address of service or service provider. See also 
-            OnlineResource elements under <DCPType>. -->
+        <!-- Top-level web address of service or service provider. See also OnlineResource 
+            elements under <DCPType>. -->
         <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
-            xlink:type="simple" xlink:href="${serviceUrl}" />
-            
+            xlink:type="simple" xlink:href="http://github.com/davidmoten/grumpy" />
+
         <!-- Contact information -->
 
         <!-- Fees or access constraints imposed. -->

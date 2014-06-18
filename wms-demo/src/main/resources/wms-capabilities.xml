@@ -11,12 +11,12 @@
         <!-- Narrative description providing additional information -->
 
         <Abstract>Demonstration of custom rendered wms layer</Abstract>
-        <!-- Top-level web address of service or service provider. See also 
-            OnlineResource elements under <DCPType>. -->
+        <!-- Top-level web address of service or service provider. See also OnlineResource 
+            elements under <DCPType>. -->
         <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:type="simple" xlink:href="http://github.com/davidmoten/grumpy" />
         <!-- Contact information -->
-        
+
         <ContactInformation>
             <ContactPersonPrimary>
                 <ContactPerson>Fred Nurk</ContactPerson>
@@ -49,42 +49,15 @@
         <Request>
             <GetCapabilities>
                 <Format>text/xml</Format>
-                <DCPType>
-                    <HTTP>
-                        <Get>
-                            <OnlineResource
-                                xmlns:xlink="http://www.w3.org/1999/xlink"
-                                xlink:type="simple" xlink:href="${wmsUrl}" />
-                        </Get>
-                    </HTTP>
-                </DCPType>
             </GetCapabilities>
             <GetMap>
                 <Format>image/png</Format>
-                <DCPType>
-                    <HTTP>
-                        <Get>
-                            <OnlineResource
-                                xmlns:xlink="http://www.w3.org/1999/xlink"
-                                xlink:type="simple" xlink:href="${wmsUrl}" />
-                        </Get>
-                    </HTTP>
-                </DCPType>
             </GetMap>
             <GetFeatureInfo>
                 <!-- <Format>text/plain</Format> <Format>text/swf</Format> -->
                 <Format>application/vnd.ogc.gml</Format>
                 <Format>text/xml</Format>
                 <Format>text/html</Format>
-                <DCPType>
-                    <HTTP>
-                        <Get>
-                            <OnlineResource
-                                xmlns:xlink="http://www.w3.org/1999/xlink"
-                                xlink:type="simple" xlink:href="${proxyUrl}" />
-                        </Get>
-                    </HTTP>
-                </DCPType>
             </GetFeatureInfo>
         </Request>
         <Exception>
@@ -93,43 +66,21 @@
             <Format>BLANK</Format>
         </Exception>
 
-        <Layer>
-            <Title>Miscellaneous</Title>
-            <CRS>EPSG:4326</CRS>
-            <CRS>EPSG:3857</CRS> 
-            <!-- all layers are available in at least this CRS -->
-
-            <EX_GeographicBoundingBox>
-                <westBoundLongitude>-180</westBoundLongitude>
-                <eastBoundLongitude>180</eastBoundLongitude>
-                <southBoundLatitude>-90</southBoundLatitude>
-                <northBoundLatitude>90</northBoundLatitude>
-            </EX_GeographicBoundingBox>
-            <BoundingBox CRS="EPSG:4326" minx="-180" miny="-90"
-                maxx="180" maxy="90" />
-
-            <Layer queryable="1" opaque="1">
-                <Name>Custom</Name>
-                <Title>Custom wms layer</Title>
-                <BoundingBox CRS="EPSG:4326" minx="-180"
-                    miny="-90" maxx="180" maxy="90" />
-                <MaxScaleDenominator>500000000</MaxScaleDenominator>
-                <Style>
-                    <Name>Standard</Name>
-                </Style>
-                <Style>
-                    <Name>Super</Name>
-                </Style>
-            </Layer>
-            
-            <Layer  opaque="1">
+        <Layer queryable="0" opaque="1">
                 <Name>Darkness</Name>
                 <Title>Darkness</Title>
-                <BoundingBox CRS="EPSG:4326" minx="-180"
-                    miny="-90" maxx="180" maxy="90" />
+                <CRS>EPSG:4326</CRS>
+                <CRS>EPSG:3857</CRS>
+                <EX_GeographicBoundingBox>
+                    <westBoundLongitude>-180</westBoundLongitude>
+                    <eastBoundLongitude>180</eastBoundLongitude>
+                    <southBoundLatitude>-90</southBoundLatitude>
+                    <northBoundLatitude>90</northBoundLatitude>
+                </EX_GeographicBoundingBox>
+                <BoundingBox CRS="EPSG:4326" minx="-180" miny="-90"
+                    maxx="180" maxy="90" />
                 <MaxScaleDenominator>500000000</MaxScaleDenominator>
             </Layer>
-        </Layer>
     </Capability>
 </WMS_Capabilities>
 

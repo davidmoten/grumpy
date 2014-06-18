@@ -57,13 +57,22 @@ public class CapabilitiesProviderFromCapabilities implements CapabilitiesProvide
                 xml = xml.a("queryable", "1");
             if (layer.isOpaque())
                 xml = xml.a("opaque", "1");
-            xml = xml.element("name").text(layer.getName()).up()
+            xml = xml.element("Name").text(layer.getName()).up()
             // add title
-                    .element("title").text(layer.getTitle()).up();
+                    .element("Title").text(layer.getTitle()).up();
             for (String crs : layer.getCrs())
                 xml = xml.element("CRS").text(crs).up();
+
+            xml = xml.e("EX_GeographicBoundingBox").element("westBoundLongitude").text("-180").up()
+                    .element("eastBoundLongitude").text("180").up().element("southBoundLatitude")
+                    .text("-90").up().element("northBoundLatitude").text("90").up().up();
+            // xml = xml.e("BoundingBox").a("CRS", "EPSG:4326").a("minx",
+            // "-180").a("miny", "-90")
+            // .a("maxx", "180").a("maxy", "90").up();
+            // xml = xml.e("MaxScaleDenominator").text("500000000").up();
             for (String style : layer.getStyles())
                 xml = xml.element("Style").element("Name").text(style).up().up();
+
             return xml.asString();
         } catch (ParserConfigurationException | FactoryConfigurationError e) {
             throw new RuntimeException(e);
