@@ -8,8 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.davidmoten.grumpy.core.Position;
-import com.github.davidmoten.grumpy.util.Bounds;
-import com.google.common.base.Function;
 
 /**
  * Utility methods related to the position of the Sun relative to the Earth.
@@ -62,42 +60,6 @@ public final class SunUtil {
 		double distKm = somePosition.getDistanceToKm(subSolarPoint);
 		double distRads = distKm / EARTH_RADIUS_KM;
 		return getTwilight(distRads);
-	}
-
-	/**
-	 * Computes the twilight condition which prevails across the entire
-	 * specified region by testing sample points. If one of the sample points
-	 * differs in twilight value from the others then null is returned otherwise
-	 * the common {@link Twilight} value is returned.
-	 * 
-	 * @param region
-	 *            of interest
-	 * @param subSolarPoint
-	 *            -- point on the earth's surface where the sun is on the zenith
-	 * @return the regional twilight or null if different twilights prevail
-	 * 
-	 */
-	public static <T> T getUniformValue(Bounds region,
-			Function<Position, T> function) {
-
-		T regionT = null;
-
-		Position[] corners = new Position[4];
-
-		corners[0] = new Position(region.getMin().lat(), region.getMin().lon());
-		corners[1] = new Position(region.getMax().lat(), region.getMin().lon());
-		corners[2] = new Position(region.getMax().lat(), region.getMax().lon());
-		corners[3] = new Position(region.getMin().lat(), region.getMax().lon());
-
-		for (Position corner : corners) {
-			T t = function.apply(corner);
-			if (regionT == null) {
-				regionT = t;
-			} else if (!regionT.equals(t)) {
-				return null;
-			}
-		}
-		return regionT;
 	}
 
 	/**
