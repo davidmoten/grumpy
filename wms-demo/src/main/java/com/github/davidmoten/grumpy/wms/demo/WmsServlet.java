@@ -26,7 +26,8 @@ public class WmsServlet extends HttpServlet {
         FiddleLayer fiddle = new FiddleLayer();
 
         // setup the capabilities of the service which will extract features
-        // from the layers to fill in defaults
+        // from the layers to fill in defaults for the layer fields in generated
+        // capabilities.xml
         Capabilities cap = Capabilities
                 .builder()
                 .serviceName("CustomOGC")
