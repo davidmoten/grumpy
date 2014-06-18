@@ -12,14 +12,11 @@ import com.github.davidmoten.grumpy.wms.WmsServletRequestProcessor;
 import com.github.davidmoten.grumpy.wms.layer.darkness.DarknessLayer;
 
 public class WmsServlet extends HttpServlet {
+    private static final long serialVersionUID = 1518113833457077766L;
 
     private static final String SERVICE_TITLE = "Custom OGC Services";
-
     private static final String SERVICE_NAME = "CustomOGC";
-
     private static final String SERVICE_ABSTRACT = "Custom OGC WMS services including Custom, Fiddle and Darkness layers";
-
-    private static final long serialVersionUID = 1518113833457077766L;
 
     private final WmsServletRequestProcessor processor;
 
