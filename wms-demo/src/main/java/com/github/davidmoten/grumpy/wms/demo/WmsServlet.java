@@ -29,14 +29,14 @@ public class WmsServlet extends HttpServlet {
         // from the layers to fill in defaults
         Capabilities cap = Capabilities
                 .builder()
-                .serviceName("CustomOgc")
+                .serviceName("CustomOGC")
                 .serviceTitle("Custom OGC Services")
                 .serviceAbstract(
                         "Custom OGC WMS services including Custom, Fiddle and Darkness layers")
                 .imageFormat("image/png").infoFormat("text/html")
-                .layer(CapabilitiesLayer.builder().opaque().layer(custom).build())
-                .layer(CapabilitiesLayer.builder().opaque().layer(darkness).build())
-                .layer(CapabilitiesLayer.builder().opaque().layer(fiddle).build())
+                .layer(CapabilitiesLayer.from(custom).build())
+                .layer(CapabilitiesLayer.from(darkness).build())
+                .layer(CapabilitiesLayer.from(fiddle).build())
                 // build caps
                 .build();
 

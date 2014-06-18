@@ -55,6 +55,10 @@ public class CapabilitiesLayer {
         return new Builder();
     }
 
+    public static Builder from(Layer layer) {
+        return new Builder().layer(layer);
+    }
+
     public static class Builder {
 
         private String name;
