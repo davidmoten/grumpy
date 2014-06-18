@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.Projector;
 import com.github.davidmoten.grumpy.wms.Layer;
+import com.github.davidmoten.grumpy.wms.LayerFeatures;
 import com.github.davidmoten.grumpy.wms.RendererUtil;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
@@ -33,6 +34,8 @@ public class CustomLayer implements Layer {
     private static final double PLACE_LON = 149.1244;
     private final List<Position> box;
 
+    private final LayerFeatures features;
+
     public CustomLayer() {
         // prepare a box around place
         box = new ArrayList<Position>();
@@ -41,6 +44,9 @@ public class CustomLayer implements Layer {
         box.add(position(PLACE_LAT + 2, PLACE_LON + 4));
         box.add(position(PLACE_LAT - 2, PLACE_LON + 4));
         box.add(position(PLACE_LAT - 2, PLACE_LON - 4));
+
+        features = LayerFeatures.builder().name("Custom").crs("EPSG:4326").crs("EPSG:3857")
+                .queryable().build();
     }
 
     @Override
@@ -88,6 +94,11 @@ public class CustomLayer implements Layer {
                     + "</div>";
         else
             return "";
+    }
+
+    @Override
+    public LayerFeatures getFeatures() {
+        return features;
     }
 
 }

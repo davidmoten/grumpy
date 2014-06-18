@@ -26,6 +26,7 @@ import com.github.davidmoten.grumpy.projection.ProjectorTarget;
 import com.github.davidmoten.grumpy.util.Bounds;
 import com.github.davidmoten.grumpy.util.LatLon;
 import com.github.davidmoten.grumpy.wms.Layer;
+import com.github.davidmoten.grumpy.wms.LayerFeatures;
 import com.github.davidmoten.grumpy.wms.RendererUtil;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
@@ -42,12 +43,16 @@ import com.github.davidmoten.grumpy.wms.layer.darkness.SunUtil.Twilight;
  */
 public class DarknessLayer implements Layer {
 
+    private static final String STYLE_PLAIN = "plain";
     private static final int SUB_SOLAR_POINT_SIZE_PIXELS = 30;
     private static final Map<Twilight, Color> shades = createShades();
     private final BufferedImage subSolarImage;
+    private final LayerFeatures features;
 
     public DarknessLayer() {
         subSolarImage = loadSubSolarPointImage();
+        features = LayerFeatures.builder().name("Darkness").style(STYLE_PLAIN).crs("EPSG:4326")
+                .crs("EPSG:3857").build();
     }
 
     @Override
@@ -90,7 +95,7 @@ public class DarknessLayer implements Layer {
         LatLon latLon = new LatLon(subSolarPoint.getLat(), subSolarPoint.getLon());
         Point point = projector.toPoint(latLon.lat(), latLon.lon());
         int size = SUB_SOLAR_POINT_SIZE_PIXELS;
-        if (styles.contains("plain")) {
+        if (styles.contains(STYLE_PLAIN)) {
             Ellipse2D spot = new Ellipse2D.Double();
             g.setColor(Color.YELLOW);
             spot.setFrame(point.x - size / 2, point.y - size / 2, size, size);
@@ -235,6 +240,11 @@ public class DarknessLayer implements Layer {
     @Override
     public String getInfo(Date time, WmsRequest request, Point point, String format) {
         return null;
+    }
+
+    @Override
+    public LayerFeatures getFeatures() {
+        return features;
     }
 
 }

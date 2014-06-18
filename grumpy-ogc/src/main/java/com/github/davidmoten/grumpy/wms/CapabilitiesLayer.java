@@ -62,8 +62,9 @@ public class CapabilitiesLayer {
         private List<String> crs = new ArrayList<String>();
         private List<String> styles = new ArrayList<String>();
         private List<CapabilitiesLayer> layers = new ArrayList<CapabilitiesLayer>();
-        private boolean queryable = false;
+        private Boolean queryable = null;
         private boolean opaque = true;
+        private Layer layer;
 
         private Builder() {
         }
@@ -116,6 +117,11 @@ public class CapabilitiesLayer {
             return this;
         }
 
+        public Builder layer(Layer layer) {
+            this.layer = layer;
+            return this;
+        }
+
         public Builder layers(List<CapabilitiesLayer> layers) {
             this.layers = layers;
             return this;
@@ -127,6 +133,18 @@ public class CapabilitiesLayer {
         }
 
         public CapabilitiesLayer build() {
+            if (layer != null) {
+                styles.addAll(layer.getFeatures().getStyles());
+                crs.addAll(layer.getFeatures().getCrs());
+                if (name == null)
+                    name = layer.getFeatures().getName();
+                if (queryable == null)
+                    queryable = layer.getFeatures().isQueryable();
+            }
+            if (title == null)
+                title = name;
+            if (queryable == null)
+                queryable = false;
             return new CapabilitiesLayer(name, title, queryable, opaque, crs, styles, layers);
         }
     }

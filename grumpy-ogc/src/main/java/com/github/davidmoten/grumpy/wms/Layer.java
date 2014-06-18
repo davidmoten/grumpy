@@ -21,7 +21,7 @@ public interface Layer {
      * @param height
      *            - of the graphics area in pixels
      */
-    public void render(Graphics2D g, WmsRequest request);
+    void render(Graphics2D g, WmsRequest request);
 
     /**
      * Returns info about the given point on the layer formatted as per the
@@ -34,5 +34,13 @@ public interface Layer {
      * @return
      */
     String getInfo(Date time, WmsRequest request, Point point, String mimeType);
+
+    /**
+     * Returns features about the WMS layer including styles, supported CRS and
+     * the default name of the layer.
+     * 
+     * @return
+     */
+    LayerFeatures getFeatures();
 
 }

@@ -16,9 +16,16 @@ import java.util.List;
 import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.Projector;
 import com.github.davidmoten.grumpy.wms.Layer;
+import com.github.davidmoten.grumpy.wms.LayerFeatures;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
 
 public class FiddleLayer implements Layer {
+
+    private final LayerFeatures features;
+
+    public FiddleLayer() {
+        features = LayerFeatures.builder().name("Fiddle").crs("EPSG:4326").crs("EPSG:3857").build();
+    }
 
     @Override
     public void render(Graphics2D g, WmsRequest request) {
@@ -32,6 +39,11 @@ public class FiddleLayer implements Layer {
     @Override
     public String getInfo(Date time, WmsRequest request, Point point, String mimeType) {
         return null;
+    }
+
+    @Override
+    public LayerFeatures getFeatures() {
+        return features;
     }
 
 }

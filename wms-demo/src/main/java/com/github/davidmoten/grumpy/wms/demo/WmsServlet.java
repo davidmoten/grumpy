@@ -20,17 +20,21 @@ public class WmsServlet extends HttpServlet {
 
     public WmsServlet() {
 
+        CustomLayer custom = new CustomLayer();
+        DarknessLayer darkness = new DarknessLayer();
+        FiddleLayer fiddle = new FiddleLayer();
+
+        // setup the capabilities of the service
         Capabilities cap = Capabilities
                 .builder()
                 .serviceName("CustomOgc")
                 .serviceTitle("Custom OGC Services")
                 .serviceAbstract(
                         "Custom OGC WMS services including Custom, Fiddle and Darkness layers")
-                .imageFormat("image/png")
-                .infoFormat("text/html")
-                .layer(CapabilitiesLayer.builder().name("Custom").title("Custom WMS Layer")
-                        .queryable().opaque().style("plain").crs("EPSG:4326").crs("EPSG:3857")
-                        .build())
+                .imageFormat("image/png").infoFormat("text/html")
+                .layer(CapabilitiesLayer.builder().opaque().layer(custom).build())
+                .layer(CapabilitiesLayer.builder().opaque().layer(darkness).build())
+                .layer(CapabilitiesLayer.builder().opaque().layer(fiddle).build())
                 // build caps
                 .build();
 
@@ -43,11 +47,11 @@ public class WmsServlet extends HttpServlet {
                 // set image cache size
                 .imageCache(200)
                 // add custom layer as cached
-                .addCachedLayer("Custom", new CustomLayer())
+                .addCachedLayer("Custom", custom)
                 // add darkness, not cached
-                .addLayer("Darkness", new DarknessLayer())
+                .addLayer("Darkness", darkness)
                 // add fiddles layer
-                .addLayer("Fiddle", new FiddleLayer())
+                .addLayer("Fiddle", fiddle)
                 // build it up
                 .build();
     }
