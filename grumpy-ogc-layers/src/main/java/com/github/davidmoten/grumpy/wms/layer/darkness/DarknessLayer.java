@@ -131,44 +131,55 @@ public class DarknessLayer implements Layer {
 				return SunUtil.getTwilight(subSolarPoint, p);
 			}
 		};
-		renderTwilightRegion(g, function, projector, geoBounds, xyBounds);
+		RegionRenderer<Twilight> regionRenderer = new RegionRenderer<Twilight>() {
+			@Override
+			public void renderRegion(Graphics2D g, Projector projector,
+					Bounds geoBounds, Twilight t) {
+				render(g, projector, geoBounds, t);
+			}
+		};
+		renderRegion(g, function, projector, geoBounds, xyBounds,
+				regionRenderer);
 	}
 
-	private static void renderTwilightRegion(Graphics2D g,
-			Function<Position, Twilight> function, Projector projector,
-			Bounds geoBounds, Rectangle xyBounds) {
+	private static <T> void renderRegion(Graphics2D g,
+			Function<Position, T> function, Projector projector,
+			Bounds geoBounds, Rectangle xyBounds,
+			RegionRenderer<T> regionRenderer) {
 
 		// check if we need to divide the region
 		boolean regionDivisible = xyBounds.height > 1 || xyBounds.width > 1;
 
-		final Twilight regionUniformTwilightValue;
+		final T regionUniformValue;
 		if (!regionDivisible) {
 			// region is indivisible, so choose any corner for the twilight
 			// value
-			regionUniformTwilightValue = function.apply(new Position(geoBounds
-					.getMin().lat(), geoBounds.getMin().lon()));
+			regionUniformValue = function.apply(new Position(geoBounds.getMin()
+					.lat(), geoBounds.getMin().lon()));
 		} else {
 			// get the twilight value for the region if common to all sample
 			// points in the region (if no common value returns null)
-			regionUniformTwilightValue = SamplingUtil.getUniformSampledValue(
-					geoBounds, function);
+			regionUniformValue = SamplingUtil.getUniformSampledValue(geoBounds,
+					function);
 		}
 
-		if (regionUniformTwilightValue != null) {
+		if (regionUniformValue != null) {
 			// shade the region to represent the twilight
-			shadeRegion(g, projector, geoBounds, regionUniformTwilightValue);
+			regionRenderer.renderRegion(g, projector, geoBounds,
+					regionUniformValue);
 		} else {
 			// region is a mix of twilight conditions and is divisible
 			// so divide into sub regions ... 2 or 4
 			// but only if we can
 
-			renderTwilightOnSplitRegions(g, function, projector, xyBounds);
+			renderTwilightOnSplitRegions(g, function, projector, xyBounds,
+					regionRenderer);
 		}
 	}
 
-	private static void renderTwilightOnSplitRegions(Graphics2D g,
-			Function<Position, Twilight> function, Projector projector,
-			Rectangle xyBounds) {
+	private static <T> void renderTwilightOnSplitRegions(Graphics2D g,
+			Function<Position, T> function, Projector projector,
+			Rectangle xyBounds, RegionRenderer<T> regionRenderer) {
 		// split region
 		final Rectangle[] rectangles = splitRectangles(xyBounds);
 
@@ -178,11 +189,11 @@ public class DarknessLayer implements Layer {
 			Position max = projector.toPosition(rect.x + rect.width, rect.y);
 			Bounds bounds = new Bounds(new LatLon(min.getLat(), min.getLon()),
 					new LatLon(max.getLat(), max.getLon()));
-			renderTwilightRegion(g, function, projector, bounds, rect);
+			renderRegion(g, function, projector, bounds, rect, regionRenderer);
 		}
 	}
 
-	private static void shadeRegion(Graphics2D g, Projector projector,
+	private static void render(Graphics2D g, Projector projector,
 			Bounds geoBounds, final Twilight twilight) {
 		if (twilight != Twilight.DAYLIGHT) {
 
