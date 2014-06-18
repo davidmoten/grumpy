@@ -3,9 +3,15 @@ package com.github.davidmoten.grumpy.wms;
 import java.awt.Color;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.renderer.lite.RendererUtilities;
+
+import com.github.davidmoten.grumpy.projection.FeatureUtil;
 import com.github.davidmoten.grumpy.projection.Projector;
+import com.github.davidmoten.grumpy.projection.ProjectorBounds;
 import com.github.davidmoten.grumpy.projection.ProjectorTarget;
 
 public class WmsUtil {
@@ -34,6 +40,15 @@ public class WmsUtil {
     public static Projector getProjector(WmsRequest request) {
         ProjectorTarget target = new ProjectorTarget(request.getWidth(), request.getHeight());
         return new Projector(request.getBounds(), target);
+    }
+
+    public static double calculateScale(WmsRequest request) {
+        ProjectorBounds b = request.getBounds();
+        ReferencedEnvelope envelope = new ReferencedEnvelope(b.getMinX(), b.getMaxX(), b.getMinY(),
+                b.getMaxY(), FeatureUtil.getCrs(request.getCrs()));
+        double scale = RendererUtilities.calculateOGCScale(envelope, request.getWidth(),
+                Collections.emptyMap());
+        return scale;
     }
 
 }
