@@ -77,10 +77,10 @@ public final class SunUtil {
 	 * @return the regional twilight or null if different twilights prevail
 	 * 
 	 */
-	public static Twilight getUniformTwilight(Bounds region,
-			Function<Position, Twilight> function) {
+	public static <T> T getUniformValue(Bounds region,
+			Function<Position, T> function) {
 
-		Twilight regionTwilight = null;
+		T regionT = null;
 
 		Position[] corners = new Position[4];
 
@@ -90,14 +90,14 @@ public final class SunUtil {
 		corners[3] = new Position(region.getMin().lat(), region.getMax().lon());
 
 		for (Position corner : corners) {
-			Twilight tl = function.apply(corner);
-			if (regionTwilight == null) {
-				regionTwilight = tl;
-			} else if (regionTwilight != tl) {
+			T t = function.apply(corner);
+			if (regionT == null) {
+				regionT = t;
+			} else if (!regionT.equals(t)) {
 				return null;
 			}
 		}
-		return regionTwilight;
+		return regionT;
 	}
 
 	/**
