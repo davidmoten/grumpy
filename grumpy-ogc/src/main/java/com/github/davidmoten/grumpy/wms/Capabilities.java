@@ -133,6 +133,11 @@ public class Capabilities {
             return this;
         }
 
+        public Builder layer(Layer layer) {
+            this.layers.add(CapabilitiesLayer.from(layer).build());
+            return this;
+        }
+
         public Capabilities build() {
             if (serviceTitle == null)
                 serviceTitle = serviceName;

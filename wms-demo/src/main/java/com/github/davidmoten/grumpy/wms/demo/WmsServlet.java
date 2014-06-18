@@ -8,11 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.davidmoten.grumpy.wms.Capabilities;
-import com.github.davidmoten.grumpy.wms.CapabilitiesLayer;
 import com.github.davidmoten.grumpy.wms.WmsServletRequestProcessor;
 import com.github.davidmoten.grumpy.wms.layer.darkness.DarknessLayer;
 
 public class WmsServlet extends HttpServlet {
+
+    private static final String SERVICE_TITLE = "Custom OGC Services";
+
+    private static final String SERVICE_NAME = "CustomOGC";
+
+    private static final String SERVICE_ABSTRACT = "Custom OGC WMS services including Custom, Fiddle and Darkness layers";
 
     private static final long serialVersionUID = 1518113833457077766L;
 
@@ -28,16 +33,23 @@ public class WmsServlet extends HttpServlet {
         // setup the capabilities of the service which will extract features
         // from the layers to fill in defaults for the layer fields in generated
         // capabilities.xml
-        Capabilities cap = Capabilities
-                .builder()
-                .serviceName("CustomOGC")
-                .serviceTitle("Custom OGC Services")
-                .serviceAbstract(
-                        "Custom OGC WMS services including Custom, Fiddle and Darkness layers")
-                .imageFormat("image/png").infoFormat("text/html")
-                .layer(CapabilitiesLayer.from(custom).build())
-                .layer(CapabilitiesLayer.from(darkness).build())
-                .layer(CapabilitiesLayer.from(fiddle).build())
+        Capabilities cap = Capabilities.builder()
+        // set service name
+                .serviceName(SERVICE_NAME)
+                // set service title
+                .serviceTitle(SERVICE_TITLE)
+                // set service abstract
+                .serviceAbstract(SERVICE_ABSTRACT)
+                // add image format
+                .imageFormat("image/png")
+                // add info format
+                .infoFormat("text/html")
+                // add custom layer
+                .layer(custom)
+                // add darkness layer
+                .layer(darkness)
+                // add fiddle layer
+                .layer(fiddle)
                 // build caps
                 .build();
 
