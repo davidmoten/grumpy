@@ -76,13 +76,17 @@ public class DarknessLayer implements Layer {
 				subSolarPoint.getLon());
 		int size = SUB_SOLAR_POINT_SIZE_PIXELS;
 		if (styles.contains(STYLE_PLAIN)) {
-			Ellipse2D spot = new Ellipse2D.Double();
-			g.setColor(Color.YELLOW);
-			spot.setFrame(point.x - size / 2, point.y - size / 2, size, size);
-			g.fill(spot);
+			fillCircle(g, point, size);
 		} else
 			g.drawImage(subSolarImage, point.x - size / 2, point.y - size / 2,
 					size, size, null);
+	}
+
+	private static void fillCircle(Graphics2D g, Point point, int size) {
+		Ellipse2D spot = new Ellipse2D.Double();
+		g.setColor(Color.YELLOW);
+		spot.setFrame(point.x - size / 2, point.y - size / 2, size, size);
+		g.fill(spot);
 	}
 
 	private static BufferedImage loadSubSolarPointImage() {
