@@ -31,7 +31,7 @@ public class WmsServletRequestProcessor {
     private static final Object REQUEST_GET_CAPABILITIES = "GetCapabilities";
     private static final Object REQUEST_GET_FEATURE_INFO = "GetFeatureInfo";
 
-    private final WmsGetCapabilitiesProvider capabilitiesProvider;
+    private final CapabilitiesProvider capabilitiesProvider;
 
     private final ImageCache imageCache;
 
@@ -47,8 +47,8 @@ public class WmsServletRequestProcessor {
      * @param imageCache
      * @param imageWriter
      */
-    public WmsServletRequestProcessor(WmsGetCapabilitiesProvider capabilitiesProvider, Layers layers,
-            ImageCache imageCache, ImageWriter imageWriter) {
+    public WmsServletRequestProcessor(CapabilitiesProvider capabilitiesProvider,
+            Layers layers, ImageCache imageCache, ImageWriter imageWriter) {
         this.capabilitiesProvider = capabilitiesProvider;
         this.imageCache = imageCache;
         this.imageWriter = imageWriter;
@@ -61,7 +61,7 @@ public class WmsServletRequestProcessor {
 
     public static class Builder {
 
-        private WmsGetCapabilitiesProvider capabilitiesProvider = new WmsGetCapabilitiesProviderEmpty();
+        private CapabilitiesProvider capabilitiesProvider = new CapabilitiesProviderEmpty();
         private ImageCache imageCache = new ImageCache();
         private Layers layers;
         private final LayersBuilder layersBuilder = LayersBuilder.builder();
@@ -72,13 +72,19 @@ public class WmsServletRequestProcessor {
         private Builder() {
         }
 
-        public Builder capabilities(WmsGetCapabilitiesProvider capabilitiesProvider) {
+        public Builder capabilities(CapabilitiesProvider capabilitiesProvider) {
             this.capabilitiesProvider = capabilitiesProvider;
             return this;
         }
 
+        public Builder capabilities(Capabilities capabilities) {
+            this.capabilitiesProvider = new CapabilitiesProviderFromCapabilities(capabilities);
+            return this;
+        }
+
         public Builder capabilitiesFromClasspath(String resource) {
-            this.capabilitiesProvider = WmsGetCapabilitiesProviderFromClasspath.fromClasspath(resource);
+            this.capabilitiesProvider = CapabilitiesProviderFromClasspath
+                    .fromClasspath(resource);
             return this;
         }
 
@@ -119,11 +125,13 @@ public class WmsServletRequestProcessor {
                 imageCache.add(layer);
             if (layers == null)
                 layers = layersBuilder.build();
-            return new WmsServletRequestProcessor(capabilitiesProvider, layers, imageCache, imageWriter);
+            return new WmsServletRequestProcessor(capabilitiesProvider, layers, imageCache,
+                    imageWriter);
         }
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         long t = System.currentTimeMillis();
         try {
             log.info("httpGetUrl=" + request.getRequestURL() + "?" + request.getQueryString());
@@ -151,13 +159,15 @@ public class WmsServletRequestProcessor {
             handleException(e);
         } finally {
             log.info("requestTimeSeconds="
-                    + new DecimalFormat("0.000").format((System.currentTimeMillis() - t) / 1000.0) + "s");
+                    + new DecimalFormat("0.000").format((System.currentTimeMillis() - t) / 1000.0)
+                    + "s");
         }
     }
 
     private void handleException(Exception e) throws ServletException {
         if (e.getClass().getName().contains("ClientAbortException") || e.getMessage() != null
-                && e.getMessage().contains("Broken pipe") || e.getCause() instanceof java.net.SocketException) {
+                && e.getMessage().contains("Broken pipe")
+                || e.getCause() instanceof java.net.SocketException) {
             String s = e.getMessage();
             if (s == null)
                 s = e.getClass().getName();
@@ -169,7 +179,8 @@ public class WmsServletRequestProcessor {
         }
     }
 
-    private void writeCapabilities(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void writeCapabilities(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         response.setContentType("text/xml");
         String capabilities = capabilitiesProvider.getCapabilities(request);
         response.getOutputStream().write(capabilities.getBytes());
@@ -205,7 +216,8 @@ public class WmsServletRequestProcessor {
             // which is commented on further in JIRA ER-95
             log.info("writing image to memory for layers " + wmsRequest.getLayers());
             ByteArrayOutputStream byteOs = new ByteArrayOutputStream();
-            String imageType = wmsRequest.getFormat().substring(wmsRequest.getFormat().indexOf('/') + 1);
+            String imageType = wmsRequest.getFormat().substring(
+                    wmsRequest.getFormat().indexOf('/') + 1);
             // This call is slow!!
             long t = System.currentTimeMillis();
             imageWriter.writeImage(image, byteOs, imageType);
@@ -218,8 +230,8 @@ public class WmsServletRequestProcessor {
         log.info("writing image to http output stream for layers " + wmsRequest.getLayers());
         response.getOutputStream().write(bytes);
         response.getOutputStream().flush();
-        log.info("imageSizeK=" + new DecimalFormat("0.000").format(bytes.length / 1000.0) + " for layers "
-                + wmsRequest.getLayers());
+        log.info("imageSizeK=" + new DecimalFormat("0.000").format(bytes.length / 1000.0)
+                + " for layers " + wmsRequest.getLayers());
     }
 
     private void writeFeatureInfo(HttpServletRequest request, HttpServletResponse response)

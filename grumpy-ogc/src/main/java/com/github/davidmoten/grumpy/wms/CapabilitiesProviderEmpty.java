@@ -2,9 +2,9 @@ package com.github.davidmoten.grumpy.wms;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class WmsGetCapabilitiesProviderEmpty implements WmsGetCapabilitiesProvider {
+public class CapabilitiesProviderEmpty implements CapabilitiesProvider {
 
-    private final WmsGetCapabilitiesProvider provider = WmsGetCapabilitiesProviderFromClasspath
+    private final CapabilitiesProvider provider = CapabilitiesProviderFromClasspath
             .fromClasspath("/wms-capabilities-empty.xml");
 
     @Override

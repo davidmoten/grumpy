@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.davidmoten.grumpy.wms.Capabilities;
+import com.github.davidmoten.grumpy.wms.CapabilitiesLayer;
 import com.github.davidmoten.grumpy.wms.WmsServletRequestProcessor;
 import com.github.davidmoten.grumpy.wms.layer.darkness.DarknessLayer;
 
@@ -17,10 +19,27 @@ public class WmsServlet extends HttpServlet {
     private final WmsServletRequestProcessor processor;
 
     public WmsServlet() {
+
+        Capabilities cap = Capabilities
+                .builder()
+                .serviceName("CustomOgc")
+                .serviceTitle("Custom OGC Services")
+                .serviceAbstract(
+                        "Custom OGC WMS services including Custom, Fiddle and Darkness layers")
+                .imageFormat("image/png")
+                .infoFormat("text/html")
+                .layer(CapabilitiesLayer.builder().name("Custom").title("Custom WMS Layer")
+                        .queryable().opaque().style("plain").crs("EPSG:4326").crs("EPSG:3857")
+                        .build())
+                // build caps
+                .build();
+
         // initialize the request processor
         processor = WmsServletRequestProcessor.builder()
         // capabilities
-                .capabilitiesFromClasspath("/wms-capabilities.xml")
+                .capabilities(cap)
+                // or use
+                // .capabilitiesFromClasspath("/wms-capabilities.xml")
                 // set image cache size
                 .imageCache(200)
                 // add custom layer as cached
