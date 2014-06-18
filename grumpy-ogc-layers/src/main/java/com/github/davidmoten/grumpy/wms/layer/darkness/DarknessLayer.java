@@ -27,7 +27,9 @@ import com.github.davidmoten.grumpy.util.Bounds;
 import com.github.davidmoten.grumpy.util.LatLon;
 import com.github.davidmoten.grumpy.wms.Layer;
 import com.github.davidmoten.grumpy.wms.LayerFeatures;
+import com.github.davidmoten.grumpy.wms.ReducingValueRenderer;
 import com.github.davidmoten.grumpy.wms.RendererUtil;
+import com.github.davidmoten.grumpy.wms.ValueRenderer;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
 import com.github.davidmoten.grumpy.wms.layer.darkness.SunUtil.Twilight;
@@ -135,14 +137,14 @@ public class DarknessLayer implements Layer {
 			@Override
 			public void render(Graphics2D g, Projector projector,
 					Bounds geoBounds, Twilight t) {
-				render(g, projector, geoBounds, t);
+				renderBounds(g, projector, geoBounds, t);
 			}
 		};
 		ReducingValueRenderer.renderRegion(g, function, projector, geoBounds,
 				xyBounds, regionRenderer);
 	}
 
-	private static void render(Graphics2D g, Projector projector,
+	private static void renderBounds(Graphics2D g, Projector projector,
 			Bounds geoBounds, final Twilight twilight) {
 		if (twilight != Twilight.DAYLIGHT) {
 
