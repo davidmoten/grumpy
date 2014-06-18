@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.Projector;
 import com.github.davidmoten.grumpy.wms.Layer;
@@ -22,6 +25,8 @@ import com.github.davidmoten.grumpy.wms.WmsRequest;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
 
 public class CustomLayer implements Layer {
+
+    private static final Logger log = LoggerFactory.getLogger(CustomLayer.class);
 
     private static final String PLACE = "Canberra";
     private static final double PLACE_LAT = -35.3075;
@@ -40,6 +45,8 @@ public class CustomLayer implements Layer {
 
     @Override
     public void render(Graphics2D g, WmsRequest request) {
+
+        log.info("scale=" + WmsUtil.calculateScale(request));
 
         RendererUtil.useAntialiasing(g);
 
