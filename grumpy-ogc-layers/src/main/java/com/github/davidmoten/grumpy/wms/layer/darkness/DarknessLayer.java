@@ -23,7 +23,6 @@ import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.Projector;
 import com.github.davidmoten.grumpy.projection.ProjectorTarget;
 import com.github.davidmoten.grumpy.util.Bounds;
-import com.github.davidmoten.grumpy.util.LatLon;
 import com.github.davidmoten.grumpy.wms.Layer;
 import com.github.davidmoten.grumpy.wms.LayerFeatures;
 import com.github.davidmoten.grumpy.wms.RendererUtil;
@@ -63,13 +62,9 @@ public class DarknessLayer implements Layer {
 	public void render(Graphics2D g, WmsRequest request) {
 		Projector projector = WmsUtil.getProjector(request);
 		Bounds bounds = toBounds(request);
-		render(g, projector, bounds, request.getStyles());
-	}
-
-	private void render(Graphics2D g, Projector projector, Bounds bounds,
-			List<String> styles) {
 		Position subSolarPoint = SunUtil.getSubSolarPoint();
-		renderSubSolarPoint(g, subSolarPoint, projector, subSolarImage, styles);
+		renderSubSolarPoint(g, subSolarPoint, projector, subSolarImage,
+				request.getStyles());
 		renderTwilight(g, subSolarPoint, projector, bounds);
 	}
 
@@ -77,9 +72,8 @@ public class DarknessLayer implements Layer {
 			Position subSolarPoint, Projector projector,
 			BufferedImage subSolarImage, List<String> styles) {
 
-		LatLon latLon = new LatLon(subSolarPoint.getLat(),
+		Point point = projector.toPoint(subSolarPoint.getLat(),
 				subSolarPoint.getLon());
-		Point point = projector.toPoint(latLon.lat(), latLon.lon());
 		int size = SUB_SOLAR_POINT_SIZE_PIXELS;
 		if (styles.contains(STYLE_PLAIN)) {
 			Ellipse2D spot = new Ellipse2D.Double();
