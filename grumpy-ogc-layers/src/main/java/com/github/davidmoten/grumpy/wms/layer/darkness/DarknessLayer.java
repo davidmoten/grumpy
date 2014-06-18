@@ -1,6 +1,7 @@
 package com.github.davidmoten.grumpy.wms.layer.darkness;
 
 import static com.github.davidmoten.grumpy.core.Position.position;
+import static com.github.davidmoten.grumpy.wms.WmsUtil.toBounds;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -19,9 +20,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import com.github.davidmoten.grumpy.core.Position;
-import com.github.davidmoten.grumpy.projection.FeatureUtil;
 import com.github.davidmoten.grumpy.projection.Projector;
-import com.github.davidmoten.grumpy.projection.ProjectorBounds;
 import com.github.davidmoten.grumpy.projection.ProjectorTarget;
 import com.github.davidmoten.grumpy.util.Bounds;
 import com.github.davidmoten.grumpy.util.LatLon;
@@ -31,6 +30,7 @@ import com.github.davidmoten.grumpy.wms.RendererUtil;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
 import com.github.davidmoten.grumpy.wms.layer.darkness.SunUtil.Twilight;
+import com.github.davidmoten.grumpy.wms.reduction.BoundsSampler;
 import com.github.davidmoten.grumpy.wms.reduction.BoundsSamplerCorners;
 import com.github.davidmoten.grumpy.wms.reduction.ReducingValueRenderer;
 import com.github.davidmoten.grumpy.wms.reduction.ValueRenderer;
@@ -62,35 +62,12 @@ public class DarknessLayer implements Layer {
 	@Override
 	public void render(Graphics2D g, WmsRequest request) {
 		Projector projector = WmsUtil.getProjector(request);
-		ProjectorBounds b = request.getBounds();
-		Position min = FeatureUtil.convertToLatLon(b.getMinX(), b.getMinY(),
-				request.getCrs());
-		Position max = FeatureUtil.convertToLatLon(b.getMaxX(), b.getMaxY(),
-				request.getCrs());
-		Bounds bounds = new Bounds(new LatLon(min.getLat(), min.getLon()),
-				new LatLon(max.getLat(), max.getLon()));
-		render(g, projector, bounds, request.getWidth(), request.getHeight(),
-				request.getStyles());
+		Bounds bounds = toBounds(request);
+		render(g, projector, bounds, request.getStyles());
 	}
 
-	/**
-	 * Render the Earth's shadow onto the supplied graphics context
-	 * 
-	 * @param g
-	 *            - the graphics context used for rendering
-	 * @param projector
-	 *            - the projection used to map from the geo-spatial world onto
-	 *            the graphics context
-	 * @param bounds
-	 *            - the geo-spatial bounding box of the region to be rendered
-	 * @param width
-	 *            - of the graphics area in pixels
-	 * @param height
-	 *            - of the graphics area in pixels
-	 */
 	private void render(Graphics2D g, Projector projector, Bounds bounds,
-			int width, int height, List<String> styles) {
-
+			List<String> styles) {
 		Position subSolarPoint = SunUtil.getSubSolarPoint();
 		renderSubSolarPoint(g, subSolarPoint, projector, subSolarImage, styles);
 		renderTwilight(g, subSolarPoint, projector, bounds);
@@ -128,22 +105,31 @@ public class DarknessLayer implements Layer {
 
 		ProjectorTarget t = projector.getTarget();
 		Rectangle xyBounds = new Rectangle(0, 0, t.getWidth(), t.getHeight());
-		Function<Position, Twilight> function = new Function<Position, Twilight>() {
+		Function<Position, Twilight> function = createValueFunction(subSolarPoint);
+		ValueRenderer<Twilight> regionRenderer = createValueRenderer();
+		BoundsSampler sampler = new BoundsSamplerCorners();
+		ReducingValueRenderer.renderRegion(g, function, projector, geoBounds,
+				xyBounds, sampler, regionRenderer);
+	}
+
+	private static Function<Position, Twilight> createValueFunction(
+			final Position subSolarPoint) {
+		return new Function<Position, Twilight>() {
 			@Override
 			public Twilight apply(Position p) {
 				return SunUtil.getTwilight(subSolarPoint, p);
 			}
 		};
-		ValueRenderer<Twilight> regionRenderer = new ValueRenderer<Twilight>() {
+	}
+
+	private static ValueRenderer<Twilight> createValueRenderer() {
+		return new ValueRenderer<Twilight>() {
 			@Override
 			public void render(Graphics2D g, Projector projector,
 					Bounds geoBounds, Twilight t) {
 				renderBounds(g, projector, geoBounds, t);
 			}
 		};
-		BoundsSamplerCorners sampler = new BoundsSamplerCorners();
-		ReducingValueRenderer.renderRegion(g, function, projector, geoBounds,
-				xyBounds, sampler, regionRenderer);
 	}
 
 	private static void renderBounds(Graphics2D g, Projector projector,

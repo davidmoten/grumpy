@@ -62,8 +62,8 @@ public class Projector {
         }
     }
 
-    public com.vividsolutions.jts.geom.Point getGeometryPointInSrsRelativeTo(double lat,
-            double lon, double relativeLat, double relativeLon, double relativeX, double relativeY) {
+    public com.vividsolutions.jts.geom.Point getGeometryPointInSrsRelativeTo(double lat, double lon,
+            double relativeLat, double relativeLon, double relativeX, double relativeY) {
 
         double diffLon1 = lon - relativeLon;
         double diffLon2 = lon - relativeLon + 360;
@@ -101,17 +101,14 @@ public class Projector {
     }
 
     public Point2D.Double getTargetPoint(com.vividsolutions.jts.geom.Point point) {
-        double proportionX = (point.getX() - bounds.getMinX())
-                / (bounds.getMaxX() - bounds.getMinX());
-        double proportionY = (bounds.getMaxY() - point.getY())
-                / (bounds.getMaxY() - bounds.getMinY());
+        double proportionX = (point.getX() - bounds.getMinX()) / (bounds.getMaxX() - bounds.getMinX());
+        double proportionY = (bounds.getMaxY() - point.getY()) / (bounds.getMaxY() - bounds.getMinY());
         double x = proportionX * target.getWidth();
         double y = proportionY * target.getHeight();
         return new Point2D.Double(x, y);
     }
 
-    public com.vividsolutions.jts.geom.Point getFirstXAfter(Projector projector, double lat,
-            double lon, double x) {
+    public com.vividsolutions.jts.geom.Point getFirstXAfter(Projector projector, double lat, double lon, double x) {
         com.vividsolutions.jts.geom.Point point = projector.getGeometryPointInSrs(lat, lon);
         double x2 = point.getX();
         double periodX = periodAtLat(lat);
@@ -146,8 +143,8 @@ public class Projector {
                 // assume the maxX occurs at longitude 180 (true for EPSG 3857
                 // spherical mercator) but maybe not true for other projections?
                 Coordinate c = new Coordinate(180, 0);
-                com.vividsolutions.jts.geom.Point pt = (com.vividsolutions.jts.geom.Point) JTS
-                        .transform(geometryFactory.createPoint(c), transform);
+                com.vividsolutions.jts.geom.Point pt = (com.vividsolutions.jts.geom.Point) JTS.transform(
+                        geometryFactory.createPoint(c), transform);
                 double maximumX = pt.getX();
                 if (point.getX() > bounds.getMaxX())
                     proportionX = (point.getX() - 2 * maximumX - bounds.getMinX())
@@ -156,13 +153,11 @@ public class Projector {
                     proportionX = (point.getX() + 2 * maximumX - bounds.getMinX())
                             / (bounds.getMaxX() - bounds.getMinX());
             } else {
-                proportionX = (point.getX() - bounds.getMinX())
-                        / (bounds.getMaxX() - bounds.getMinX());
+                proportionX = (point.getX() - bounds.getMinX()) / (bounds.getMaxX() - bounds.getMinX());
             }
-            double proportionY = (bounds.getMaxY() - point.getY())
-                    / (bounds.getMaxY() - bounds.getMinY());
-            Point2D.Double point2D = new Point2D.Double(proportionX * target.getWidth(),
-                    proportionY * target.getHeight());
+            double proportionY = (bounds.getMaxY() - point.getY()) / (bounds.getMaxY() - bounds.getMinY());
+            Point2D.Double point2D = new Point2D.Double(proportionX * target.getWidth(), proportionY
+                    * target.getHeight());
             return point2D;
         } catch (MismatchedDimensionException e) {
             throw new RuntimeException(e);
@@ -186,6 +181,10 @@ public class Projector {
             throw new RuntimeException(e);
         }
         return new Position(point.getY(), point.getX());
+    }
+
+    public Position toPositionFromSrs(double x, double y) {
+        return FeatureUtil.convertToLatLon(x, y, bounds.getSrs());
     }
 
     @Override
