@@ -18,7 +18,8 @@ Features
 * WMS Server utilities in ```grumpy-ogc```
 * Create a lightweight WMS server (about 12MB war)
 * Supports BBOX parameters handled differently by WMS 1.1.1 and 1.3
-* Handles boundary discontinuities with ```RendererUtil``` methods
+* Handles boundary discontinuities with ```Reducer``` and ```RendererUtil``` methods
+* War artifact to deploy Darkness layer as WMS service (```grumpy-app```)
 
 Demonstration
 -----------------
@@ -127,6 +128,8 @@ The bands correspond to the following twilight categories:
 * Night (the darkest)
 
 The layer is visible in the demo.
+
+The ```grumpy-app``` artifact is a war artifact that can be deployed to a java servlet container (tomcat, glassfish, jetty, jboss, others) to offer a WMS service with the Darkness layer (and any other layers that get added to ```grumpy-ogc-layers```).
 
 Why Grumpy?
 ---------------
