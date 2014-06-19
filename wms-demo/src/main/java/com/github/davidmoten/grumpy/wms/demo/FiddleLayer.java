@@ -49,8 +49,8 @@ public class FiddleLayer implements Layer {
     private ValueRenderer<Boolean> createValueRenderer() {
         return new ValueRenderer<Boolean>() {
             @Override
-            public void render(Graphics2D g, Projector projector, Rectangle region, Boolean t) {
-                if (t) {
+            public void render(Graphics2D g, Projector projector, Rectangle region, Boolean inRegion) {
+                if (inRegion) {
                     List<Position> positions = WmsUtil.getBorder(projector, region);
                     List<GeneralPath> shapes = RendererUtil.toPath(projector, positions);
                     g.setColor(Color.LIGHT_GRAY);
