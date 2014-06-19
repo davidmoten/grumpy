@@ -44,13 +44,12 @@ public class WmsUtil {
         return new Projector(request.getBounds(), target);
     }
 
-    public static double calculateScale(WmsRequest request) {
+    public static double getScale(WmsRequest request) {
         ProjectorBounds b = request.getBounds();
         ReferencedEnvelope envelope = new ReferencedEnvelope(b.getMinX(), b.getMaxX(), b.getMinY(),
                 b.getMaxY(), FeatureUtil.getCrs(request.getCrs()));
-        double scale = RendererUtilities.calculateOGCScale(envelope, request.getWidth(),
+        return RendererUtilities.calculateOGCScale(envelope, request.getWidth(),
                 Collections.emptyMap());
-        return scale;
     }
 
     public static Rectangle toTargetRectangle(Projector projector) {

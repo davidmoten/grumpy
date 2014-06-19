@@ -52,7 +52,7 @@ public class CustomLayer implements Layer {
     @Override
     public void render(Graphics2D g, WmsRequest request) {
 
-        log.info("scale=" + WmsUtil.calculateScale(request));
+        log.info("scale=" + WmsUtil.getScale(request));
 
         RendererUtil.useAntialiasing(g);
 

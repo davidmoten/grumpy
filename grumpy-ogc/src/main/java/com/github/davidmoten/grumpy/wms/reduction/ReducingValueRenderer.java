@@ -108,7 +108,7 @@ public class ReducingValueRenderer {
 
         T regionT = null;
 
-        List<Point> points = sampler.sample(region);
+        List<Point> points = sampler.sample(region, projector);
 
         for (Point point : points) {
             Position p = projector.toPosition(point.x, point.y);
