@@ -3,6 +3,7 @@ package com.github.davidmoten.grumpy.wms.reduction;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.davidmoten.grumpy.core.Position;
@@ -53,7 +54,7 @@ public class ReducingValueRenderer {
             Projector projector, Rectangle region, RectangleSampler sampler,
             ValueRenderer<T> regionRenderer) {
         // split region
-        final Rectangle[] regions = splitRegion(region);
+        final List<Rectangle> regions = splitRegion(region);
 
         // now render each region
         for (Rectangle subRegion : regions) {
@@ -61,46 +62,38 @@ public class ReducingValueRenderer {
         }
     }
 
-    private static Rectangle[] splitRegion(Rectangle region) {
-        final Rectangle[] rectangles;
+    private static List<Rectangle> splitHorizontally(Rectangle region) {
+        List<Rectangle> list = new ArrayList<Rectangle>();
+        int halfWidth = region.width / 2;
+        list.add(new Rectangle(region.x, region.y, halfWidth, region.height));
+        list.add(new Rectangle(region.x + halfWidth, region.y, region.width - halfWidth,
+                region.height));
+        return list;
+    }
 
-        if (region.width > 1 && region.height > 1) {
+    private static List<Rectangle> splitVertically(Rectangle region) {
+        List<Rectangle> list = new ArrayList<Rectangle>();
+        int halfHeight = region.height / 2;
+        list.add(new Rectangle(region.x, region.y, region.width, halfHeight));
+        list.add(new Rectangle(region.x, region.y + halfHeight, region.width, region.height
+                - halfHeight));
+        return list;
+    }
 
-            // divide into 4 sub regions
+    private static List<Rectangle> quarter(Rectangle region) {
+        List<Rectangle> list = new ArrayList<Rectangle>();
+        for (Rectangle r : splitHorizontally(region))
+            list.addAll(splitVertically(r));
+        return list;
+    }
 
-            rectangles = new Rectangle[4];
-            int halfWidth = region.width / 2;
-            int halfHeight = region.height / 2;
-            rectangles[0] = new Rectangle(region.x, region.y, halfWidth, halfHeight);
-            rectangles[1] = new Rectangle(region.x + halfWidth, region.y, region.width
-                    - halfWidth, halfHeight);
-            rectangles[2] = new Rectangle(region.x + halfWidth, region.y + halfHeight,
-                    region.width - halfWidth, region.height - halfHeight);
-            rectangles[3] = new Rectangle(region.x, region.y + halfHeight, halfWidth,
-                    region.height - halfHeight);
-
-        } else if (region.height > 1) {
-
-            // divide into two vertically
-
-            rectangles = new Rectangle[2];
-
-            int halfHeight = region.height / 2;
-            rectangles[0] = new Rectangle(region.x, region.y, 1, halfHeight);
-            rectangles[1] = new Rectangle(region.x, region.y + halfHeight, 1, region.height
-                    - halfHeight);
-
-        } else {
-
-            // divide into two horizontally
-
-            rectangles = new Rectangle[2];
-            int halfWidth = region.width / 2;
-            rectangles[0] = new Rectangle(region.x, region.y, halfWidth, 1);
-            rectangles[1] = new Rectangle(region.x + halfWidth, region.y, region.width
-                    - halfWidth, 1);
-        }
-        return rectangles;
+    private static List<Rectangle> splitRegion(Rectangle region) {
+        if (region.width > 1 && region.height > 1)
+            return quarter(region);
+        else if (region.height > 1)
+            return splitVertically(region);
+        else
+            return splitHorizontally(region);
     }
 
     private static <T> T getUniformSampledValue(Projector projector, Rectangle region,
