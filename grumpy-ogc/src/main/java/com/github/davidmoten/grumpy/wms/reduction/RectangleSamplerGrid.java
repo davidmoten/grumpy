@@ -21,6 +21,7 @@ public class RectangleSamplerGrid implements RectangleSampler {
 
     @Override
     public List<Point> sample(Rectangle region, Projector projector) {
+        // TODO implement
         return RectangleUtil.corners(region);
     }
 }
