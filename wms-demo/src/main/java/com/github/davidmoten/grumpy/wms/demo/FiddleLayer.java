@@ -40,18 +40,19 @@ public class FiddleLayer implements Layer {
         Position centre = position(-35, 149);
         Projector projector = getProjector(request);
 
-        int radiusKm = 500;
-        List<Position> positions = getCircle(centre, radiusKm, 360);
-        List<GeneralPath> paths = toPath(projector, positions);
-        g.setColor(Color.BLUE);
-        draw(g, paths);
+        int radiusKm = 8000;
 
         Bounds geoBounds = WmsUtil.toBounds(request);
         Function<Position, Boolean> function = createValueFunction(centre, radiusKm);
         ValueRenderer<Boolean> regionRenderer = createValueRenderer();
-        BoundsSampler sampler = new BoundsSamplerMaxSize(radiusKm / 4);
+        BoundsSampler sampler = new BoundsSamplerMaxSize(radiusKm / 2);
         ReducingValueRenderer.renderRegion(g, function, projector, geoBounds, sampler,
                 regionRenderer);
+
+        List<Position> positions = getCircle(centre, radiusKm, 360);
+        List<GeneralPath> paths = toPath(projector, positions);
+        g.setColor(Color.BLUE);
+        draw(g, paths);
     }
 
     private ValueRenderer<Boolean> createValueRenderer() {
@@ -61,7 +62,7 @@ public class FiddleLayer implements Layer {
                 if (t) {
                     List<Position> positions = WmsUtil.getBorder(geoBounds);
                     List<GeneralPath> shapes = RendererUtil.toPath(projector, positions);
-                    g.setColor(Color.GRAY);
+                    g.setColor(Color.LIGHT_GRAY);
                     RendererUtil.fill(g, shapes);
                 }
             }
