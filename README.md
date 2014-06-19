@@ -113,6 +113,14 @@ In short the recursive algorithm is to start with a rectangle the size of the sc
 
 It's a useful way of handling projection weirdness by concentrating on the screen pixels. If the region you are trying to draw is irregular or small then you might need to use a custom sampler to be sure the region is detected at low scales. The ```Darkness``` layer is an example of a region that is smooth and large enough that corner sampling of rectangles is sufficient.
 
+The Darkness layer
+----------------------
+The module ```grumpy-ogc-layers``` contains the Darkness layer and it looks like this:
+
+<img src="https://raw.githubusercontent.com/davidmoten/grumpy/master/src/docs/demo4.png"/>
+
+It is visible in the demo.
+
 Why Grumpy?
 ---------------
 The project name was chosen at random and is no hint at the disposition of the primary developer! I'm very happy to receive contributions on this project. Just raise an issue.
