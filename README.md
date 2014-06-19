@@ -109,7 +109,7 @@ The reducer is an abstraction of Steven Ring's original idea for implementing th
 * a rectangle sampler
 * a rectangle renderer
 
-In short the recursive algorithm is to start with a rectangle the size of the screen and if the points sampled across the rectangle (according to the *rectangle sampler*) differ in value (calculated using the *value function*) then the rectangle is split into sub-rectangles and the process repeated. Once the values sampled across a rectangle are all the same the rectangle is rendered with its one value using the *rectangle renderer*.
+In short the recursive algorithm is to start with a rectangle the size of the screen and if the points sampled across the rectangle (according to the *rectangle sampler*) differ in value (calculated using the *value function*) then the rectangle is split into sub-rectangles and the process continued recursively. Once the values sampled across a rectangle are all the same the rectangle is rendered with its one value using the *rectangle renderer*.
 
 It's a useful way of handling projection weirdness by concentrating on the screen pixels. If the region you are trying to draw is irregular or small then you might need to use a custom sampler to be sure the region is detected at low scales. The ```Darkness``` layer is an example of a region that is smooth and large enough that corner sampling of rectangles is sufficient.
 
