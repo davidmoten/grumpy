@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
-import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.core.Position.LongitudePair;
 
 /**
@@ -808,7 +807,8 @@ public class PositionTest {
     public void testLongitudeDiff() {
         assertEquals(10, longitudeDiff(15, 5), PRECISION);
         assertEquals(10, longitudeDiff(-175, 175), PRECISION);
-        assertEquals(350, longitudeDiff(175, -175), PRECISION);
+        assertEquals(10, longitudeDiff(175, -175), PRECISION);
+        assertEquals(5, longitudeDiff(149, 154), PRECISION);
     }
 
     @Test

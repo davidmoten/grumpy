@@ -15,9 +15,17 @@ import java.util.List;
 
 import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.Projector;
+import com.github.davidmoten.grumpy.util.Bounds;
 import com.github.davidmoten.grumpy.wms.Layer;
 import com.github.davidmoten.grumpy.wms.LayerFeatures;
+import com.github.davidmoten.grumpy.wms.RendererUtil;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
+import com.github.davidmoten.grumpy.wms.WmsUtil;
+import com.github.davidmoten.grumpy.wms.reduction.BoundsSampler;
+import com.github.davidmoten.grumpy.wms.reduction.BoundsSamplerMaxSize;
+import com.github.davidmoten.grumpy.wms.reduction.ReducingValueRenderer;
+import com.github.davidmoten.grumpy.wms.reduction.ValueRenderer;
+import com.google.common.base.Function;
 
 public class FiddleLayer implements Layer {
 
@@ -29,11 +37,45 @@ public class FiddleLayer implements Layer {
 
     @Override
     public void render(Graphics2D g, WmsRequest request) {
+        Position centre = position(-35, 149);
         Projector projector = getProjector(request);
-        List<Position> positions = getCircle(position(-35, 149), 10000, 360);
+
+        int radiusKm = 500;
+        List<Position> positions = getCircle(centre, radiusKm, 360);
         List<GeneralPath> paths = toPath(projector, positions);
         g.setColor(Color.BLUE);
         draw(g, paths);
+
+        Bounds geoBounds = WmsUtil.toBounds(request);
+        Function<Position, Boolean> function = createValueFunction(centre, radiusKm);
+        ValueRenderer<Boolean> regionRenderer = createValueRenderer();
+        BoundsSampler sampler = new BoundsSamplerMaxSize(radiusKm / 4);
+        ReducingValueRenderer.renderRegion(g, function, projector, geoBounds, sampler,
+                regionRenderer);
+    }
+
+    private ValueRenderer<Boolean> createValueRenderer() {
+        return new ValueRenderer<Boolean>() {
+            @Override
+            public void render(Graphics2D g, Projector projector, Bounds geoBounds, Boolean t) {
+                if (t) {
+                    List<Position> positions = WmsUtil.getBorder(geoBounds);
+                    List<GeneralPath> shapes = RendererUtil.toPath(projector, positions);
+                    g.setColor(Color.GRAY);
+                    RendererUtil.fill(g, shapes);
+                }
+            }
+        };
+    }
+
+    private Function<Position, Boolean> createValueFunction(final Position centre,
+            final double radiusKm) {
+        return new Function<Position, Boolean>() {
+            @Override
+            public Boolean apply(Position p) {
+                return centre.getDistanceToKm(p) <= radiusKm;
+            }
+        };
     }
 
     @Override
