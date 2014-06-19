@@ -63,7 +63,7 @@ Using a war project (you could just copy the ```wms-demo``` project and change i
 
 ###Create a layer:
 
-See [CustomLayer.java](https://github.com/davidmoten/grumpy/blob/master/wms-demo/src/main/java/com/github/davidmoten/grumpy/wms/demo/CustomLayer.java) for how to render a layer using a ```Projector``` and a ```RendererUtil```.
+See [CustomLayer.java](blob/master/wms-demo/src/main/java/com/github/davidmoten/grumpy/wms/demo/CustomLayer.java) for how to render a layer using a ```Projector``` and a ```RendererUtil```.
 
 ###Create a servlet to serve the layer and capabilities:
 
@@ -99,7 +99,7 @@ Drawing Regions
 ----------------
 Drawing regions that extend over the polar areas is a bit tricky. The safest method is to use ```Reducer.render``` with an *is inside* value function and a filling ```ValueRenderer```. See [FiddleLayer.java](https://github.com/davidmoten/grumpy/blob/master/wms-demo%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgithub%2Fdavidmoten%2Fgrumpy%2Fwms%2Fdemo%2FFiddleLayer.java). The Fiddle layer is visible in the demo.
 
-Another example using the ```Reducer``` is the [Darkness layer](blob/master/grumpy-ogc-layers/src/main/java/com/github/davidmoten/grumpy/wms/layer/darkness/DarknessLayer.java) (also in the demo).
+Another example using the ```Reducer``` is the [Darkness layer](https://github.com/davidmoten/grumpy/blob/master/grumpy-ogc-layers/src/main/java/com/github/davidmoten/grumpy/wms/layer/darkness/DarknessLayer.java) (also in the demo).
 
 Why Grumpy?
 ---------------
