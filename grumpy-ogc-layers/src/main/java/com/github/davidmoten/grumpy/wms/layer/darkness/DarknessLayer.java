@@ -25,7 +25,7 @@ import com.github.davidmoten.grumpy.wms.WmsUtil;
 import com.github.davidmoten.grumpy.wms.layer.darkness.SunUtil.Twilight;
 import com.github.davidmoten.grumpy.wms.reduction.RectangleSampler;
 import com.github.davidmoten.grumpy.wms.reduction.RectangleSamplerCorners;
-import com.github.davidmoten.grumpy.wms.reduction.ReducingValueRenderer;
+import com.github.davidmoten.grumpy.wms.reduction.Reducer;
 import com.github.davidmoten.grumpy.wms.reduction.ValueRenderer;
 import com.google.common.base.Function;
 
@@ -92,7 +92,7 @@ public class DarknessLayer implements Layer {
         Function<Position, Twilight> function = createValueFunction(subSolarPoint);
         ValueRenderer<Twilight> valueRenderer = createValueRenderer();
         RectangleSampler sampler = new RectangleSamplerCorners();
-        ReducingValueRenderer.renderRegion(g, function, projector, sampler, valueRenderer);
+        Reducer.render(g, function, projector, sampler, valueRenderer);
     }
 
     private static Function<Position, Twilight> createValueFunction(final Position subSolarPoint) {

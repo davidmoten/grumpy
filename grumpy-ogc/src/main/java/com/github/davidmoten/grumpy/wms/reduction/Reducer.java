@@ -1,9 +1,12 @@
 package com.github.davidmoten.grumpy.wms.reduction;
 
+import static com.github.davidmoten.grumpy.wms.reduction.RectangleUtil.quarter;
+import static com.github.davidmoten.grumpy.wms.reduction.RectangleUtil.splitHorizontally;
+import static com.github.davidmoten.grumpy.wms.reduction.RectangleUtil.splitVertically;
+
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.github.davidmoten.grumpy.core.Position;
@@ -11,9 +14,9 @@ import com.github.davidmoten.grumpy.projection.Projector;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
 import com.google.common.base.Function;
 
-public class ReducingValueRenderer {
+public class Reducer {
 
-    public static <T> void renderRegion(Graphics2D g, Function<Position, T> function,
+    public static <T> void render(Graphics2D g, Function<Position, T> function,
             Projector projector, RectangleSampler sampler, ValueRenderer<T> regionRenderer) {
         Rectangle region = WmsUtil.toTargetRectangle(projector);
         renderRegion(g, function, projector, region, sampler, regionRenderer);
@@ -28,8 +31,8 @@ public class ReducingValueRenderer {
 
         final T regionUniformValue;
         if (!regionDivisible) {
-            // region is indivisible, so choose any corner for the twilight
-            // value
+            // region is indivisible, so choose any corner for the
+            // representative value
             regionUniformValue = function.apply(projector.toPosition(region.getMinX(),
                     region.getMinY()));
         } else {
@@ -62,31 +65,6 @@ public class ReducingValueRenderer {
         }
     }
 
-    private static List<Rectangle> splitHorizontally(Rectangle region) {
-        List<Rectangle> list = new ArrayList<Rectangle>();
-        int halfWidth = region.width / 2;
-        list.add(new Rectangle(region.x, region.y, halfWidth, region.height));
-        list.add(new Rectangle(region.x + halfWidth, region.y, region.width - halfWidth,
-                region.height));
-        return list;
-    }
-
-    private static List<Rectangle> splitVertically(Rectangle region) {
-        List<Rectangle> list = new ArrayList<Rectangle>();
-        int halfHeight = region.height / 2;
-        list.add(new Rectangle(region.x, region.y, region.width, halfHeight));
-        list.add(new Rectangle(region.x, region.y + halfHeight, region.width, region.height
-                - halfHeight));
-        return list;
-    }
-
-    private static List<Rectangle> quarter(Rectangle region) {
-        List<Rectangle> list = new ArrayList<Rectangle>();
-        for (Rectangle r : splitHorizontally(region))
-            list.addAll(splitVertically(r));
-        return list;
-    }
-
     private static List<Rectangle> splitRegion(Rectangle region) {
         if (region.width > 1 && region.height > 1)
             return quarter(region);
@@ -99,19 +77,19 @@ public class ReducingValueRenderer {
     private static <T> T getUniformSampledValue(Projector projector, Rectangle region,
             RectangleSampler sampler, Function<Position, T> function) {
 
-        T regionT = null;
+        T firstT = null;
 
         List<Point> points = sampler.sample(region, projector);
 
         for (Point point : points) {
             Position p = projector.toPosition(point.x, point.y);
             T t = function.apply(p);
-            if (regionT == null) {
-                regionT = t;
-            } else if (!regionT.equals(t)) {
+            if (firstT == null) {
+                firstT = t;
+            } else if (!firstT.equals(t)) {
                 return null;
             }
         }
-        return regionT;
+        return firstT;
     }
 }
