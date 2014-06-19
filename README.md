@@ -119,7 +119,14 @@ The module ```grumpy-ogc-layers``` contains the Darkness layer and it looks like
 
 <img src="https://raw.githubusercontent.com/davidmoten/grumpy/master/src/docs/demo4.png"/>
 
-It is visible in the demo.
+The bands correspond to the following twilight categories:
+
+* Civil (the lightest)
+* Nautical
+* Astronomical
+* Night (the darkest)
+
+The layer is visible in the demo.
 
 Why Grumpy?
 ---------------
