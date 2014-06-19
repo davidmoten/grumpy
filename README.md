@@ -63,11 +63,11 @@ Using a war project (you could just copy the ```wms-demo``` project and change i
 
 ###Create a layer:
 
-See [CustomLayer.java](blob/master/wms-demo/src/main/java/com/github/davidmoten/grumpy/wms/demo/CustomLayer.java) for how to render a layer using a ```Projector``` and a ```RendererUtil```.
+See [CustomLayer.java](wms-demo/src/main/java/com/github/davidmoten/grumpy/wms/demo/CustomLayer.java) for how to render a layer using a ```Projector``` and a ```RendererUtil```.
 
 ###Create a servlet to serve the layer and capabilities:
 
-See [WmsServlet.java](https://github.com/davidmoten/grumpy/blob/master/wms-demo%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgithub%2Fdavidmoten%2Fgrumpy%2Fwms%2Fdemo%2FWmsServlet.java) for how an ```HttpServlet``` is created to server WMS requests. You do need to register this servlet against a url of course in [web.xml](https://github.com/davidmoten/grumpy/blob/master/wms-demo/src/main/webapp/WEB-INF/web.xml).
+See [WmsServlet.java](wms-demo%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgithub%2Fdavidmoten%2Fgrumpy%2Fwms%2Fdemo%2FWmsServlet.java) for how an ```HttpServlet``` is created to server WMS requests. You do need to register this servlet against a url of course in [web.xml](wms-demo/src/main/webapp/WEB-INF/web.xml).
 
 ###Define the service capabilities:
 
@@ -75,15 +75,15 @@ Note that this enables service discovery and is required from WMS clients like A
 
 There are two options
 
-* Use ```Capabilities.builder()``` as in [WmsServlet.java](https://github.com/davidmoten/grumpy/blob/master/wms-demo%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgithub%2Fdavidmoten%2Fgrumpy%2Fwms%2Fdemo%2FWmsServlet.java)
+* Use ```Capabilities.builder()``` as in [WmsServlet.java](wms-demo%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgithub%2Fdavidmoten%2Fgrumpy%2Fwms%2Fdemo%2FWmsServlet.java)
 * Use a classpath resource such as ```/wms-capabilities.xml``` with ```WmsServletRequestProcessor.builder().capabilitiesFromClasspath()```
 
-See [wms-capabilities.xml](https://github.com/davidmoten/grumpy/blob/master/wms-demo%2Fsrc%2Fmain%2Fresources%2Fwms-capabilities.xml) which should conform to the OGC WMS 1.3 schema.
+See [wms-capabilities.xml](wms-demo%2Fsrc%2Fmain%2Fresources%2Fwms-capabilities.xml) which should conform to the OGC WMS 1.3 schema.
 
 From this point you have a working WMS service against the url for the ```WmsServlet```!
 
 ###View the WMS:
-An example WMS client is included in ```wms-demo``` in [map.jsp](https://github.com/davidmoten/grumpy/blob/master/wms-demo%2Fsrc%2Fmain%2Fwebapp%2Fmap.jsp) and the custom layer is referenced in [layers.js](https://github.com/davidmoten/grumpy/blob/master/wms-demo/src/main/webapp/js/layers.js).
+An example WMS client is included in ```wms-demo``` in [map.jsp](wms-demo%2Fsrc%2Fmain%2Fwebapp%2Fmap.jsp) and the custom layer is referenced in [layers.js](wms-demo/src/main/webapp/js/layers.js).
 
 ```wms-demo``` project uses [OpenLayers](http://openlayers.org/) javascript libraries and google maps v3 to display the world and the custom layer using the Spherical Mercator projection (EPSG 3857). See OpenLayers [documentation](http://docs.openlayers.org/) and [examples](http://openlayers.org/dev/examples/) to play with this client as you see fit.
 
@@ -97,9 +97,9 @@ mvn clean install
 
 Drawing Regions
 ----------------
-Drawing regions that extend over the polar areas is a bit tricky. The safest method is to use ```Reducer.render``` with an *is inside* value function and a filling ```ValueRenderer```. See [FiddleLayer.java](https://github.com/davidmoten/grumpy/blob/master/wms-demo%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgithub%2Fdavidmoten%2Fgrumpy%2Fwms%2Fdemo%2FFiddleLayer.java). The Fiddle layer is visible in the demo.
+Drawing regions that extend over the polar areas is a bit tricky. The safest method is to use ```Reducer.render``` with an *is inside* value function and a filling ```ValueRenderer```. See [FiddleLayer.java](wms-demo%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgithub%2Fdavidmoten%2Fgrumpy%2Fwms%2Fdemo%2FFiddleLayer.java). The Fiddle layer is visible in the demo.
 
-Another example using the ```Reducer``` is the [Darkness layer](https://github.com/davidmoten/grumpy/blob/master/grumpy-ogc-layers/src/main/java/com/github/davidmoten/grumpy/wms/layer/darkness/DarknessLayer.java) (also in the demo).
+Another example using the ```Reducer``` is the [Darkness layer](grumpy-ogc-layers/src/main/java/com/github/davidmoten/grumpy/wms/layer/darkness/DarknessLayer.java) (also in the demo).
 
 Why Grumpy?
 ---------------
