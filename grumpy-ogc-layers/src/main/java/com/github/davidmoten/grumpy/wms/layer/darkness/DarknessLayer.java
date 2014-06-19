@@ -1,10 +1,9 @@
 package com.github.davidmoten.grumpy.wms.layer.darkness;
 
-import static com.github.davidmoten.grumpy.wms.WmsUtil.toBounds;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
@@ -18,15 +17,14 @@ import javax.imageio.ImageIO;
 
 import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.Projector;
-import com.github.davidmoten.grumpy.util.Bounds;
 import com.github.davidmoten.grumpy.wms.Layer;
 import com.github.davidmoten.grumpy.wms.LayerFeatures;
 import com.github.davidmoten.grumpy.wms.RendererUtil;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
 import com.github.davidmoten.grumpy.wms.layer.darkness.SunUtil.Twilight;
-import com.github.davidmoten.grumpy.wms.reduction.BoundsSampler;
-import com.github.davidmoten.grumpy.wms.reduction.BoundsSamplerCorners;
+import com.github.davidmoten.grumpy.wms.reduction.RectangleSampler;
+import com.github.davidmoten.grumpy.wms.reduction.RectangleSamplerCorners;
 import com.github.davidmoten.grumpy.wms.reduction.ReducingValueRenderer;
 import com.github.davidmoten.grumpy.wms.reduction.ValueRenderer;
 import com.google.common.base.Function;
@@ -57,10 +55,9 @@ public class DarknessLayer implements Layer {
     @Override
     public void render(Graphics2D g, WmsRequest request) {
         Projector projector = WmsUtil.getProjector(request);
-        Bounds bounds = toBounds(request);
         Position subSolarPoint = SunUtil.getSubSolarPoint();
         renderSubSolarPoint(g, subSolarPoint, projector, subSolarImage, request.getStyles());
-        renderTwilight(g, subSolarPoint, projector, bounds);
+        renderTwilight(g, subSolarPoint, projector);
     }
 
     private static void renderSubSolarPoint(Graphics2D g, Position subSolarPoint,
@@ -90,13 +87,12 @@ public class DarknessLayer implements Layer {
     }
 
     private static void renderTwilight(Graphics2D g, final Position subSolarPoint,
-            Projector projector, Bounds geoBounds) {
+            Projector projector) {
 
         Function<Position, Twilight> function = createValueFunction(subSolarPoint);
-        ValueRenderer<Twilight> regionRenderer = createValueRenderer();
-        BoundsSampler sampler = new BoundsSamplerCorners();
-        ReducingValueRenderer.renderRegion(g, function, projector, geoBounds, sampler,
-                regionRenderer);
+        ValueRenderer<Twilight> valueRenderer = createValueRenderer();
+        RectangleSampler sampler = new RectangleSamplerCorners();
+        ReducingValueRenderer.renderRegion(g, function, projector, sampler, valueRenderer);
     }
 
     private static Function<Position, Twilight> createValueFunction(final Position subSolarPoint) {
@@ -111,17 +107,17 @@ public class DarknessLayer implements Layer {
     private static ValueRenderer<Twilight> createValueRenderer() {
         return new ValueRenderer<Twilight>() {
             @Override
-            public void render(Graphics2D g, Projector projector, Bounds geoBounds, Twilight t) {
-                renderBounds(g, projector, geoBounds, t);
+            public void render(Graphics2D g, Projector projector, Rectangle region, Twilight t) {
+                renderBounds(g, projector, region, t);
             }
         };
     }
 
-    private static void renderBounds(Graphics2D g, Projector projector, Bounds geoBounds,
+    private static void renderBounds(Graphics2D g, Projector projector, Rectangle region,
             final Twilight twilight) {
         if (twilight != Twilight.DAYLIGHT) {
 
-            List<Position> box = WmsUtil.getBorder(geoBounds);
+            List<Position> box = WmsUtil.getBorder(projector, region);
 
             // use multiple paths to handle boundary weirdness
             List<GeneralPath> path = RendererUtil.toPath(projector, box);

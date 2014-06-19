@@ -1,7 +1,5 @@
 package com.github.davidmoten.grumpy.wms;
 
-import static com.github.davidmoten.grumpy.core.Position.position;
-
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.lang.reflect.Field;
@@ -70,15 +68,14 @@ public class WmsUtil {
         return new Rectangle(0, 0, t.getWidth(), t.getHeight());
     }
 
-    public static List<Position> getBorder(Bounds bounds) {
+    public static List<Position> getBorder(Projector projector, Rectangle region) {
         List<Position> box = new ArrayList<Position>();
-        box.add(position(bounds.getMin().lat(), bounds.getMin().lon()));
-        box.add(position(bounds.getMin().lat(), bounds.getMax().lon()));
-        box.add(position(bounds.getMax().lat(), bounds.getMax().lon()));
-        box.add(position(bounds.getMax().lat(), bounds.getMin().lon()));
-        box.add(position(bounds.getMin().lat(), bounds.getMin().lon()));
+        box.add(projector.toPosition(region.x, region.y));
+        box.add(projector.toPosition(region.x, region.y + region.height));
+        box.add(projector.toPosition(region.x + region.width, region.y + region.height));
+        box.add(projector.toPosition(region.x + region.width, region.y));
+        box.add(projector.toPosition(region.x, region.y));
         return box;
-
     }
 
 }

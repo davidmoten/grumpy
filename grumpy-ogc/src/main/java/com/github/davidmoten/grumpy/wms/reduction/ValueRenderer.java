@@ -1,10 +1,10 @@
 package com.github.davidmoten.grumpy.wms.reduction;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 
 import com.github.davidmoten.grumpy.projection.Projector;
-import com.github.davidmoten.grumpy.util.Bounds;
 
 public interface ValueRenderer<T> {
-    void render(Graphics2D g, Projector projector, Bounds geoBounds, final T t);
+    void render(Graphics2D g, Projector projector, Rectangle region, final T t);
 }

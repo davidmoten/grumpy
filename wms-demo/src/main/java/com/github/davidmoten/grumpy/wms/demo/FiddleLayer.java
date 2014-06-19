@@ -6,20 +6,20 @@ import static com.github.davidmoten.grumpy.wms.WmsUtil.getProjector;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.GeneralPath;
 import java.util.Date;
 import java.util.List;
 
 import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.Projector;
-import com.github.davidmoten.grumpy.util.Bounds;
 import com.github.davidmoten.grumpy.wms.Layer;
 import com.github.davidmoten.grumpy.wms.LayerFeatures;
 import com.github.davidmoten.grumpy.wms.RendererUtil;
 import com.github.davidmoten.grumpy.wms.WmsRequest;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
-import com.github.davidmoten.grumpy.wms.reduction.BoundsSampler;
-import com.github.davidmoten.grumpy.wms.reduction.BoundsSamplerMaxSize;
+import com.github.davidmoten.grumpy.wms.reduction.RectangleSampler;
+import com.github.davidmoten.grumpy.wms.reduction.RectangleSamplerCorners;
 import com.github.davidmoten.grumpy.wms.reduction.ReducingValueRenderer;
 import com.github.davidmoten.grumpy.wms.reduction.ValueRenderer;
 import com.google.common.base.Function;
@@ -39,21 +39,19 @@ public class FiddleLayer implements Layer {
 
         int radiusKm = 8000;
 
-        Bounds geoBounds = WmsUtil.toBounds(request);
         Function<Position, Boolean> function = createValueFunction(centre, radiusKm);
         ValueRenderer<Boolean> regionRenderer = createValueRenderer();
-        BoundsSampler sampler = new BoundsSamplerMaxSize(radiusKm / 2);
-        ReducingValueRenderer.renderRegion(g, function, projector, geoBounds, sampler,
-                regionRenderer);
+        RectangleSampler sampler = new RectangleSamplerCorners();
+        ReducingValueRenderer.renderRegion(g, function, projector, sampler, regionRenderer);
 
     }
 
     private ValueRenderer<Boolean> createValueRenderer() {
         return new ValueRenderer<Boolean>() {
             @Override
-            public void render(Graphics2D g, Projector projector, Bounds geoBounds, Boolean t) {
+            public void render(Graphics2D g, Projector projector, Rectangle region, Boolean t) {
                 if (t) {
-                    List<Position> positions = WmsUtil.getBorder(geoBounds);
+                    List<Position> positions = WmsUtil.getBorder(projector, region);
                     List<GeneralPath> shapes = RendererUtil.toPath(projector, positions);
                     g.setColor(Color.LIGHT_GRAY);
                     RendererUtil.fill(g, shapes);

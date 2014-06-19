@@ -1,69 +1,63 @@
 package com.github.davidmoten.grumpy.wms.reduction;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.List;
 
 import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.grumpy.projection.Projector;
-import com.github.davidmoten.grumpy.util.Bounds;
-import com.github.davidmoten.grumpy.util.LatLon;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
 import com.google.common.base.Function;
 
 public class ReducingValueRenderer {
 
     public static <T> void renderRegion(Graphics2D g, Function<Position, T> function,
-            Projector projector, Bounds geoBounds, BoundsSampler sampler,
-            ValueRenderer<T> regionRenderer) {
-        Rectangle xyBounds = WmsUtil.toTargetRectangle(projector);
-        renderRegion(g, function, projector, geoBounds, xyBounds, sampler, regionRenderer);
+            Projector projector, RectangleSampler sampler, ValueRenderer<T> regionRenderer) {
+        Rectangle region = WmsUtil.toTargetRectangle(projector);
+        renderRegion(g, function, projector, region, sampler, regionRenderer);
     }
 
     private static <T> void renderRegion(Graphics2D g, Function<Position, T> function,
-            Projector projector, Bounds geoBounds, Rectangle xyBounds, BoundsSampler sampler,
+            Projector projector, Rectangle region, RectangleSampler sampler,
             ValueRenderer<T> regionRenderer) {
 
         // check if we need to divide the region
-        boolean regionDivisible = xyBounds.height > 1 || xyBounds.width > 1;
+        boolean regionDivisible = region.height > 1 || region.width > 1;
 
         final T regionUniformValue;
         if (!regionDivisible) {
             // region is indivisible, so choose any corner for the twilight
             // value
-            regionUniformValue = function.apply(new Position(geoBounds.getMin().lat(), geoBounds
-                    .getMin().lon()));
+            regionUniformValue = function.apply(projector.toPosition(region.getMinX(),
+                    region.getMinY()));
         } else {
             // get the function value for the region if common to all sample
             // points in the region (if no common value returns null)
-            regionUniformValue = getUniformSampledValue(geoBounds, sampler, function);
+            regionUniformValue = getUniformSampledValue(projector, region, sampler, function);
         }
 
         if (regionUniformValue != null) {
             // render the region
-            regionRenderer.render(g, projector, geoBounds, regionUniformValue);
+            regionRenderer.render(g, projector, region, regionUniformValue);
         } else {
             // region is a mix of values and is divisible
             // so divide into sub regions ... 2 or 4
             // but only if we can
 
-            splitRegionAndRender(g, function, projector, xyBounds, sampler, regionRenderer);
+            splitRegionAndRender(g, function, projector, region, sampler, regionRenderer);
         }
     }
 
     private static <T> void splitRegionAndRender(Graphics2D g, Function<Position, T> function,
-            Projector projector, Rectangle xyBounds, BoundsSampler sampler,
+            Projector projector, Rectangle xyBounds, RectangleSampler sampler,
             ValueRenderer<T> regionRenderer) {
         // split region
         final Rectangle[] rectangles = splitRectangles(xyBounds);
 
         // now render each region
         for (Rectangle rect : rectangles) {
-            Position min = projector.toPosition(rect.x, rect.y + rect.height);
-            Position max = projector.toPosition(rect.x + rect.width, rect.y);
-            Bounds bounds = new Bounds(new LatLon(min.getLat(), min.getLon()), new LatLon(
-                    max.getLat(), max.getLon()));
-            renderRegion(g, function, projector, bounds, rect, sampler, regionRenderer);
+            renderRegion(g, function, projector, rect, sampler, regionRenderer);
         }
     }
 
@@ -109,14 +103,15 @@ public class ReducingValueRenderer {
         return rectangles;
     }
 
-    private static <T> T getUniformSampledValue(Bounds region, BoundsSampler sampler,
-            Function<Position, T> function) {
+    private static <T> T getUniformSampledValue(Projector projector, Rectangle region,
+            RectangleSampler sampler, Function<Position, T> function) {
 
         T regionT = null;
 
-        List<Position> positions = sampler.sample(region);
+        List<Point> points = sampler.sample(region);
 
-        for (Position p : positions) {
+        for (Point point : points) {
+            Position p = projector.toPosition(point.x, point.y);
             T t = function.apply(p);
             if (regionT == null) {
                 regionT = t;
