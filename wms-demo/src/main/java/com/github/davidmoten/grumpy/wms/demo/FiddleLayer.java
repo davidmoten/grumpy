@@ -40,9 +40,9 @@ public class FiddleLayer implements Layer {
         int radiusKm = 8000;
 
         Function<Position, Boolean> function = createValueFunction(centre, radiusKm);
-        ValueRenderer<Boolean> regionRenderer = createValueRenderer();
+        ValueRenderer<Boolean> valueRenderer = createValueRenderer();
         RectangleSampler sampler = new RectangleSamplerCorners();
-        ReducingValueRenderer.renderRegion(g, function, projector, sampler, regionRenderer);
+        ReducingValueRenderer.renderRegion(g, function, projector, sampler, valueRenderer);
 
     }
 
