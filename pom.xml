@@ -86,6 +86,7 @@
 		<module>grumpy-ogc</module>
 		<module>grumpy-ogc-layers</module>
 		<module>wms-demo</module>
+        <module>grumpy-app</module>
     </modules>
 	
 	<build>
