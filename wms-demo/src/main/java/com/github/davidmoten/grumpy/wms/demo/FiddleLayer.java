@@ -1,9 +1,6 @@
 package com.github.davidmoten.grumpy.wms.demo;
 
 import static com.github.davidmoten.grumpy.core.Position.position;
-import static com.github.davidmoten.grumpy.wms.RendererUtil.draw;
-import static com.github.davidmoten.grumpy.wms.RendererUtil.getCircle;
-import static com.github.davidmoten.grumpy.wms.RendererUtil.toPath;
 import static com.github.davidmoten.grumpy.wms.WmsUtil.getProjector;
 
 import java.awt.Color;
@@ -37,7 +34,7 @@ public class FiddleLayer implements Layer {
 
     @Override
     public void render(Graphics2D g, WmsRequest request) {
-        Position centre = position(-35, 149);
+        Position centre = position(35, -40);
         Projector projector = getProjector(request);
 
         int radiusKm = 8000;
@@ -49,10 +46,6 @@ public class FiddleLayer implements Layer {
         ReducingValueRenderer.renderRegion(g, function, projector, geoBounds, sampler,
                 regionRenderer);
 
-        List<Position> positions = getCircle(centre, radiusKm, 360);
-        List<GeneralPath> paths = toPath(projector, positions);
-        g.setColor(Color.BLUE);
-        draw(g, paths);
     }
 
     private ValueRenderer<Boolean> createValueRenderer() {
