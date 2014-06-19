@@ -50,44 +50,44 @@ public class ReducingValueRenderer {
     }
 
     private static <T> void splitRegionAndRender(Graphics2D g, Function<Position, T> function,
-            Projector projector, Rectangle xyBounds, RectangleSampler sampler,
+            Projector projector, Rectangle region, RectangleSampler sampler,
             ValueRenderer<T> regionRenderer) {
         // split region
-        final Rectangle[] rectangles = splitRectangles(xyBounds);
+        final Rectangle[] regions = splitRegion(region);
 
         // now render each region
-        for (Rectangle rect : rectangles) {
-            renderRegion(g, function, projector, rect, sampler, regionRenderer);
+        for (Rectangle subRegion : regions) {
+            renderRegion(g, function, projector, subRegion, sampler, regionRenderer);
         }
     }
 
-    private static Rectangle[] splitRectangles(Rectangle xyBounds) {
+    private static Rectangle[] splitRegion(Rectangle region) {
         final Rectangle[] rectangles;
 
-        if (xyBounds.width > 1 && xyBounds.height > 1) {
+        if (region.width > 1 && region.height > 1) {
 
             // divide into 4 sub regions
 
             rectangles = new Rectangle[4];
-            int halfWidth = xyBounds.width / 2;
-            int halfHeight = xyBounds.height / 2;
-            rectangles[0] = new Rectangle(xyBounds.x, xyBounds.y, halfWidth, halfHeight);
-            rectangles[1] = new Rectangle(xyBounds.x + halfWidth, xyBounds.y, xyBounds.width
+            int halfWidth = region.width / 2;
+            int halfHeight = region.height / 2;
+            rectangles[0] = new Rectangle(region.x, region.y, halfWidth, halfHeight);
+            rectangles[1] = new Rectangle(region.x + halfWidth, region.y, region.width
                     - halfWidth, halfHeight);
-            rectangles[2] = new Rectangle(xyBounds.x + halfWidth, xyBounds.y + halfHeight,
-                    xyBounds.width - halfWidth, xyBounds.height - halfHeight);
-            rectangles[3] = new Rectangle(xyBounds.x, xyBounds.y + halfHeight, halfWidth,
-                    xyBounds.height - halfHeight);
+            rectangles[2] = new Rectangle(region.x + halfWidth, region.y + halfHeight,
+                    region.width - halfWidth, region.height - halfHeight);
+            rectangles[3] = new Rectangle(region.x, region.y + halfHeight, halfWidth,
+                    region.height - halfHeight);
 
-        } else if (xyBounds.height > 1) {
+        } else if (region.height > 1) {
 
             // divide into two vertically
 
             rectangles = new Rectangle[2];
 
-            int halfHeight = xyBounds.height / 2;
-            rectangles[0] = new Rectangle(xyBounds.x, xyBounds.y, 1, halfHeight);
-            rectangles[1] = new Rectangle(xyBounds.x, xyBounds.y + halfHeight, 1, xyBounds.height
+            int halfHeight = region.height / 2;
+            rectangles[0] = new Rectangle(region.x, region.y, 1, halfHeight);
+            rectangles[1] = new Rectangle(region.x, region.y + halfHeight, 1, region.height
                     - halfHeight);
 
         } else {
@@ -95,9 +95,9 @@ public class ReducingValueRenderer {
             // divide into two horizontally
 
             rectangles = new Rectangle[2];
-            int halfWidth = xyBounds.width / 2;
-            rectangles[0] = new Rectangle(xyBounds.x, xyBounds.y, halfWidth, 1);
-            rectangles[1] = new Rectangle(xyBounds.x + halfWidth, xyBounds.y, xyBounds.width
+            int halfWidth = region.width / 2;
+            rectangles[0] = new Rectangle(region.x, region.y, halfWidth, 1);
+            rectangles[1] = new Rectangle(region.x + halfWidth, region.y, region.width
                     - halfWidth, 1);
         }
         return rectangles;
