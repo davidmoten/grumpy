@@ -88,7 +88,7 @@ public class CustomLayer implements Layer {
         Position position = projector.toPosition(point.x, point.y);
 
         if (position.isWithin(box))
-            return "<div style=\"width:250px\">"
+            return "<div style=\"width:200px\">"
                     + "<p>Canberra is the capital city of Australia. With a population of 381,488, it is Australia's largest inland city and the eighth-largest city overall.</p>"
                     + "<img src=\"http://international.cit.edu.au/__data/assets/image/0006/27636/Canberra-Aerial-view-of-lake.jpg\" width=\"200\"/>"
                     + "</div>";
