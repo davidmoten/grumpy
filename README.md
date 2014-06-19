@@ -3,7 +3,7 @@ grumpy
 
 [OGC WMS](http://www.opengeospatial.org/standards/wms) Server in java allowing custom rendering of WMS layers using projection utilities and Graphics2D.
 
-Status: *released to Maven Central*, proper handling of longitude wrapping regions and lines happening now (nearly finished and will be released as 0.2 by 21 June 2014). 
+Status: *released to Maven Central*
 
 [Release Notes](RELEASE_NOTES.md)
 
