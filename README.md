@@ -83,7 +83,7 @@ See [wms-capabilities.xml](wms-demo%2Fsrc%2Fmain%2Fresources%2Fwms-capabilities.
 From this point you have a working WMS service against the url for the ```WmsServlet```!
 
 ###View the WMS:
-An example WMS client is included in ```wms-demo``` in [map.jsp](wms-demo%2Fsrc%2Fmain%2Fwebapp%2Fmap.jsp) and the custom layer is referenced in [layers.js](wms-demo/src/main/webapp/js/layers.js).
+Example WMS clients are included in ```wms-demo``` in [map-3857.jsp](wms-demo%2Fsrc%2Fmain%2Fwebapp%2Fmap-3857.jsp) and [map-4326.jsp](wms-demo%2Fsrc%2Fmain%2Fwebapp%2Fmap-4326.jsp). The custom layer is referenced in [layers.js](wms-demo/src/main/webapp/js/layers.js).
 
 ```wms-demo``` project uses [OpenLayers](http://openlayers.org/) javascript libraries and google maps v3 to display the world and the custom layer using the Spherical Mercator projection (EPSG 3857). See OpenLayers [documentation](http://docs.openlayers.org/) and [examples](http://openlayers.org/dev/examples/) to play with this client as you see fit.
 
