@@ -15,8 +15,6 @@ import com.github.davidmoten.grumpy.projection.FeatureUtil;
 import com.github.davidmoten.grumpy.projection.Projector;
 import com.github.davidmoten.grumpy.projection.ProjectorBounds;
 import com.github.davidmoten.grumpy.projection.ProjectorTarget;
-import com.github.davidmoten.grumpy.util.Bounds;
-import com.github.davidmoten.grumpy.util.LatLon;
 
 public class WmsUtil {
 
@@ -53,14 +51,6 @@ public class WmsUtil {
         double scale = RendererUtilities.calculateOGCScale(envelope, request.getWidth(),
                 Collections.emptyMap());
         return scale;
-    }
-
-    public static Bounds toBounds(WmsRequest request) {
-        ProjectorBounds b = request.getBounds();
-        Position min = FeatureUtil.convertToLatLon(b.getMinX(), b.getMinY(), request.getCrs());
-        Position max = FeatureUtil.convertToLatLon(b.getMaxX(), b.getMaxY(), request.getCrs());
-        return new Bounds(new LatLon(min.getLat(), min.getLon()), new LatLon(max.getLat(),
-                max.getLon()));
     }
 
     public static Rectangle toTargetRectangle(Projector projector) {
