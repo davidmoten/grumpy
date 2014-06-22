@@ -77,23 +77,25 @@ public class NearBSpline implements Shape, Cloneable {
         for (int i = 2; i < points.length;) {
             switch (points.length - i) {
             case 2:
-                lastPart = new Line2D.Float((float) path.getCurrentPoint().getX(), (float) path.getCurrentPoint()
-                        .getY(), (float) points[i], (float) points[i + 1]);
+                lastPart = new Line2D.Float((float) path.getCurrentPoint().getX(), (float) path
+                        .getCurrentPoint().getY(), (float) points[i], (float) points[i + 1]);
                 path.append(lastPart, true);
                 segments[i / 2 - 1] = lastPart;
                 i += 2;
                 break;
             case 4:
-                lastPart = new QuadCurve2D.Float((float) path.getCurrentPoint().getX(), (float) path.getCurrentPoint()
-                        .getY(), (float) points[i], (float) points[i + 1], (float) points[i + 2], (float) points[i + 3]);
+                lastPart = new QuadCurve2D.Float((float) path.getCurrentPoint().getX(),
+                        (float) path.getCurrentPoint().getY(), (float) points[i],
+                        (float) points[i + 1], (float) points[i + 2], (float) points[i + 3]);
                 path.append(lastPart, true);
                 segments[i / 2 - 1] = lastPart;
                 segments[i / 2] = lastPart;
                 i += 4;
                 break;
             case 6:
-                lastPart = new CubicCurve2D.Double(path.getCurrentPoint().getX(), path.getCurrentPoint().getY(),
-                        points[i], points[i + 1], points[i + 2], points[i + 3], points[i + 4], points[i + 5]);
+                lastPart = new CubicCurve2D.Double(path.getCurrentPoint().getX(), path
+                        .getCurrentPoint().getY(), points[i], points[i + 1], points[i + 2],
+                        points[i + 3], points[i + 4], points[i + 5]);
                 path.append(lastPart, true);
                 segments[i / 2 - 1] = lastPart;
                 segments[i / 2] = lastPart;
@@ -104,8 +106,9 @@ public class NearBSpline implements Shape, Cloneable {
                 float x = (float) (points[i + 2] + points[i + 4]) / 2F;
                 float y = (float) (points[i + 3] + points[i + 5]) / 2F;
 
-                lastPart = new CubicCurve2D.Double(path.getCurrentPoint().getX(), path.getCurrentPoint().getY(),
-                        points[i], points[i + 1], points[i + 2], points[i + 3], x, y);
+                lastPart = new CubicCurve2D.Double(path.getCurrentPoint().getX(), path
+                        .getCurrentPoint().getY(), points[i], points[i + 1], points[i + 2],
+                        points[i + 3], x, y);
 
                 path.append(lastPart, true);
                 segments[i / 2 - 1] = lastPart;

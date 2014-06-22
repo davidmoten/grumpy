@@ -1,7 +1,7 @@
 package com.github.davidmoten.grumpy.wms;
 
-import static com.github.davidmoten.grumpy.wms.RequestUtil.getList;
-import static com.github.davidmoten.grumpy.wms.RequestUtil.getParameter;
+import static com.github.davidmoten.util.servlet.RequestUtil.getList;
+import static com.github.davidmoten.util.servlet.RequestUtil.getParameter;
 
 import java.awt.Color;
 import java.text.ParseException;
@@ -20,6 +20,7 @@ import org.apache.commons.lang3.ObjectUtils;
 
 import com.github.davidmoten.grumpy.projection.FeatureUtil;
 import com.github.davidmoten.grumpy.projection.ProjectorBounds;
+import com.github.davidmoten.util.servlet.RequestUtil;
 
 public class WmsRequest {
 
