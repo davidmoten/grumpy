@@ -29,6 +29,8 @@ mvn clean install
 Demonstration
 -----------------
 ```
+cd grumpy
+mvn clean install
 cd wms-demo
 mvn jetty:run
 ```
