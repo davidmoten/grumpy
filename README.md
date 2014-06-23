@@ -29,6 +29,9 @@ Try it [live](http://grumpy.xuml-tools.cloudbees.net/) on cloudbees.
 Run demo locally
 ------------------
 ```
+git clone https://github.com/davidmoten/grumpy.git
+cd grumpy
+mvn clean install
 cd wms-demo
 mvn jetty:run
 ```
