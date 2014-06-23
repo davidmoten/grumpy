@@ -133,14 +133,6 @@
 						</plugin>
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-checkstyle-plugin</artifactId>
-							<version>${checkstyle.version}</version>
-							<configuration>
-								<includeTestSourceDirectory>true</includeTestSourceDirectory>
-							</configuration>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-pmd-plugin</artifactId>
 							<version>${pmd.version}</version>
 							<configuration>
@@ -162,11 +154,6 @@
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>jdepend-maven-plugin</artifactId>
 							<version>${jdepend.version}</version>
-						</plugin>
-						<plugin>
-							<groupId>org.codehaus.mojo</groupId>
-							<artifactId>javancss-maven-plugin</artifactId>
-							<version>${javancss.version}</version>
 						</plugin>
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
@@ -200,5 +187,10 @@
 			</plugin>
 		</plugins>
 	</build>
-
+<distributionManagement>
+    <site>
+      <id>grumpy-site</id>
+      <url>http://davidmoten.github.io/grumpy</url>
+    </site>
+  </distributionManagement>
 </project>
