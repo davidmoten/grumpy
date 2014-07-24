@@ -11,7 +11,7 @@ Status: *released to Maven Central*
 
 [Maven reports](http://davidmoten.github.io/grumpy/project-reports.html) including [javadocs](http://davidmoten.github.io/grumpy/apidocs/index.html).
 
-Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/). <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
+Continuous integration with Jenkins: <a href="https://xuml-tools.ci.cloudbees.com/"><img src="https://xuml-tools.ci.cloudbees.com/job/grumpy/badge/icon"/></a>
 
 Features
 ----------
