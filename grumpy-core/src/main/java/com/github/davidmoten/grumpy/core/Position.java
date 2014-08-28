@@ -15,6 +15,7 @@ import static java.lang.Math.sqrt;
 import static java.lang.Math.toRadians;
 
 import java.awt.Polygon;
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +28,9 @@ import org.apache.commons.math3.util.FastMath;
  * href="https://issues.apache.org/jira/browse/MATH-740">here</a>).
  * 
  */
-public class Position {
-    private static final double DEFAULT_INTERPOLATION_LONGITUDE_THRESHOLD = 0.25;
+public class Position implements Serializable{
+	private static final long serialVersionUID = -5416968288249676974L;
+	private static final double DEFAULT_INTERPOLATION_LONGITUDE_THRESHOLD = 0.25;
     private final double lat;
     private final double lon;
     private final double alt;

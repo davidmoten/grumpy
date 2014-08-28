@@ -6,9 +6,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +37,13 @@ public class PositionTest {
         squareRegion.add(new Position(40, 20));
         squareRegion.add(new Position(40, 40));
         squareRegion.add(new Position(20, 40));
+    }
+    
+    @Test
+    public final void testSerializable() {
+    	Serializable original = new Position(53, 3);
+		Object copy = SerializationUtils.clone(original);
+		Assert.assertEquals("Original and result Object are not same.", original, copy);    	
     }
 
     @Test
