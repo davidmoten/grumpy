@@ -149,9 +149,12 @@ class LayerManager {
                     final MyGraphics graphics = createGraphics(request);
                     paintLayer(graphics.graphics, layerName, layers, request);
                     return graphics.image;
-                } catch (Throwable e) {
+                } catch (Exception e) {
                     log.error(e.getMessage(), e);
                     throw e;
+                } catch (Error e) {
+                    log.error(e.getMessage(), e);
+					throw e;
                 }
             }
         };

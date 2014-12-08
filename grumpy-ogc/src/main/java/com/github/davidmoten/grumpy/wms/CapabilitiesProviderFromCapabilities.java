@@ -74,7 +74,9 @@ public class CapabilitiesProviderFromCapabilities implements CapabilitiesProvide
                 xml = xml.element("Style").element("Name").text(style).up().up();
 
             return xml.asString();
-        } catch (ParserConfigurationException | FactoryConfigurationError e) {
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        } catch (FactoryConfigurationError e) {
             throw new RuntimeException(e);
         } catch (TransformerException e) {
             throw new RuntimeException(e);

@@ -41,8 +41,8 @@ public class LayerFeatures {
     public static class Builder {
 
         private String name;
-        private List<String> styles = new ArrayList<>();
-        private List<String> crs = new ArrayList<>();
+        private List<String> styles = new ArrayList<String>();
+        private List<String> crs = new ArrayList<String>();
         private boolean queryable = false;
 
         private Builder() {

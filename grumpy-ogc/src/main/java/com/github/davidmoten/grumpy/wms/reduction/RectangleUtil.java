@@ -8,7 +8,7 @@ import java.util.List;
 public class RectangleUtil {
 
     public static List<Point> corners(Rectangle region) {
-        List<Point> list = new ArrayList<>();
+        List<Point> list = new ArrayList<Point>();
         list.add(new Point(region.x, region.y));
         list.add(new Point(region.x, region.y + region.height));
         list.add(new Point(region.x + region.width, region.y));
