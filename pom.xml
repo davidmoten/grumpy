@@ -185,10 +185,10 @@
 			</plugin>
 		</plugins>
 	</build>
-<distributionManagement>
-    <site>
-      <id>grumpy-site</id>
-      <url>http://davidmoten.github.io/grumpy</url>
-    </site>
-  </distributionManagement>
+    <distributionManagement>
+		<site>
+		  <id>grumpy-site</id>
+		  <url>http://davidmoten.github.io/grumpy</url>
+		</site>
+    </distributionManagement>
 </project>
