@@ -1,5 +1,6 @@
 grumpy
 =============
+<a href="https://travis-ci.org/davidmoten/grumpy"><img src="https://travis-ci.org/davidmoten/grumpy.svg"/></a>
 
 [OGC WMS](http://www.opengeospatial.org/standards/wms) Server in java allowing custom rendering of WMS layers using projection utilities and Graphics2D.
 
@@ -10,8 +11,6 @@ Status: *released to Maven Central*
 <img src="https://raw.githubusercontent.com/davidmoten/grumpy/master/src/docs/demo2.png"/>
 
 [Maven reports](http://davidmoten.github.io/grumpy/project-reports.html) including [javadocs](http://davidmoten.github.io/grumpy/apidocs/index.html).
-
-Continuous integration with Jenkins: <a href="https://xuml-tools.ci.cloudbees.com/"><img src="https://xuml-tools.ci.cloudbees.com/job/grumpy/badge/icon"/></a>
 
 Features
 ----------
