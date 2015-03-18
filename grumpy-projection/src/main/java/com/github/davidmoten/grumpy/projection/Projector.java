@@ -17,7 +17,13 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * Uses GeoTools and JTS libraries to perform transformations between coordinate
- * reference systems
+ * reference systems.
+ * 
+ * <p>
+ * Set {@code Projector.forceXY = false} before instantiating any Projector if
+ * you don't want the system property "org.geotools.referencing.forceXY" to be
+ * set to truen (it will happen on first instantiation of a Projector by
+ * default).
  * 
  * @author dxm
  * 
