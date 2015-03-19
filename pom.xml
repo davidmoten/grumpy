@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>grumpy</artifactId>
-	<version>0.2.3</version>
+	<version>0.2.4-SNAPSHOT</version>
 
 	<name>${project.artifactId}</name>
 	<description>OGC tools including WMS server</description>
@@ -75,7 +75,7 @@
 		<connection>scm:git:git@github.com:davidmoten/grumpy.git</connection>
 		<developerConnection>scm:git:git@github.com:davidmoten/grumpy.git</developerConnection>
 		<url>scm:git:git@github.com:davidmoten/grumpy.git</url>
-	  <tag>0.2.3</tag>
+	  <tag>HEAD</tag>
   </scm>
 
     <modules>
