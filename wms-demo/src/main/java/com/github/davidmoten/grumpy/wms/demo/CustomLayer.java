@@ -27,78 +27,88 @@ import com.github.davidmoten.grumpy.wms.WmsUtil;
 
 public class CustomLayer implements Layer {
 
-    private static final Logger log = LoggerFactory.getLogger(CustomLayer.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(CustomLayer.class);
 
-    private static final String PLACE = "Canberra";
-    private static final double PLACE_LAT = -35.3075;
-    private static final double PLACE_LON = 149.1244;
-    private final List<Position> box;
+	private static final String PLACE = "Canberra";
+	private static final double PLACE_LAT = -35.3075;
+	private static final double PLACE_LON = 149.1244;
+	private final List<Position> box;
 
-    private final LayerFeatures features;
+	private final LayerFeatures features;
 
-    public CustomLayer() {
-        // prepare a box around place
-        box = new ArrayList<Position>();
-        box.add(position(PLACE_LAT - 2, PLACE_LON - 4));
-        box.add(position(PLACE_LAT + 2, PLACE_LON - 4));
-        box.add(position(PLACE_LAT + 2, PLACE_LON + 4));
-        box.add(position(PLACE_LAT - 2, PLACE_LON + 4));
-        box.add(position(PLACE_LAT - 2, PLACE_LON - 4));
+	public CustomLayer() {
+		// prepare a box around place
+		box = new ArrayList<Position>();
+		box.add(position(PLACE_LAT - 2, PLACE_LON - 4));
+		box.add(position(PLACE_LAT + 2, PLACE_LON - 4));
+		box.add(position(PLACE_LAT + 2, PLACE_LON + 4));
+		box.add(position(PLACE_LAT - 2, PLACE_LON + 4));
+		box.add(position(PLACE_LAT - 2, PLACE_LON - 4));
 
-        features = LayerFeatures.builder().name("Custom").crs("EPSG:4326").crs("EPSG:3857")
-                .queryable().build();
-    }
+		features = LayerFeatures.builder().name("Custom").crs("EPSG:4326")
+				.crs("EPSG:3857").queryable().build();
+	}
 
-    @Override
-    public void render(Graphics2D g, WmsRequest request) {
+	@Override
+	public void render(Graphics2D g, WmsRequest request) {
 
-        log.info("scale=" + WmsUtil.getScale(request));
+		log.info("scale=" + WmsUtil.getScale(request));
 
-        RendererUtil.useAntialiasing(g);
+		Projector projector = WmsUtil.getProjector(request);
+		// only start the logic to load the data and schedule refreshes once
+		// get the limits of the request box in lats and longs so we can use an
+		// rtree
+		Position min = projector.toPositionFromSrs(request.getBounds()
+				.getMinX(), request.getBounds().getMinY());
+		Position max = projector.toPositionFromSrs(request.getBounds()
+				.getMaxX(), request.getBounds().getMaxY());
+		log.info("min=" + min + ", max=" + max);
 
-        Projector projector = WmsUtil.getProjector(request);
+		RendererUtil.useAntialiasing(g);
 
-        // get the box around place as a shape
-        List<GeneralPath> shapes = toPathGreatCircle(projector, box);
+		// get the box around place as a shape
+		List<GeneralPath> shapes = toPathGreatCircle(projector, box);
 
-        // fill the box with white
-        // transparency is deferred to the wms client framework
-        g.setColor(Color.white);
-        fill(g, shapes);
+		// fill the box with white
+		// transparency is deferred to the wms client framework
+		g.setColor(Color.white);
+		fill(g, shapes);
 
-        // draw border in blue
-        g.setColor(Color.blue);
-        draw(g, shapes);
+		// draw border in blue
+		g.setColor(Color.blue);
+		draw(g, shapes);
 
-        // label place
-        Point p = projector.toPoint(PLACE_LAT, PLACE_LON);
-        g.setColor(Color.RED);
-        g.setFont(g.getFont().deriveFont(24.0f).deriveFont(Font.BOLD));
-        g.drawString(PLACE, p.x + 5, p.y);
+		// label place
+		Point p = projector.toPoint(PLACE_LAT, PLACE_LON);
+		g.setColor(Color.RED);
+		g.setFont(g.getFont().deriveFont(24.0f).deriveFont(Font.BOLD));
+		g.drawString(PLACE, p.x + 5, p.y);
 
-    }
+	}
 
-    @Override
-    public String getInfo(Date time, WmsRequest request, Point point, String mimeType) {
+	@Override
+	public String getInfo(Date time, WmsRequest request, Point point,
+			String mimeType) {
 
-        // if user clicks within Canberra box then return some info, otherwise
-        // return blank string
+		// if user clicks within Canberra box then return some info, otherwise
+		// return blank string
 
-        Projector projector = WmsUtil.getProjector(request);
-        Position position = projector.toPosition(point.x, point.y);
+		Projector projector = WmsUtil.getProjector(request);
+		Position position = projector.toPosition(point.x, point.y);
 
-        if (position.isWithin(box))
-            return "<div style=\"width:200px\">"
-                    + "<p>Canberra is the capital city of Australia. With a population of 381,488, it is Australia's largest inland city and the eighth-largest city overall.</p>"
-                    + "<img src=\"http://international.cit.edu.au/__data/assets/image/0006/27636/Canberra-Aerial-view-of-lake.jpg\" width=\"200\"/>"
-                    + "</div>";
-        else
-            return "";
-    }
+		if (position.isWithin(box))
+			return "<div style=\"width:200px\">"
+					+ "<p>Canberra is the capital city of Australia. With a population of 381,488, it is Australia's largest inland city and the eighth-largest city overall.</p>"
+					+ "<img src=\"http://international.cit.edu.au/__data/assets/image/0006/27636/Canberra-Aerial-view-of-lake.jpg\" width=\"200\"/>"
+					+ "</div>";
+		else
+			return "";
+	}
 
-    @Override
-    public LayerFeatures getFeatures() {
-        return features;
-    }
+	@Override
+	public LayerFeatures getFeatures() {
+		return features;
+	}
 
 }
