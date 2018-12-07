@@ -9,6 +9,7 @@ function init() {
     map = new OpenLayers.Map('map', {
         projection: 'EPSG:3857',
         layers: [
+            new OpenLayers.Layer.OSM( "OpenStreetMap"),
             new OpenLayers.Layer.Google(
                 "Google Physical",
                 {type: google.maps.MapTypeId.TERRAIN}
@@ -24,8 +25,7 @@ function init() {
             new OpenLayers.Layer.Google(
                 "Google Satellite",
                 {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22}
-            ),
-            new OpenLayers.Layer.OSM( "OpenStreetMap")
+            )
         ],
         center: new OpenLayers.LonLat(149.1,-35.3)
             // Google.v3 uses web mercator as projection, so we have to
