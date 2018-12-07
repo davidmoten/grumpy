@@ -66,15 +66,15 @@ How to make your own WMS
 ---------------------------
 Using a war project (you could just copy the ```wms-demo``` project and change its artifact and group id, remove the parent reference as well):
 
-###Create a layer:
+### Create a layer:
 
 See [CustomLayer.java](wms-demo/src/main/java/com/github/davidmoten/grumpy/wms/demo/CustomLayer.java) for how to render a layer using a ```Projector``` and a ```RendererUtil```.
 
-###Create a servlet to serve the layer and capabilities:
+### Create a servlet to serve the layer and capabilities:
 
 See [WmsServlet.java](wms-demo%2Fsrc%2Fmain%2Fjava%2Fcom%2Fgithub%2Fdavidmoten%2Fgrumpy%2Fwms%2Fdemo%2FWmsServlet.java) for how an ```HttpServlet``` is created to server WMS requests. You do need to register this servlet against a url of course in [web.xml](wms-demo/src/main/webapp/WEB-INF/web.xml).
 
-###Define the service capabilities:
+### Define the service capabilities:
 
 Note that this enables service discovery and is required from WMS clients like ArcGIS but is not required for an OpenLayers WMS client like in ```wms-demo```.
 
@@ -87,7 +87,7 @@ See [wms-capabilities.xml](wms-demo%2Fsrc%2Fmain%2Fresources%2Fwms-capabilities.
 
 From this point you have a working WMS service against the url for the ```WmsServlet```!
 
-###View the WMS:
+### View the WMS:
 Example WMS clients are included in ```wms-demo``` in [map-3857.jsp](wms-demo%2Fsrc%2Fmain%2Fwebapp%2Fmap-3857.jsp) and [map-4326.jsp](wms-demo%2Fsrc%2Fmain%2Fwebapp%2Fmap-4326.jsp). The custom layer is referenced in [layers.js](wms-demo/src/main/webapp/js/layers.js).
 
 ```wms-demo``` project uses [OpenLayers](http://openlayers.org/) javascript libraries and google maps v3 to display the world and the custom layer using the Spherical Mercator projection (EPSG 3857). See OpenLayers [documentation](http://docs.openlayers.org/) and [examples](http://openlayers.org/dev/examples/) to play with this client as you see fit.
