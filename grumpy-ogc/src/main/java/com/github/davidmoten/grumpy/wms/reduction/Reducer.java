@@ -10,9 +10,9 @@ import java.awt.Rectangle;
 import java.util.List;
 
 import com.github.davidmoten.grumpy.core.Position;
+import com.github.davidmoten.grumpy.function.Function;
 import com.github.davidmoten.grumpy.projection.Projector;
 import com.github.davidmoten.grumpy.wms.WmsUtil;
-import com.google.common.base.Function;
 
 public class Reducer {
 

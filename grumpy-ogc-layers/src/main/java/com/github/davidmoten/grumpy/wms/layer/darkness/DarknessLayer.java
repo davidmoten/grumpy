@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import com.github.davidmoten.grumpy.core.Position;
+import com.github.davidmoten.grumpy.function.Function;
 import com.github.davidmoten.grumpy.projection.Projector;
 import com.github.davidmoten.grumpy.wms.Layer;
 import com.github.davidmoten.grumpy.wms.LayerFeatures;
@@ -27,7 +28,6 @@ import com.github.davidmoten.grumpy.wms.reduction.RectangleSampler;
 import com.github.davidmoten.grumpy.wms.reduction.RectangleSamplerCorners;
 import com.github.davidmoten.grumpy.wms.reduction.Reducer;
 import com.github.davidmoten.grumpy.wms.reduction.ValueRenderer;
-import com.google.common.base.Function;
 
 /**
  * Splits the visible region into rectangles recursively till all sampled points
