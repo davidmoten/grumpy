@@ -38,6 +38,9 @@
         <m3.site.version>3.3</m3.site.version>
         <changelog.version>2.2</changelog.version>
         <coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
+      
+        <scm.url>scm:git:https://github.com/davidmoten/grumpy.git</scm.url>
+
     </properties>
 
     <licenses>
@@ -74,9 +77,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git@github.com:davidmoten/grumpy.git</connection>
-        <developerConnection>scm:git:git@github.com:davidmoten/grumpy.git</developerConnection>
-        <url>scm:git:git@github.com:davidmoten/grumpy.git</url>
+        <connection>${scm.url}</connection>
+        <developerConnection>${scm.url}</developerConnection>
+        <url>${scm.url}</url>
         <tag>HEAD</tag>
     </scm>
 
