@@ -171,6 +171,8 @@ Resources:
       Name: !Sub "${restApiName}"
       Description: !Sub "${mode} grumpy OGC WMS api"
       FailOnWarnings: true
+      BinaryMediaTypes:
+      - "image/png"
       Body:
         swagger: "2.0"
         info:
@@ -228,7 +230,7 @@ Resources:
                 uri: !Sub "arn:aws:apigateway:ap-southeast-2:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${!stageVariables.function}/invocations"
                 passthroughBehavior: "when_no_templates"
                 httpMethod: "POST"
-                contentHandling: "CONVERT_TO_TEXT"
+                contentHandling: "CONVERT_TO_BINARY"
                 type: "aws"
         securityDefinitions:
           api_key:
