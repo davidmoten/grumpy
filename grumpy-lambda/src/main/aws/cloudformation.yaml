@@ -168,7 +168,7 @@ Resources:
   ApiWmsGet:
     Type: AWS::ApiGateway::RestApi
     Properties:
-      Name: !Sub "${stackName}"
+      Name: !Sub "${restApiName}"
       Description: !Sub "${mode} grumpy OGC WMS api"
       FailOnWarnings: true
       Body:
