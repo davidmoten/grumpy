@@ -19,7 +19,7 @@
     <url>http://github.com/davidmoten/grumpy</url>
 
     <properties>
-        <maven.compiler.target>1.6</maven.compiler.target>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <slf4j.version>1.7.7</slf4j.version>
         <geotools.version>19.4</geotools.version>
 

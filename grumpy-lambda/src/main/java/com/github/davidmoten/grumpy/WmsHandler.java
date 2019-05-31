@@ -1,5 +1,9 @@
 package com.github.davidmoten.grumpy;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
 import java.util.Map;
 
 import com.amazonaws.services.lambda.runtime.Context;
@@ -8,8 +12,8 @@ import com.github.davidmoten.aws.helper.StandardRequestBodyPassThrough;
 
 public class WmsHandler {
 
-    public String get(Map<String, Object> input, Context context) {
-        
+    public String get(Map<String, Object> input, Context context) throws IOException {
+
         LambdaLogger log = context.getLogger();
 
         log.log("starting");
@@ -17,7 +21,18 @@ public class WmsHandler {
         // expects full request body passthrough from api gateway integration
         // request
         StandardRequestBodyPassThrough request = StandardRequestBodyPassThrough.from(input);
-        return "";
+        try (InputStream is = WmsHandler.class.getResourceAsStream("/cloud.png")) {
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            int nRead;
+            byte[] data = new byte[1024];
+            while ((nRead = is.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+
+            buffer.flush();
+            byte[] bytes = buffer.toByteArray();
+            return Base64.getEncoder().encodeToString(bytes);
+        }
     }
 
 }
