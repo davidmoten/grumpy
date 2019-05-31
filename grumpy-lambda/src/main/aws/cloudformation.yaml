@@ -18,6 +18,10 @@ Parameters:
     Type: String
     Default: "grumpy-lambda-wms"  
 
+  restApiName:
+    Type: String
+    Default: "grumpy-lambda-dev2"
+
 Resources:
 
   # The lambda reads data from this S3 bucket
@@ -164,7 +168,7 @@ Resources:
   ApiWmsGet:
     Type: AWS::ApiGateway::RestApi
     Properties:
-      Name: !Sub "grumpy-lambda-${mode}"
+      Name: !Sub "${stackName}"
       Description: !Sub "${mode} grumpy OGC WMS api"
       FailOnWarnings: true
       Body:

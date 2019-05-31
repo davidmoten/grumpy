@@ -24,6 +24,8 @@
         <artifact.bucket>grumpy-lambda-artifacts-${mode}</artifact.bucket>
         <junit.version>4.12</junit.version>
         <aws.server.id>amsa.aws</aws.server.id>
+        <stack.name>grumpy-lambda-${mode}</stack.name>
+        <rest.api.name>${stack.name}</rest.api.name>
     </properties>
 
     <dependencies>
@@ -102,12 +104,13 @@
                         <configuration>
                             <serverId>${aws.server.id}</serverId>
                             <region>ap-southeast-2</region>
-                            <stackName>grumpy-lambda-${mode}</stackName>
+                            <stackName>${stack.name}</stackName>
                             <parameters>
                                 <mode>${mode}</mode>
                                 <artifactBucket>${artifact.bucket}</artifactBucket>
                                 <artifactObjectName>${artifact.object.prefix}.jar</artifactObjectName>
                                 <functionName>${function.name}</functionName>
+                                <restApiName>${stack.name}</restApiName>
                             </parameters>
                             <template>src/main/aws/cloudformation.yaml</template>
                             <intervalSeconds>2</intervalSeconds>
@@ -126,7 +129,7 @@
                         <configuration>
                             <serverId>${aws.server.id}</serverId>
                             <region>ap-southeast-2</region>
-                            <restApiName>grumpy-wms-${mode}</restApiName>
+                            <restApiName>${rest.api.name}</restApiName>
                             <stage>${mode}</stage>
                             <!-- optional proxy config -->
                             <httpsProxyHost>${proxy.host}</httpsProxyHost>
