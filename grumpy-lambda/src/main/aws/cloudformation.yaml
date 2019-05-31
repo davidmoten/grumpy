@@ -153,10 +153,11 @@ Resources:
         RateLimit: 1 # per second
       UsagePlanName: !Sub "grumpy-lambda-usage-plan-${mode}" 
 
+  ## Prerequisite for this to work is that this user exists
   ApiUsagePlanKeyExample:
     Type: AWS::ApiGateway::UsagePlanKey
     Properties : 
-      KeyId: "dtjnm63iud"
+      KeyId: "epzw07en5f"
       KeyType: API_KEY
       UsagePlanId: !Ref ApiUsagePlan 
 

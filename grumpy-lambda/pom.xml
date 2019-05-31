@@ -12,7 +12,7 @@
 
     <properties>
         <aws.sdk.version>1.11.63</aws.sdk.version>
-        <proxy.host>proxy.amsa.gov.au</proxy.host>
+        <proxy.host>proxy</proxy.host>
         <proxy.port>8080</proxy.port>
         <mode>dev</mode>
         <function.name>grumpy-lambda-wms</function.name>
@@ -21,7 +21,7 @@
         <timestampSuffix>-${timestamp}</timestampSuffix>
         <!-- this property used in src/main/resources/configuration.properties -->
         <artifact.object.prefix>${project.artifactId}-${project.version}${timestampSuffix}</artifact.object.prefix>
-        <artifact.bucket>cts-gateway-artifacts-${mode}</artifact.bucket>
+        <artifact.bucket>grumpy-lambda-artifacts-${mode}</artifact.bucket>
         <junit.version>4.12</junit.version>
         <aws.server.id>amsa.aws</aws.server.id>
     </properties>
@@ -102,7 +102,7 @@
                         <configuration>
                             <serverId>${aws.server.id}</serverId>
                             <region>ap-southeast-2</region>
-                            <stackName>cts-gateway-${mode}</stackName>
+                            <stackName>grumpy-lambda-${mode}</stackName>
                             <parameters>
                                 <mode>${mode}</mode>
                                 <artifactBucket>${artifact.bucket}</artifactBucket>
