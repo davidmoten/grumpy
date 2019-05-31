@@ -193,7 +193,9 @@ Resources:
                 "200":
                   description: "200 response"
                   schema:
-                    $ref: "#/definitions/Empty"
+                    type: "file"
+                  headers:
+                  - "Content-Type"
               security:
               - api_key: []
               x-amazon-apigateway-integration:
@@ -240,3 +242,5 @@ Resources:
         definitions:
           Empty:
             type: "object"
+        x-amazon-apigateway-binary-media-types:
+        - "image/png"
