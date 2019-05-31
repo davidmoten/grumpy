@@ -32,12 +32,12 @@ public class WmsHandler {
 
             bytes.flush();
             String base64 = Base64.getEncoder().encodeToString(bytes.toByteArray());
-            String response = "{\"statusCode\": 200, " //
-                    + "\"headers\":{\"Content-Type\": \"image/png\"}, " //
-                    + "\"body\": \"" + base64 + "\", " //
-                    + " \"isBase64Encoded\": true}";
-            log.log("response=\n"+ response);
-            return response;
+//            String response = "{\"statusCode\": 200, " //
+//                    + "\"headers\":{\"Content-Type\": \"image/png\"}, " //
+//                    + "\"body\": \"" + base64 + "\", " //
+//                    + " \"isBase64Encoded\": true}";
+//            log.log("response=\n"+ response);
+            return base64;
         }
     }
 
