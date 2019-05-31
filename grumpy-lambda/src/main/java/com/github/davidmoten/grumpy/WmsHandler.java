@@ -23,21 +23,21 @@ public class WmsHandler {
         // request
         StandardRequestBodyPassThrough request = StandardRequestBodyPassThrough.from(input);
         try (InputStream is = WmsHandler.class.getResourceAsStream("/cloud.png")) {
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            int nRead;
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            int n;
             byte[] data = new byte[1024];
-            while ((nRead = is.read(data, 0, data.length)) != -1) {
-                buffer.write(data, 0, nRead);
+            while ((n = is.read(data, 0, data.length)) != -1) {
+                bytes.write(data, 0, n);
             }
 
-            buffer.flush();
-            byte[] bytes = buffer.toByteArray();
-            String base64 = Base64.getEncoder().encodeToString(bytes);
-            return "{\"statusCode\": 200, " //
+            bytes.flush();
+            String base64 = Base64.getEncoder().encodeToString(bytes.toByteArray());
+            String response = "{\"statusCode\": 200, " //
                     + "\"headers\":{\"Content-Type\": \"image/png\"}, " //
                     + "\"body\": \"" + base64 + "\", " //
                     + " \"isBase64Encoded\": true}";
-
+            log.log("response=\n"+ response);
+            return response;
         }
     }
 
