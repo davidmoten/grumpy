@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.davidmoten.aws.helper.StandardRequestBodyPassThrough;
 
 public class WmsHandler {
@@ -31,7 +32,12 @@ public class WmsHandler {
 
             buffer.flush();
             byte[] bytes = buffer.toByteArray();
-            return Base64.getEncoder().encodeToString(bytes);
+            String base64 = Base64.getEncoder().encodeToString(bytes);
+            return "{\"statusCode\": 200, " //
+                    + "\"headers\":{\"Content-Type\": \"image/png\"}, " //
+                    + "\"body\": \"" + base64 + "\", " //
+                    + " \"isBase64Encoded\": true}";
+
         }
     }
 
