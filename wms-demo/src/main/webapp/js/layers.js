@@ -21,7 +21,7 @@ function addLayers(map) {
     var layer2 = new OpenLayers.Layer.WMS( "Darkness",
                 wmsUrl, 
                 {layers: 'Darkness',transparent: "true", format: "image/png",styles:"Standard"},
-                {gutter:15,singleTile:true, visibility:false,opacity: 0.5,animationEnabled: true});
+                {gutter:15,singleTile:true, visibility:true,opacity: 0.5,animationEnabled: true});
                 
     map.addLayer(layer2);
     

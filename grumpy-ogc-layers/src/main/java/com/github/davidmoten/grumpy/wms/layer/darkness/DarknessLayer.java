@@ -48,8 +48,13 @@ public class DarknessLayer implements Layer {
 
     public DarknessLayer() {
         subSolarImage = loadSubSolarPointImage();
-        features = LayerFeatures.builder().name("Darkness").style(STYLE_PLAIN).crs("EPSG:4326")
-                .crs("EPSG:3857").build();
+        features = LayerFeatures //
+                .builder() //
+                .name("Darkness") //
+                .style(STYLE_PLAIN) //
+                .crs("EPSG:4326") //
+                .crs("EPSG:3857") //
+                .build();
     }
 
     @Override

@@ -53,7 +53,7 @@ public class FiddleLayer implements Layer {
                 if (inRegion) {
                     List<Position> positions = WmsUtil.getBorder(projector, region);
                     List<GeneralPath> shapes = RendererUtil.toPath(projector, positions);
-                    g.setColor(Color.LIGHT_GRAY);
+                    g.setColor(new Color(0, 150, 0));
                     RendererUtil.fill(g, shapes);
                 }
             }

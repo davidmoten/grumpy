@@ -60,19 +60,28 @@ public class CapabilitiesProviderFromCapabilities implements CapabilitiesProvide
             xml = xml.element("Name").text(layer.getName()).up()
             // add title
                     .element("Title").text(layer.getTitle()).up();
-            for (String crs : layer.getCrs())
+            for (String crs : layer.getCrs()) {
                 xml = xml.element("CRS").text(crs).up();
+            }
 
-            xml = xml.e("EX_GeographicBoundingBox").element("westBoundLongitude").text("-180").up()
-                    .element("eastBoundLongitude").text("180").up().element("southBoundLatitude")
-                    .text("-90").up().element("northBoundLatitude").text("90").up().up();
-            // xml = xml.e("BoundingBox").a("CRS", "EPSG:4326").a("minx",
-            // "-180").a("miny", "-90")
-            // .a("maxx", "180").a("maxy", "90").up();
-            // xml = xml.e("MaxScaleDenominator").text("500000000").up();
-            for (String style : layer.getStyles())
+            xml = xml.e("EX_GeographicBoundingBox") //
+                    .element("westBoundLongitude").text("-180").up() //
+                    .element("eastBoundLongitude").text("180").up() //
+                    .element("southBoundLatitude").text("-90").up() //
+                    .element("northBoundLatitude").text("90").up() //
+                    .up();
+            // wms 1.3.0 expects lat, long order in coordinates
+            xml = xml.e("BoundingBox") //
+                    .a("CRS", "EPSG:4326") //
+                    .a("minx", "-90") //
+                    .a("miny", "-180") //
+                    .a("maxx", "90") //
+                    .a("maxy", "180") //
+                    .up();
+//             xml = xml.e("MaxScaleDenominator").text("500000000").up();
+            for (String style : layer.getStyles()) {
                 xml = xml.element("Style").element("Name").text(style).up().up();
-
+            }
             return xml.asString();
         } catch (ParserConfigurationException e) {
             throw new RuntimeException(e);
