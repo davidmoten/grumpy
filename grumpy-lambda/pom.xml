@@ -23,6 +23,7 @@
         <artifact.object.prefix>${project.artifactId}-${project.version}${timestampSuffix}</artifact.object.prefix>
         <artifact.bucket>cts-gateway-artifacts-${mode}</artifact.bucket>
         <junit.version>4.12</junit.version>
+        <aws.server.id>amsa.aws</aws.server.id>
     </properties>
 
     <dependencies>
@@ -80,7 +81,7 @@
                             <goal>deployFileS3</goal>
                         </goals>
                         <configuration>
-                            <serverId>amsa.aws</serverId>
+                            <serverId>${aws.server.id}</serverId>
                             <region>ap-southeast-2</region>
                             <bucketName>${artifact.bucket}</bucketName>
                             <create>true</create>
@@ -99,7 +100,7 @@
                             <goal>deployCf</goal>
                         </goals>
                         <configuration>
-                            <serverId>amsa.aws</serverId>
+                            <serverId>${aws.server.id}</serverId>
                             <region>ap-southeast-2</region>
                             <stackName>cts-gateway-${mode}</stackName>
                             <parameters>
@@ -123,7 +124,7 @@
                             <goal>deployRestApi</goal>
                         </goals>
                         <configuration>
-                            <serverId>amsa.aws</serverId>
+                            <serverId>${aws.server.id}</serverId>
                             <region>ap-southeast-2</region>
                             <restApiName>grumpy-wms-${mode}</restApiName>
                             <stage>${mode}</stage>
