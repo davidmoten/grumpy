@@ -1,0 +1,419 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: template to install an environment of cts-gateway
+Parameters:
+
+  mode:
+    Type: String
+    Default: "dev2"
+    
+  artifactBucket:
+    Type: String
+    Default: "my-lambdas"
+    
+  artifactObjectName:
+    Type: String
+    Default: "grumpy-lambda-6.0-SNAPSHOT.jar"
+    
+  functionName:
+    Type: String
+    Default: "grumpy-lambda-wms"  
+
+Resources:
+
+  ## the jar is versioned and placed in the my-lambdas bucket
+  ## (which should be created external to this template so its 
+  ## contents are not thrown away when this cloudformation stack
+  ## is deleted)
+  LambdaWmsGet:
+    Type: AWS::Lambda::Function
+    Properties: 
+      FunctionName: !Sub "${functionName}-${mode}"
+      Handler: "com.github.davidmoten.grumpy.WmsHandler::get" 
+      Role: !GetAtt [RoleLambdaWmsGetExecution, Arn]
+      Code: 
+        S3Bucket: !Sub "${artifactBucket}"
+        S3Key: !Sub "${artifactObjectName}"
+      MemorySize: 512
+      Runtime: "java8"
+      Timeout: "90" # seconds
+
+  ## the role that the get-craftpic lambda is run with
+  ## very specific permissions are set about what s3 bucket and sqs queues
+  ## can be accessed
+  RoleLambdaWmsGetExecution: 
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "lambda-${functionName}-${mode}"
+      AssumeRolePolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Effect: "Allow"
+            Principal: 
+              Service: 
+                - "lambda.amazonaws.com"
+            Action: 
+              - "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - 
+          PolicyName: apigateway-api-key
+          PolicyDocument: 
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - apigateway:GET
+              Resource:
+              - arn:aws:apigateway:*::/apikeys/*
+              - arn:aws:apigateway:*::/apikeys
+        -
+          PolicyName: cloudwatch-log-group
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action: logs:CreateLogGroup
+              Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            - Effect: Allow
+              Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+              Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${functionName}-${mode}:*"
+        - 
+          PolicyName: s3-replies
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action: s3:*
+              Resource: 
+              - !Sub "arn:aws:s3:::cts-gateway-replies-${mode}/*"
+              - !Sub "arn:aws:s3:::cts-gateway-craftpic-${mode}/*"
+
+  ## give the /craftpic/lastActual api gateway resource permission to execute the lambda
+  LambdaPermissionWmsGetInvokedByApiGatewayLastActual: 
+    Type: AWS::Lambda::Permission
+    Properties: 
+      FunctionName: !GetAtt [LambdaWmsGet, Arn]
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      ## use * in the arn below for the stage part. we could explicitly restrict the stage to the mode
+      ## but that would stop us being able to call the test function in the API Gateway Console
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiWmsGet}/*/GET/craftpic/lastActual"
+
+  ## give the /check api gateway resource permission to execute the lambda
+  LambdaPermissionWmsGetInvokedByApiGatewayCheck:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt [LambdaWmsGet, Arn]
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      ## use * in the arn below for the stage part. we could explicitly restrict the stage to the mode
+      ## but that would stop us being able to call the test function in the API Gateway Console
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiWmsGet}/*/GET/check"
+
+  ## create the deployment of a stage (so that the stage is published to an https url)
+  ApiDeploymentWmsGet:
+    Type: "AWS::ApiGateway::Deployment"
+    Properties:
+      Description: !Sub "deployment of stage ${mode}"
+      RestApiId:
+        Ref: ApiWmsGet
+      StageName: !Sub "${mode}Dummy" # must be different from stage name below (see https://blog.jayway.com/2016/08/17/introduction-to-cloudformation-for-api-gateway/)
+  
+  ## create the stage
+  ApiStageWmsGet:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      DeploymentId: 
+        Ref: ApiDeploymentWmsGet
+      Description: !Sub "stage for get craftpic api ${mode}"
+      MethodSettings:
+        - ResourcePath: "/check"
+          HttpMethod: GET
+          MetricsEnabled: 'true'
+          DataTraceEnabled: 'true'
+          ThrottlingBurstLimit: '999'
+        - ResourcePath: "/craftpic/lastActual"
+          HttpMethod: GET 
+          MetricsEnabled: 'true'
+          DataTraceEnabled: 'true'
+          ThrottlingBurstLimit: '999'
+        - ResourcePath: "/docs/{proxy+}"
+          HttpMethod: GET
+          MetricsEnabled: 'false'
+          DataTraceEnabled: 'false'
+          ThrottlingBurstLimit: '555'
+      RestApiId: 
+        Ref: ApiWmsGet
+      StageName: !Sub "${mode}"
+      Variables:
+        function: !Sub "${functionName}-${mode}"
+
+  ApiUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      ApiStages:
+      - ApiId: !Ref ApiWmsGet
+        Stage: !Ref ApiStageWmsGet 
+      Description: "wms get usage plan"
+      Quota:
+        Limit: 30000
+        Period: MONTH
+      Throttle:
+        BurstLimit: 3 # per second
+        RateLimit: 1 # per second
+      UsagePlanName: !Sub "cts-gateway-usage-plan-${mode}" 
+
+  ApiUsagePlanKeyAAD:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties : 
+      KeyId: "dtjnm63iud"
+      KeyType: API_KEY
+      UsagePlanId: !Ref ApiUsagePlan 
+
+  ApiUsagePlanKeyAMSA:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties :
+      KeyId: "6883xjjuic"
+      KeyType: API_KEY
+      UsagePlanId: !Ref ApiUsagePlan
+
+  ApiUsagePlanKeyAMSAWindows:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties :
+      KeyId: "n7rjnm9j28"
+      KeyType: API_KEY
+      UsagePlanId: !Ref ApiUsagePlan
+
+  ApiUsagePlanKeyAmsaSysIntTesting:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties :
+      KeyId: "8s9xjjf6pg"
+      KeyType: API_KEY
+      UsagePlanId: !Ref ApiUsagePlan
+
+  ApiUsagePlanKeyAPASA:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties :
+      KeyId: "ia0kw2y5zj"
+      KeyType: API_KEY
+      UsagePlanId: !Ref ApiUsagePlan
+
+  ApiUsagePlanKeyWADOT:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties :
+      KeyId: "2f5jpjqtw6"
+      KeyType: API_KEY
+      UsagePlanId: !Ref ApiUsagePlan
+
+  ApiUsagePlanKeyAmsaGis:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties :
+      KeyId: "kc6okzn2og"
+      KeyType: API_KEY
+      UsagePlanId: !Ref ApiUsagePlan
+
+  ApiWmsGet:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub "cts-gateway-${mode}"
+      Description: !Sub "${mode} cts-gateway rest api"
+      FailOnWarnings: true
+      Body:
+        swagger: "2.0"
+        info:
+          version: "2017-03-30T22:50:37Z"
+          title: "cts-gateway"
+#       host: "w0ik4qs1c7.execute-api.ap-southeast-2.amazonaws.com"
+        basePath: !Sub "/${mode}"
+        schemes:
+        - "https"
+        paths:
+          /check:
+            get:
+              consumes:
+              - "application/json"
+              produces:
+              - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+              security:
+              - api_key: []
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                requestTemplates:
+                  application/json: "##  See http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html\n\
+                    ##  This template will pass through all parameters including path, querystring,\
+                    \ header, stage variables, and context through to the integration endpoint\
+                    \ via the body/payload\n#set($allParams = $input.params())\n{\n\"body-json\"\
+                    \ : $input.json('$'),\n\"params\" : {\n#foreach($type in $allParams.keySet())\n\
+                    \    #set($params = $allParams.get($type))\n\"$type\" : {\n    #foreach($paramName\
+                    \ in $params.keySet())\n    \"$paramName\" : \"$util.escapeJavaScript($params.get($paramName))\"\
+                    \n        #if($foreach.hasNext),#end\n    #end\n}\n    #if($foreach.hasNext),#end\n\
+                    #end\n},\n\"stage-variables\" : {\n#foreach($key in $stageVariables.keySet())\n\
+                    \"$key\" : \"$util.escapeJavaScript($stageVariables.get($key))\"\n   \
+                    \ #if($foreach.hasNext),#end\n#end\n},\n\"context\" : {\n    \"account-id\"\
+                    \ : \"$context.identity.accountId\",\n    \"api-id\" : \"$context.apiId\"\
+                    ,\n    \"api-key\" : \"$context.identity.apiKey\",\n    \"authorizer-principal-id\"\
+                    \ : \"$context.authorizer.principalId\",\n    \"caller\" : \"$context.identity.caller\"\
+                    ,\n    \"cognito-authentication-provider\" : \"$context.identity.cognitoAuthenticationProvider\"\
+                    ,\n    \"cognito-authentication-type\" : \"$context.identity.cognitoAuthenticationType\"\
+                    ,\n    \"cognito-identity-id\" : \"$context.identity.cognitoIdentityId\"\
+                    ,\n    \"cognito-identity-pool-id\" : \"$context.identity.cognitoIdentityPoolId\"\
+                    ,\n    \"http-method\" : \"$context.httpMethod\",\n    \"stage\" : \"\
+                    $context.stage\",\n    \"source-ip\" : \"$context.identity.sourceIp\"\
+                    ,\n    \"user\" : \"$context.identity.user\",\n    \"user-agent\" : \"\
+                    $context.identity.userAgent\",\n    \"user-arn\" : \"$context.identity.userArn\"\
+                    ,\n    \"request-id\" : \"$context.requestId\",\n    \"resource-id\" :\
+                    \ \"$context.resourceId\",\n    \"resource-path\" : \"$context.resourcePath\"\
+                    \n    }\n}\n"
+                # escape the substitution using ! before stageVariables.function
+                uri: !Sub "arn:aws:apigateway:ap-southeast-2:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${!stageVariables.function}/invocations"
+                passthroughBehavior: "when_no_templates"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+          /craftpic/lastActual:
+            get:
+              consumes:
+              - "application/json"
+              produces:
+              - "text/xml"
+              - "application/json"
+              parameters:
+              - name: "leftLon"
+                in: "query"
+                required: false
+                type: "string"
+              - name: "rightLon"
+                in: "query"
+                required: false
+                type: "string"
+              - name: "identifierPattern"
+                in: "query"
+                required: false
+                type: "string"
+              - name: "topLat"
+                in: "query"
+                required: false
+                type: "string"
+              - name: "craftTypePattern"
+                in: "query"
+                required: false
+                type: "string"
+              - name: "bottomLat"
+                in: "query"
+                required: false
+                type: "string"
+              - name: "sourcePattern"
+                in: "query"
+                required: false
+                type: "string"
+              - name: "Content-Encoding"
+                in: "header"
+                required: false
+                type: "string"
+              - name: "propertyPattern"
+                in: "query"
+                required: false
+                type: "string"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                "302":
+                  description: "302 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Location:
+                      type: "string"
+                "504":
+                  description: "504 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+              security:
+              - api_key: []
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                  http.*:
+                    statusCode: "302"
+                    responseParameters:
+                      method.response.header.Location: "integration.response.body.errorMessage"
+                  Timed.*:
+                    statusCode: "504"
+                requestTemplates:
+                  application/json: "##  See http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html\n\
+                    ##  This template will pass through all parameters including path, querystring,\
+                    \ header, stage variables, and context through to the integration endpoint\
+                    \ via the body/payload\n#set($allParams = $input.params())\n{\n\"body-json\"\
+                    \ : $input.json('$'),\n\"params\" : {\n#foreach($type in $allParams.keySet())\n\
+                    \    #set($params = $allParams.get($type))\n\"$type\" : {\n    #foreach($paramName\
+                    \ in $params.keySet())\n    \"$paramName\" : \"$util.escapeJavaScript($params.get($paramName))\"\
+                    \n        #if($foreach.hasNext),#end\n    #end\n}\n    #if($foreach.hasNext),#end\n\
+                    #end\n},\n\"stage-variables\" : {\n#foreach($key in $stageVariables.keySet())\n\
+                    \"$key\" : \"$util.escapeJavaScript($stageVariables.get($key))\"\n   \
+                    \ #if($foreach.hasNext),#end\n#end\n},\n\"context\" : {\n    \"account-id\"\
+                    \ : \"$context.identity.accountId\",\n    \"api-id\" : \"$context.apiId\"\
+                    ,\n    \"api-key\" : \"$context.identity.apiKey\",\n    \"authorizer-principal-id\"\
+                    \ : \"$context.authorizer.principalId\",\n    \"caller\" : \"$context.identity.caller\"\
+                    ,\n    \"cognito-authentication-provider\" : \"$context.identity.cognitoAuthenticationProvider\"\
+                    ,\n    \"cognito-authentication-type\" : \"$context.identity.cognitoAuthenticationType\"\
+                    ,\n    \"cognito-identity-id\" : \"$context.identity.cognitoIdentityId\"\
+                    ,\n    \"cognito-identity-pool-id\" : \"$context.identity.cognitoIdentityPoolId\"\
+                    ,\n    \"http-method\" : \"$context.httpMethod\",\n    \"stage\" : \"\
+                    $context.stage\",\n    \"source-ip\" : \"$context.identity.sourceIp\"\
+                    ,\n    \"user\" : \"$context.identity.user\",\n    \"user-agent\" : \"\
+                    $context.identity.userAgent\",\n    \"user-arn\" : \"$context.identity.userArn\"\
+                    ,\n    \"request-id\" : \"$context.requestId\",\n    \"resource-id\" :\
+                    \ \"$context.resourceId\",\n    \"resource-path\" : \"$context.resourcePath\"\
+                    \n    }\n}\n"
+                # escape the substitution using ! before stageVariables.function
+                uri: !Sub "arn:aws:apigateway:ap-southeast-2:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${!stageVariables.function}/invocations"
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+          /docs/{proxy+}:
+            x-amazon-apigateway-any-method:
+              produces:
+              - "application/json"
+              parameters:
+              - name: "proxy"
+                in: "path"
+                required: true
+                type: "string"
+              responses: {}
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                requestParameters:
+                  integration.request.path.proxy: "method.request.path.proxy"
+                uri: !Sub "http://cts-gateway-public-resources-${mode}.s3-website-ap-southeast-2.amazonaws.com/{proxy}"
+                passthroughBehavior: "when_no_match"
+                httpMethod: "ANY"
+                cacheNamespace: "34xt32"
+                cacheKeyParameters:
+                - "method.request.path.proxy"
+                contentHandling: "CONVERT_TO_BINARY"
+                type: "http_proxy"
+        securityDefinitions:
+          api_key:
+            type: "apiKey"
+            name: "x-api-key"
+            in: "header"
+        definitions:
+          Empty:
+            type: "object"

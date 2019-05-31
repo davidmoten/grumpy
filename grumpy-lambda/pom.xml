@@ -1,0 +1,149 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.davidmoten</groupId>
+        <artifactId>grumpy</artifactId>
+        <version>0.2.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>grumpy-lambda</artifactId>
+    <name>${project.artifactId}</name>
+
+    <properties>
+        <aws.sdk.version>1.11.63</aws.sdk.version>
+        <proxy.host>proxy.amsa.gov.au</proxy.host>
+        <proxy.port>8080</proxy.port>
+        <mode>dev</mode>
+        <function.name>grumpy-lambda-wms</function.name>
+        <maven.build.timestamp.format>yyyyMMdd_HHmm</maven.build.timestamp.format>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <timestampSuffix>-${timestamp}</timestampSuffix>
+        <!-- this property used in src/main/resources/configuration.properties -->
+        <artifact.object.prefix>${project.artifactId}-${project.version}${timestampSuffix}</artifact.object.prefix>
+        <artifact.bucket>cts-gateway-artifacts-${mode}</artifact.bucket>
+        <junit.version>4.12</junit.version>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>${aws.sdk.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-api-gateway</artifactId>
+            <version>${aws.sdk.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-lambda-java-core</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>guava-mini</artifactId>
+            <version>0.1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>com.github.davidmoten</groupId>
+                <artifactId>aws-maven-plugin</artifactId>
+                <version>0.2.14</version>
+                <executions>
+                    <!-- deploy lambda jar -->
+                    <execution>
+                        <id>file</id>
+                        <goals>
+                            <goal>deployFileS3</goal>
+                        </goals>
+                        <configuration>
+                            <serverId>amsa.aws</serverId>
+                            <region>ap-southeast-2</region>
+                            <bucketName>${artifact.bucket}</bucketName>
+                            <create>true</create>
+                            <file>${project.build.directory}/${project.artifactId}.jar</file>
+                            <objectName>${artifact.object.prefix}.jar</objectName>
+                            <!-- optional proxy config -->
+                            <httpsProxyHost>${proxy.host}</httpsProxyHost>
+                            <httpsProxyPort>${proxy.port}</httpsProxyPort>
+                        </configuration>
+                    </execution>
+                    <!-- deploy cloudformation template -->
+                    <!-- mvn aws:deployCf@cf -->
+                    <execution>
+                        <id>cf</id>
+                        <goals>
+                            <goal>deployCf</goal>
+                        </goals>
+                        <configuration>
+                            <serverId>amsa.aws</serverId>
+                            <region>ap-southeast-2</region>
+                            <stackName>cts-gateway-${mode}</stackName>
+                            <parameters>
+                                <mode>${mode}</mode>
+                                <artifactBucket>${artifact.bucket}</artifactBucket>
+                                <artifactObjectName>${artifact.object.prefix}.jar</artifactObjectName>
+                                <functionName>${function.name}</functionName>
+                            </parameters>
+                            <template>src/main/aws/cloudformation.yaml</template>
+                            <intervalSeconds>2</intervalSeconds>
+                            <!-- optional proxy config -->
+                            <httpsProxyHost>${proxy.host}</httpsProxyHost>
+                            <httpsProxyPort>${proxy.port}</httpsProxyPort>
+                        </configuration>
+                    </execution>
+                    <!-- cloudformation does not deploy the api to a stage 
+                        automatically so we do it with this command -->
+                    <execution>
+                        <id>api</id>
+                        <goals>
+                            <goal>deployRestApi</goal>
+                        </goals>
+                        <configuration>
+                            <serverId>amsa.aws</serverId>
+                            <region>ap-southeast-2</region>
+                            <restApiName>grumpy-wms-${mode}</restApiName>
+                            <stage>${mode}</stage>
+                            <!-- optional proxy config -->
+                            <httpsProxyHost>${proxy.host}</httpsProxyHost>
+                            <httpsProxyPort>${proxy.port}</httpsProxyPort>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
