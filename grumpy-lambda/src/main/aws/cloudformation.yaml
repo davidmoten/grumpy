@@ -171,8 +171,8 @@ Resources:
       Name: !Sub "${restApiName}"
       Description: !Sub "${mode} grumpy OGC WMS api"
       FailOnWarnings: true
-      BinaryMediaTypes:
-      - "*/*" ## apparently required although we want to return only image/png
+#      BinaryMediaTypes:
+#      - "*/*" ## apparently required although we want to return only image/png
       Body:
         swagger: "2.0"
         info:
@@ -194,12 +194,17 @@ Resources:
                   description: "200 response"
                   schema:
                     $ref: "#/definitions/Empty"
+                  headers:
+                    Content-Type:
+                      type: "string"
               security:
               - api_key: []
               x-amazon-apigateway-integration:
                 responses:
                   default:
                     statusCode: "200"
+                    responseParameters:
+                      method.response.header.Content-Type: "'image/png'"
                 requestTemplates:
                   application/json: "##  See http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html\n\
                     ##  This template will pass through all parameters including path, querystring,\
