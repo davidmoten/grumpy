@@ -38,6 +38,7 @@ public class WmsHandler {
                 // + "\"body\": \"" + base64 + "\", " //
                 // + " \"isBase64Encoded\": true}";
                 // log.log("response=\n"+ response);
+                log.log("returning base64 " + base64.substring(0, 32) + "...");
                 return base64;
             }
         } catch (Throwable t) {
@@ -46,7 +47,7 @@ public class WmsHandler {
             try (PrintStream p = new PrintStream(b)) {
                 t.printStackTrace(p);
             }
-            log.log("stack trace:\n"+ new String(b.toByteArray()));
+            log.log("stack trace:\n" + new String(b.toByteArray()));
             if (t instanceof RuntimeException) {
                 throw (RuntimeException) t;
             } else if (t instanceof IOException) {

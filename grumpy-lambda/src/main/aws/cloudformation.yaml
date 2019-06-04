@@ -171,8 +171,8 @@ Resources:
       Name: !Sub "${restApiName}"
       Description: !Sub "${mode} grumpy OGC WMS api"
       FailOnWarnings: true
-      BinaryMediaTypes:
-      - "*/*" ## apparently required although we want to return only image/png
+#      BinaryMediaTypes:
+#      - "*/*" ## apparently required although we want to return only image/png
       Body:
         swagger: "2.0"
         info:
