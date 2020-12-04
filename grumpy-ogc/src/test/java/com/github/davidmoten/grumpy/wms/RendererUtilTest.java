@@ -1,18 +1,17 @@
 package com.github.davidmoten.grumpy.wms;
 
-import static com.github.davidmoten.grumpy.core.Position.position;
+import com.github.davidmoten.grumpy.projection.Projector;
+import com.github.davidmoten.grumpy.projection.ProjectorBounds;
+import com.github.davidmoten.grumpy.projection.ProjectorTarget;
+import org.junit.Test;
+import org.locationtech.jts.geom.Point;
 
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D.Double;
 import java.util.List;
 
-import org.junit.Test;
-
-import com.github.davidmoten.grumpy.projection.Projector;
-import com.github.davidmoten.grumpy.projection.ProjectorBounds;
-import com.github.davidmoten.grumpy.projection.ProjectorTarget;
-import com.vividsolutions.jts.geom.Point;
+import static com.github.davidmoten.grumpy.core.Position.position;
 
 public class RendererUtilTest {
 
