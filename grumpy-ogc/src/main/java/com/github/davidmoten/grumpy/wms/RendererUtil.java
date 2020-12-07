@@ -39,12 +39,12 @@ public class RendererUtil {
         return list;
     }
 
-    private static List<com.vividsolutions.jts.geom.Point> getPathPoints(Projector projector,
+    private static List<org.locationtech.jts.geom.Point> getPathPoints(Projector projector,
             List<Position> positions, double deltaX) {
-        List<com.vividsolutions.jts.geom.Point> list = new ArrayList<com.vividsolutions.jts.geom.Point>();
+        List<org.locationtech.jts.geom.Point> list = new ArrayList<org.locationtech.jts.geom.Point>();
         Double firstPointLat = null;
         Double firstPointLon = null;
-        com.vividsolutions.jts.geom.Point firstPoint = null;
+        org.locationtech.jts.geom.Point firstPoint = null;
         for (Position pos : positions) {
             Position p = pos.normalizeLongitude();
             if (firstPoint == null) {
@@ -54,7 +54,7 @@ public class RendererUtil {
                 firstPointLon = p.getLon();
                 list.add(firstPoint);
             } else {
-                com.vividsolutions.jts.geom.Point point = projector
+                org.locationtech.jts.geom.Point point = projector
                         .getGeometryPointInSrsRelativeTo(p.getLat(), p.getLon(), firstPointLat,
                                 firstPointLon, firstPoint.getX(), firstPoint.getY());
                 list.add(point);
@@ -65,10 +65,10 @@ public class RendererUtil {
 
     private static GeneralPath createPath(Projector projector, List<Position> positions,
             double deltaX) {
-        List<com.vividsolutions.jts.geom.Point> points = getPathPoints(projector, positions, deltaX);
+        List<org.locationtech.jts.geom.Point> points = getPathPoints(projector, positions, deltaX);
         GeneralPath path = new GeneralPath();
         boolean first = true;
-        for (com.vividsolutions.jts.geom.Point point : points) {
+        for (org.locationtech.jts.geom.Point point : points) {
             Point2D.Double pt = projector.getTargetPoint(point);
             if (first) {
                 path.moveTo(pt.x, pt.y);

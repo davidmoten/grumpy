@@ -4,16 +4,16 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.github.davidmoten.grumpy.core.Position;
+
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
-
-import com.github.davidmoten.grumpy.core.Position;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * Uses GeoTools and JTS libraries to perform transformations between coordinate
@@ -65,11 +65,11 @@ public class Projector {
 		return target;
 	}
 
-	public com.vividsolutions.jts.geom.Point getGeometryPointInSrs(double lat, double lon) {
-		Coordinate coordinate = new Coordinate(lon, lat);
-		com.vividsolutions.jts.geom.Point point = geometryFactory.createPoint(coordinate);
+	public org.locationtech.jts.geom.Point getGeometryPointInSrs(double lat, double lon) {
+        Coordinate coordinate = new Coordinate(lon, lat);
+		org.locationtech.jts.geom.Point point = geometryFactory.createPoint(coordinate);
 		try {
-			return (com.vividsolutions.jts.geom.Point) JTS.transform(point, transform);
+			return (org.locationtech.jts.geom.Point) JTS.transform(point, transform);
 		} catch (MismatchedDimensionException e) {
 			throw new RuntimeException(e);
 		} catch (TransformException e) {
@@ -77,7 +77,7 @@ public class Projector {
 		}
 	}
 
-	public com.vividsolutions.jts.geom.Point getGeometryPointInSrsRelativeTo(double lat,
+	public org.locationtech.jts.geom.Point getGeometryPointInSrsRelativeTo(double lat,
 	        double lon, double relativeLat, double relativeLon, double relativeX, double relativeY) {
 
 		double diffLon1 = lon - relativeLon;
@@ -86,7 +86,7 @@ public class Projector {
 			lon = lon + 360;
 		double sign = Math.signum(lon - relativeLon);
 
-		com.vividsolutions.jts.geom.Point point = getGeometryPointInSrs(lat, lon);
+		org.locationtech.jts.geom.Point point = getGeometryPointInSrs(lat, lon);
 		double periodAtLat = periodAtLat(lat);
 		double x = point.getX();
 		// makes the assumption that increasing lon = increasing X
@@ -107,7 +107,7 @@ public class Projector {
 		return createPoint(x, point.getY());
 	}
 
-	public com.vividsolutions.jts.geom.Point createPoint(double x, double y) {
+	public org.locationtech.jts.geom.Point createPoint(double x, double y) {
 		return geometryFactory.createPoint(new Coordinate(x, y));
 	}
 
@@ -115,7 +115,7 @@ public class Projector {
 		return getGeometryPointInSrs(lat, 180).getX() - getGeometryPointInSrs(lat, -180).getX();
 	}
 
-	public Point2D.Double getTargetPoint(com.vividsolutions.jts.geom.Point point) {
+	public Point2D.Double getTargetPoint(org.locationtech.jts.geom.Point point) {
 		double proportionX = (point.getX() - bounds.getMinX())
 		        / (bounds.getMaxX() - bounds.getMinX());
 		double proportionY = (bounds.getMaxY() - point.getY())
@@ -125,9 +125,9 @@ public class Projector {
 		return new Point2D.Double(x, y);
 	}
 
-	public com.vividsolutions.jts.geom.Point getFirstXAfter(Projector projector, double lat,
+	public org.locationtech.jts.geom.Point getFirstXAfter(Projector projector, double lat,
 	        double lon, double x) {
-		com.vividsolutions.jts.geom.Point point = projector.getGeometryPointInSrs(lat, lon);
+		org.locationtech.jts.geom.Point point = projector.getGeometryPointInSrs(lat, lon);
 		double x2 = point.getX();
 		double periodX = periodAtLat(lat);
 		while (x2 - periodX >= x)
@@ -146,22 +146,22 @@ public class Projector {
 	}
 
 	public Point2D.Double toPointInSrs(double lat, double lon) {
-		com.vividsolutions.jts.geom.Point point = getGeometryPointInSrs(lat, lon);
+		org.locationtech.jts.geom.Point point = getGeometryPointInSrs(lat, lon);
 		return new Point2D.Double(point.getX(), point.getY());
 	}
 
 	public Point2D.Double toPoint2D(double lat, double lon) {
 		Coordinate coordinate = new Coordinate(lon, lat);
-		com.vividsolutions.jts.geom.Point point = geometryFactory.createPoint(coordinate);
+		org.locationtech.jts.geom.Point point = geometryFactory.createPoint(coordinate);
 		try {
-			point = (com.vividsolutions.jts.geom.Point) JTS.transform(point, transform);
+			point = (org.locationtech.jts.geom.Point) JTS.transform(point, transform);
 
 			double proportionX;
 			if (point.getX() > bounds.getMaxX() || point.getX() < bounds.getMinX()) {
 				// assume the maxX occurs at longitude 180 (true for EPSG 3857
 				// spherical mercator) but maybe not true for other projections?
 				Coordinate c = new Coordinate(180, 0);
-				com.vividsolutions.jts.geom.Point pt = (com.vividsolutions.jts.geom.Point) JTS
+				org.locationtech.jts.geom.Point pt = (org.locationtech.jts.geom.Point) JTS
 				        .transform(geometryFactory.createPoint(c), transform);
 				double maximumX = pt.getX();
 				if (point.getX() > bounds.getMaxX())
@@ -192,9 +192,9 @@ public class Projector {
 		double x = proportionX * (bounds.getMaxX() - bounds.getMinX()) + bounds.getMinX();
 		double y = bounds.getMaxY() - proportionY * (bounds.getMaxY() - bounds.getMinY());
 		Coordinate coordinate = new Coordinate(x, y);
-		com.vividsolutions.jts.geom.Point point = geometryFactory.createPoint(coordinate);
+		org.locationtech.jts.geom.Point point = geometryFactory.createPoint(coordinate);
 		try {
-			point = (com.vividsolutions.jts.geom.Point) JTS.transform(point, transform.inverse());
+			point = (org.locationtech.jts.geom.Point) JTS.transform(point, transform.inverse());
 		} catch (MismatchedDimensionException e) {
 			throw new RuntimeException(e);
 		} catch (TransformException e) {

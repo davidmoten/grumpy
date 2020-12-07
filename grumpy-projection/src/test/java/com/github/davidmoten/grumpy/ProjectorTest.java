@@ -1,15 +1,14 @@
 package com.github.davidmoten.grumpy;
 
-import static org.junit.Assert.assertEquals;
-
-import java.awt.geom.Point2D.Double;
-
-import org.junit.Test;
-
 import com.github.davidmoten.grumpy.projection.Projector;
 import com.github.davidmoten.grumpy.projection.ProjectorBounds;
 import com.github.davidmoten.grumpy.projection.ProjectorTarget;
-import com.vividsolutions.jts.geom.Point;
+import org.junit.Test;
+import org.locationtech.jts.geom.Point;
+
+import java.awt.geom.Point2D.Double;
+
+import static org.junit.Assert.assertEquals;
 
 public class ProjectorTest {
 
