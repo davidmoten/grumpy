@@ -1,6 +1,6 @@
 grumpy
 =============
-<a href="https://travis-ci.org/davidmoten/grumpy"><img src="https://travis-ci.org/davidmoten/grumpy.svg"/></a>
+<a href="https://travis-ci.com/davidmoten/grumpy"><img src="https://travis-ci.com/davidmoten/grumpy.svg"/></a>
 
 [OGC WMS](http://www.opengeospatial.org/standards/wms) Server in java allowing custom rendering of WMS layers using projection utilities and Graphics2D.
 
