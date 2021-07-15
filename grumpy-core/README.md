@@ -1,4 +1,4 @@
-ogc-tools
+grumpy-core
 =========
 
-WMS Server, projection and great circle navigation tools
+
