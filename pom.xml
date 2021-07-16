@@ -24,7 +24,7 @@
         <geotools.version>25.1</geotools.version>
         
         <junit.version>4.13.2</junit.version>
-        <cobertura.version>2.6</cobertura.version>
+        <cobertura.version>2.7</cobertura.version>
         <checkstyle.version>2.11</checkstyle.version>
         <findbugs.version>3.0.5</findbugs.version>
         <javadoc.version>3.2.0</javadoc.version>
