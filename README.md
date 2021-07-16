@@ -1,6 +1,8 @@
 grumpy
 =============
-<a href="https://travis-ci.com/davidmoten/grumpy"><img src="https://travis-ci.com/davidmoten/grumpy.svg"/></a>
+<a href="https://github.com/davidmoten/grumpy/actions/workflows/ci.yml"><img src="https://github.com/davidmoten/grumpy/actions/workflows/ci.yml/badge.svg"/></a><br/>
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/grumpy/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/grumpy)<br/>
+[![codecov](https://codecov.io/gh/davidmoten/grumpy/branch/master/graph/badge.svg)](https://codecov.io/gh/davidmoten/grumpy)<br/>
 
 [OGC WMS](http://www.opengeospatial.org/standards/wms) Server in java allowing custom rendering of WMS layers using projection utilities and Graphics2D.
 
