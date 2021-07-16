@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -22,7 +24,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <slf4j.version>1.7.31</slf4j.version>
         <geotools.version>25.1</geotools.version>
-        
+
         <junit.version>4.13.2</junit.version>
         <cobertura.version>2.7</cobertura.version>
         <checkstyle.version>2.11</checkstyle.version>
@@ -101,7 +103,27 @@
                     <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.7</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <!-- <execution> <id>report</id> <phase>test</phase> 
+                        <goals> <goal>report</goal> </goals> <configuration> </configuration> </execution> -->
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>${m3.site.version}</version>
@@ -214,7 +236,7 @@
             <url>http://davidmoten.github.io/grumpy</url>
         </site>
     </distributionManagement>
-    
+
     <repositories>
         <repository>
             <id>geotools</id>
