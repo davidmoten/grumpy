@@ -28,7 +28,7 @@
         <checkstyle.version>2.11</checkstyle.version>
         <findbugs.version>2.5.4</findbugs.version>
         <javadoc.version>3.2.0</javadoc.version>
-        <pmd.version>3.0.1</pmd.version>
+        <pmd.version>3.14.0</pmd.version>
         <jdepend.version>2.0-beta-2</jdepend.version>
         <javancss.version>2.0</javancss.version>
         <project.info.version>2.4</project.info.version>
