@@ -17,10 +17,6 @@
 
     <url>http://github.com/davidmoten/grumpy</url>
 
-    <properties>
-        <jetty.plugin.version>9.4.18.v20190429</jetty.plugin.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.github.davidmoten</groupId>
