@@ -25,7 +25,7 @@
         <slf4j.version>1.7.31</slf4j.version>
         <geotools.version>25.1</geotools.version>
         
-        <jetty.plugin.version>9.4.18.v20190429</jetty.plugin.version>
+        <jetty.plugin.version>9.4.43.v20210629</jetty.plugin.version>
         <junit.version>4.13.2</junit.version>
         <cobertura.version>2.7</cobertura.version>
         <checkstyle.version>2.11</checkstyle.version>
