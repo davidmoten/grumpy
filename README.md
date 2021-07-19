@@ -4,7 +4,7 @@ grumpy
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/grumpy/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/grumpy)<br/>
 [![codecov](https://codecov.io/gh/davidmoten/grumpy/branch/master/graph/badge.svg)](https://codecov.io/gh/davidmoten/grumpy)<br/>
 
-[OGC WMS](http://www.opengeospatial.org/standards/wms) Server in java allowing custom rendering of WMS layers using projection utilities and Graphics2D.
+[OGC WMS](http://www.opengeospatial.org/standards/wms) 1.3.0 Server in java allowing custom rendering of WMS layers using projection utilities and Graphics2D.
 
 Status: *released to Maven Central*
 
