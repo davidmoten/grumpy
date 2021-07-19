@@ -18,7 +18,7 @@
     <url>http://github.com/davidmoten/grumpy</url>
 
     <properties>
-        <jetty.plugin.version>8.1.15.v20140411</jetty.plugin.version>
+        <jetty.plugin.version>8.1.16.v20140903</jetty.plugin.version>
     </properties>
 
     <dependencies>
