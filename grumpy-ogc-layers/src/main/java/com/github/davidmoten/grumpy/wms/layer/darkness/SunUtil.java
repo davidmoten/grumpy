@@ -65,7 +65,7 @@ public final class SunUtil {
 	/**
 	 * Gets the position of the Sun right now.
 	 * 
-	 * @return
+	 * @return position of the sun now
 	 */
 	public static Position getSubSolarPoint() {
 		return getSubSolarPoint(GregorianCalendar.getInstance(TimeZone
@@ -77,7 +77,7 @@ public final class SunUtil {
 	 * be straight above.
 	 * 
 	 * @param time
-	 * @return
+	 * @return position of the sub-solar point
 	 */
 	public static Position getSubSolarPoint(Calendar time) {
 
