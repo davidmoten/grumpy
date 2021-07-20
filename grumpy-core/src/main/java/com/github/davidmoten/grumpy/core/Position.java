@@ -97,9 +97,9 @@ public class Position {
      * 
      * From http://www.movable-type.co.uk/scripts/latlong.html
      * 
-     * @param distanceKm
-     * @param courseDegrees
-     * @return
+     * @param distanceKm distance to predict
+     * @param courseDegrees course of prediction
+     * @return predicted position 
      */
     public final Position predict(double distanceKm, double courseDegrees) {
         assertWithMsg(alt == 0.0, "Predictions only valid for Earth's surface");
@@ -121,9 +121,9 @@ public class Position {
     /**
      * From http://williams.best.vwh.net/avform.htm (Latitude of point on GC).
      * 
-     * @param position
-     * @param longitudeDegrees
-     * @return
+     * @param position path to 
+     * @param longitudeDegrees crossing longitude
+     * @return latitude on great circle path
      */
     public Double getLatitudeOnGreatCircle(Position position, double longitudeDegrees) {
         double lonR = toRadians(longitudeDegrees);
@@ -174,9 +174,9 @@ public class Position {
      * candidates. From http://williams.best.vwh.net/avform.htm (Crossing
      * parallels).
      * 
-     * @param position
-     * @param latitudeDegrees
-     * @return
+     * @param position other position
+     * @param latitudeDegrees crossing latitude
+     * @return longitude pair or null
      */
     // TODO add unit test
     public LongitudePair getLongitudeOnGreatCircle(Position position, double latitudeDegrees) {
@@ -260,8 +260,8 @@ public class Position {
      * returns distance between two WGS84 positions according to Vincenty's
      * formula from Wikipedia
      * 
-     * @param position
-     * @return
+     * @param position other position
+     * @return distance to the given position in km
      */
     public final double getDistanceToKm(Position position) {
         double lat1 = toRadians(lat);
@@ -284,8 +284,8 @@ public class Position {
     /**
      * Returns a great circle bearing in degrees in the range 0 to 360.
      * 
-     * @param position
-     * @return
+     * @param position other position 
+     * @return bearing in degrees to the given position
      */
     public final double getBearingDegrees(Position position) {
         double lat1 = toRadians(lat);
@@ -310,7 +310,7 @@ public class Position {
      *            degrees between -360 and 360
      * @param bearing2
      *            degrees between -360 and 360
-     * @return
+     * @return difference in degrees in the range -180 to 180
      */
     public static double getBearingDifferenceDegrees(double bearing1, double bearing2) {
         if (bearing1 < 0)
@@ -329,9 +329,9 @@ public class Position {
      * 
      * Formula from: http://www.movable-type.co.uk/scripts/latlong.html
      * 
-     * @param p1
-     * @param p2
-     * @return
+     * @param p1 one end of the path
+     * @param p2 other end of the path
+     * @return distance to path in km
      */
     public final double getDistanceKmToPath(Position p1, Position p2) {
         double d = EARTH_RADIUS_KM
@@ -378,12 +378,11 @@ public class Position {
     /**
      * Returns a position along a path according to the proportion value
      * 
-     * @param position
+     * @param position path goes towards this position
      * @param proportion
      *            is between 0 and 1 inclusive
-     * @return
+     * @return position at proportion along great circle path to the given position
      */
-
     public final Position getPositionAlongPath(Position position, double proportion) {
 
         if (proportion >= 0 && proportion <= 1) {
@@ -431,7 +430,8 @@ public class Position {
      * normalize the lat lon values of this to ensure that no large longitude
      * jumps are made from lastPosition (e.g. 179 to -180)
      * 
-     * @param lastPosition
+     * @param lastPosition last position
+     * @return normalized position
      */
     public final Position ensureContinuous(Position lastPosition) {
         double lon = this.lon;
@@ -543,11 +543,6 @@ public class Position {
             return p1.getPositionAlongPath(p2, proportion);
     }
 
-    /**
-     * @param path
-     * @param minDistanceKm
-     * @return
-     */
     public boolean isOutside(List<Position> path, double minDistanceKm) {
         if (isWithin(path))
             return false;
@@ -561,9 +556,9 @@ public class Position {
      * Returns the difference between two longitude values. The returned value
      * is always >=0.
      * 
-     * @param a
-     * @param b
-     * @return
+     * @param a first longitude value
+     * @param b second longitude value
+     * @return difference between two longitude values
      */
     public static double longitudeDiff(double a, double b) {
         a = to180(a);
@@ -574,8 +569,8 @@ public class Position {
     /**
      * Converts an angle in degrees to range -180< x <= 180.
      * 
-     * @param d
-     * @return
+     * @param d angle
+     * @return normalized angle
      */
     public static double to180(double d) {
         if (d < 0)
