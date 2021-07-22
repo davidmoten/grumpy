@@ -1,7 +1,6 @@
 package com.github.davidmoten.grumpy.wms;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -24,6 +23,6 @@ public interface ImageWriter {
      *            {@link ImageIO#write(java.awt.image.RenderedImage, String, OutputStream)}
      * @throws IOException
      */
-    void writeImage(BufferedImage image, ByteArrayOutputStream os, String imageType)
+    void writeImage(BufferedImage image, OutputStream os, String imageType)
             throws IOException;
 }
