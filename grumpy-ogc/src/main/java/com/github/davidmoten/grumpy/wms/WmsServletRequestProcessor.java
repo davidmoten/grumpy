@@ -1,16 +1,10 @@
 package com.github.davidmoten.grumpy.wms;
 
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -33,11 +27,7 @@ public class WmsServletRequestProcessor {
 
     private final CapabilitiesProvider capabilitiesProvider;
 
-    private final ImageCache imageCache;
-
-    private final LayerManager layerManager;
-
-    private final ImageWriter imageWriter;
+    private WmsRequestProcessor processor;
 
     /**
      * Constructor.
@@ -47,12 +37,9 @@ public class WmsServletRequestProcessor {
      * @param imageCache
      * @param imageWriter
      */
-    public WmsServletRequestProcessor(CapabilitiesProvider capabilitiesProvider,
-            Layers layers, ImageCache imageCache, ImageWriter imageWriter) {
+    public WmsServletRequestProcessor(CapabilitiesProvider capabilitiesProvider, WmsRequestProcessor processor) {
         this.capabilitiesProvider = capabilitiesProvider;
-        this.imageCache = imageCache;
-        this.imageWriter = imageWriter;
-        this.layerManager = new LayerManager(layers);
+        this.processor = processor;
     }
 
     public static Builder builder() {
@@ -83,8 +70,7 @@ public class WmsServletRequestProcessor {
         }
 
         public Builder capabilitiesFromClasspath(String resource) {
-            this.capabilitiesProvider = CapabilitiesProviderFromClasspath
-                    .fromClasspath(resource);
+            this.capabilitiesProvider = CapabilitiesProviderFromClasspath.fromClasspath(resource);
             return this;
         }
 
@@ -125,8 +111,8 @@ public class WmsServletRequestProcessor {
                 imageCache.add(layer);
             if (layers == null)
                 layers = layersBuilder.build();
-            return new WmsServletRequestProcessor(capabilitiesProvider, layers, imageCache,
-                    imageWriter);
+            WmsRequestProcessor processor = new WmsRequestProcessor(layers, imageCache, imageWriter);
+            return new WmsServletRequestProcessor(capabilitiesProvider, processor);
         }
     }
 
@@ -165,8 +151,8 @@ public class WmsServletRequestProcessor {
     }
 
     private void handleException(Exception e) throws ServletException {
-        if (e.getClass().getName().contains("ClientAbortException") || e.getMessage() != null
-                && e.getMessage().contains("Broken pipe")
+        if (e.getClass().getName().contains("ClientAbortException")
+                || e.getMessage() != null && e.getMessage().contains("Broken pipe")
                 || e.getCause() instanceof java.net.SocketException) {
             String s = e.getMessage();
             if (s == null)
@@ -191,49 +177,13 @@ public class WmsServletRequestProcessor {
             throws MissingMandatoryParameterException, IOException {
         log.info("getting image");
         WmsRequest wmsRequest = new WmsRequest(request);
-        byte[] bytes = null;
+        OutputStream out = response.getOutputStream();
         response.setContentType(wmsRequest.getFormat());
+        boolean cacheImage = "true".equalsIgnoreCase(request.getParameter("cacheImage"));
 
-        // check the cache for the bytes of the image converted to the
-        // appropriate format. Note that the critical bottleneck is
-        // ImageIO.write rather than the layerManager.getImage call
-        bytes = imageCache.get(wmsRequest);
-
-        // if cacheImage=false then don't use cache
-        if ("false".equals(request.getParameter("cacheImage")))
-            bytes = null;
-
-        if (bytes == null) {
-            log.info("image cache empty");
-
-            BufferedImage image = null;
-            // dynamic layers should clear the imageCache in a separate thread
-            // (for example, using a quartz job)
-            image = layerManager.getImage(wmsRequest);
-            // Note that we write the image to memory first to avoid this JRE
-            // bug:
-            // http://bugs.sun.com/bugdatabase/view_bug.do;jsessionid=dc84943191e06dffffffffdf200f5210dd319?bug_id=6967419
-            // which is commented on further in JIRA ER-95
-            log.info("writing image to memory for layers " + wmsRequest.getLayers());
-            ByteArrayOutputStream byteOs = new ByteArrayOutputStream();
-            String imageType = wmsRequest.getFormat().substring(
-                    wmsRequest.getFormat().indexOf('/') + 1);
-            // This call is slow!!
-            long t = System.currentTimeMillis();
-            imageWriter.writeImage(image, byteOs, imageType);
-            log.info("ImageIoWriteTimeMs=" + (System.currentTimeMillis() - t));
-            bytes = byteOs.toByteArray();
-            imageCache.put(wmsRequest, bytes);
-        } else
-            log.info("obtained image from cache for layers " + wmsRequest.getLayers());
-
-        log.info("writing image to http output stream for layers " + wmsRequest.getLayers());
-        response.getOutputStream().write(bytes);
-        response.getOutputStream().flush();
-        log.info("imageSizeK=" + new DecimalFormat("0.000").format(bytes.length / 1000.0)
-                + " for layers " + wmsRequest.getLayers());
+        processor.writeImage(wmsRequest, cacheImage, out);
     }
-
+   
     private void writeFeatureInfo(HttpServletRequest request, HttpServletResponse response)
             throws MissingMandatoryParameterException, IOException {
         log.info("getting feature info");
@@ -241,16 +191,7 @@ public class WmsServletRequestProcessor {
         int j = getJ(request);
         WmsRequest wmsRequest = new WmsRequest(request);
         response.setContentType(wmsRequest.getInfoFormat());
-        BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());
-        Map<String, String> infos = layerManager.getInfos(new Date(), wmsRequest, new Point(i, j),
-                wmsRequest.getInfoFormat());
-
-        for (Entry<String, String> entry : infos.entrySet()) {
-            log.debug(entry.getKey() + "=" + entry.getValue());
-            bos.write(("<p>" + entry.getKey() + "</p>").getBytes());
-            bos.write(entry.getValue().getBytes());
-        }
-        bos.close();
+        processor.writeFeatureInfo(i, j, wmsRequest, response.getOutputStream());
     }
 
     private int getJ(HttpServletRequest request) {
