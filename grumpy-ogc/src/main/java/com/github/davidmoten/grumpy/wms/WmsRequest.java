@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -38,15 +40,12 @@ public class WmsRequest {
 	private final String version;
 	private final String infoFormat;
 	private final Map<String, String> parameters;
-	private final String url;
-
 	private final Date time;
 
 	public WmsRequest(List<String> layers, List<String> queryLayers, List<String> styles,
 	        ProjectorBounds bounds, String format, int width, int height, boolean transparent,
 	        Color backgroundColor, String version, String infoFormat,
-	        Map<String, String> parameters, String url, Date time) {
-		super();
+	        Map<String, String> parameters, Date time) {
 		this.layers = layers;
 		this.queryLayers = queryLayers;
 		this.styles = styles;
@@ -59,26 +58,48 @@ public class WmsRequest {
 		this.version = version;
 		this.infoFormat = infoFormat;
 		this.parameters = parameters;
-		this.url = url;
 		this.time = time;
 	}
 
 	public WmsRequest(HttpServletRequest request) throws MissingMandatoryParameterException {
 
 		this(getList(request, "LAYERS", true), getList(request, "QUERY_LAYERS", false), getList(
-		        request, "STYLES", true), getBounds(getCrs(request),
+		        request, "STYLES", true), getBounds(getEffectiveCrs(request),
 		        getParameter(request, "BBOX", true), getVersion(request)), getParameter(request,
 		        "FORMAT", true), Integer.parseInt(getParameter(request, "WIDTH", true)), Integer
 		        .parseInt(getParameter(request, "HEIGHT", true)), isTransparent(request),
 		        getBackgroundColor(request), getVersion(request), getParameter(request,
-		                "INFO_FORMAT", false), getParameters(request), getUrl(request),
+		                "INFO_FORMAT", false), getParameters(request), 
 		        getTime(request));
 	}
+	
+    public WmsRequest(String layers, String queryLayers, String styles, String crs, String srs,
+            String bbox, String format, String width, String height, String transparent,
+            String bgColor, String version, String infoFormat, Map<String, String> parameters,
+            String time) {
+        this(list(layers), list(queryLayers), list(styles),
+                getBounds(getEffectiveCrs(srs, crs), bbox, version), format,
+                Integer.parseInt(width), Integer.parseInt(height),
+                "true".equalsIgnoreCase(transparent), getColor(bgColor), version, infoFormat,
+                parameters, getTime(time));
+    }
 
+	private static List<String> list(String value) {
+	    if (value == null) {
+	        return Collections.emptyList();
+	    } else {
+	        return Arrays.asList(value.split(","));
+	    }
+	}
+	
 	private static Date getTime(HttpServletRequest request)
 	        throws MissingMandatoryParameterException {
 		String s = getParameter(request, "TIME", false);
-		if (s != null) {
+		return getTime(s);
+	}
+
+    private static Date getTime(String s) {
+        if (s != null) {
 			SimpleDateFormat sdf = new SimpleDateFormat(DATETIME_FORMAT_ISO_8601);
 			try {
 				return sdf.parse(s);
@@ -87,15 +108,7 @@ public class WmsRequest {
 			}
 		} else
 			return null;
-	}
-
-	private static String getUrl(HttpServletRequest request) {
-		return request.getRequestURL() + "?" + request.getQueryString();
-	}
-
-	public String getUrl() {
-		return url;
-	}
+    }
 
 	private static Map<String, String> getParameters(HttpServletRequest request) {
 		Map<String, String> map = new HashMap<String, String>();
@@ -110,7 +123,7 @@ public class WmsRequest {
 
 	public WmsRequest modifySize(int w, int h) {
 		return new WmsRequest(layers, queryLayers, styles, bounds, format, w, h, transparent,
-		        backgroundColor, version, infoFormat, parameters, url, time);
+		        backgroundColor, version, infoFormat, parameters, time);
 	}
 
 	public String getVersion() {
@@ -119,12 +132,12 @@ public class WmsRequest {
 
 	public WmsRequest modifyStyles(List<String> newStyles) {
 		return new WmsRequest(layers, queryLayers, newStyles, bounds, format, width, height,
-		        transparent, backgroundColor, version, infoFormat, parameters, url, time);
+		        transparent, backgroundColor, version, infoFormat, parameters, time);
 	}
 
 	public WmsRequest modifyBounds(ProjectorBounds newBounds) {
 		return new WmsRequest(layers, queryLayers, styles, newBounds, format, width, height,
-		        transparent, backgroundColor, version, infoFormat, parameters, url, time);
+		        transparent, backgroundColor, version, infoFormat, parameters,  time);
 	}
 
 	public List<String> getQueryLayers() {
@@ -155,19 +168,27 @@ public class WmsRequest {
 	private static Color getBackgroundColor(HttpServletRequest request)
 	        throws MissingMandatoryParameterException {
 		String s = getParameter(request, "BGCOLOR", false);
-		if (s != null)
+		return getColor(s);
+	}
+
+    private static Color getColor(String s) {
+        if (s != null)
 			return new Color(Integer.valueOf(s.substring(2), 16));
 		else
 			return Color.white;
+    }
+
+	private static String getEffectiveCrs(HttpServletRequest request)
+	        throws MissingMandatoryParameterException {
+		String srs = request.getParameter("SRS");
+		String crs = RequestUtil.getParameter(request, "CRS", false);
+        return getEffectiveCrs(srs, crs);
 	}
 
-	private static String getCrs(HttpServletRequest request)
-	        throws MissingMandatoryParameterException {
-		String srs = RequestUtil.getParameter(request, "SRS", false);
-		String crs = ObjectUtils.firstNonNull(RequestUtil.getParameter(request, "CRS", false), srs,
+    private static String getEffectiveCrs(String srs, String crs) {
+        return ObjectUtils.firstNonNull(crs, srs,
 		        FeatureUtil.EPSG_4326);
-		return crs;
-	}
+    }
 
 	@Override
 	public String toString() {
@@ -175,7 +196,7 @@ public class WmsRequest {
 		        + styles + ", bounds=" + bounds + ", format=" + format + ", width=" + width
 		        + ", height=" + height + ", transparent=" + transparent + ", backgroundColor="
 		        + backgroundColor + ", version=" + version + ", infoFormat=" + infoFormat
-		        + ", parameters=" + parameters + ", url=" + url + "]";
+		        + ", parameters=" + parameters + "]";
 	}
 
 	/**
