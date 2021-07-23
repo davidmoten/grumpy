@@ -1,6 +1,7 @@
 package com.github.davidmoten.grumpy.wms;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -145,17 +146,17 @@ class LayerManager {
         return new Callable<BufferedImage>() {
             @Override
             public BufferedImage call() throws Exception {
+                final MyGraphics graphics = createGraphics(request);
                 try {
-                    final MyGraphics graphics = createGraphics(request);
                     paintLayer(graphics.graphics, layerName, layers, request);
-                    return graphics.image;
-                } catch (Exception e) {
-                    log.error(e.getMessage(), e);
-                    throw e;
-                } catch (Error e) {
-                    log.error(e.getMessage(), e);
-					throw e;
+                } catch (Throwable t) {
+                    log.error(t.getMessage(), t);
+                    Graphics2D g = graphics.graphics;
+                    g.setColor(Color.black);
+                    g.setFont(g.getFont().deriveFont(14f));
+                    g.drawString(t.getClass().getName() + ":" + t.getMessage(), graphics.image.getWidth()/2-50, graphics.image.getHeight() /2 + 10);
                 }
+                return graphics.image;
             }
         };
     }
