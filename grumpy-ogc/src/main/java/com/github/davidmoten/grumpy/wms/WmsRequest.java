@@ -86,14 +86,22 @@ public class WmsRequest {
                         checkNotBlank(bbox, "BBOX"), //
                         version), //
                 checkNotBlank(format, "FORMAT"), //
-                Integer.parseInt(checkNotBlank(width, "WIDTH")), //
-                Integer.parseInt(checkNotBlank(height, "HEIGHT")), //
-                "true".equalsIgnoreCase(transparent), // 
-                getColor(bgColor), //
-                checkNotBlank(version,"VERSION"), //
+                parseInt(width, "WIDTH"), //
+                parseInt(height, "HEIGHT"), //
+                "true".equalsIgnoreCase(transparent), //
+                getColor(bgColor, "BGCOLOR"), //
+                checkNotBlank(version, "VERSION"), //
                 infoFormat, //
                 parameters, //
                 getTime(time));
+    }
+
+    private static int parseInt(String s, String name) {
+        try {
+            return Integer.parseInt(checkNotBlank(s, name));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(name + " is not a valid integer: " + s);
+        }
     }
 
     private static String checkNotBlank(String s, String name) {
@@ -123,7 +131,7 @@ public class WmsRequest {
             try {
                 return sdf.parse(s);
             } catch (ParseException e) {
-                throw new RuntimeException(e);
+                throw new IllegalArgumentException("TIME invalid format: " + e.getMessage());
             }
         } else
             return null;
@@ -187,14 +195,18 @@ public class WmsRequest {
     private static Color getBackgroundColor(HttpServletRequest request)
             throws MissingMandatoryParameterException {
         String s = getParameter(request, "BGCOLOR", false);
-        return getColor(s);
+        return getColor(s, "BGCOLOR");
     }
 
-    private static Color getColor(String s) {
-        if (s != null)
-            return new Color(Integer.valueOf(s.substring(2), 16));
-        else
-            return Color.white;
+    private static Color getColor(String s, String name) {
+        try {
+            if (s != null)
+                return new Color(Integer.valueOf(s.substring(2), 16));
+            else
+                return Color.white;
+        } catch (Throwable e) {
+            throw new IllegalArgumentException("Invalid color format for " + name);
+        }
     }
 
     private static String getEffectiveCrs(HttpServletRequest request)
@@ -251,21 +263,24 @@ public class WmsRequest {
          * 
          **/
 
-        if (("1.1.1".equals(version) || ("1.1.0".equals(version)) || !("CRS:84".equals(crs)))) {
-            minLong = Double.parseDouble(items[0]);
-            minLat = Double.parseDouble(items[1]);
-            maxLong = Double.parseDouble(items[2]);
-            maxLat = Double.parseDouble(items[3]);
-        } else {
-            // this is the order for CRS:84 but EPSG:4326 apparently not
-            minLat = Double.parseDouble(items[0]);
-            minLong = Double.parseDouble(items[1]);
-            maxLat = Double.parseDouble(items[2]);
-            maxLong = Double.parseDouble(items[3]);
+        try {
+            if (("1.1.1".equals(version) || ("1.1.0".equals(version)) || !("CRS:84".equals(crs)))) {
+                minLong = Double.parseDouble(items[0]);
+                minLat = Double.parseDouble(items[1]);
+                maxLong = Double.parseDouble(items[2]);
+                maxLat = Double.parseDouble(items[3]);
+            } else {
+                // this is the order for CRS:84 but EPSG:4326 apparently not
+                minLat = Double.parseDouble(items[0]);
+                minLong = Double.parseDouble(items[1]);
+                maxLat = Double.parseDouble(items[2]);
+                maxLong = Double.parseDouble(items[3]);
+            }
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            throw new IllegalArgumentException(
+                    "BBOX invalid, should be decimal,decimal,decimal,decimal");
         }
-        ProjectorBounds bounds = new ProjectorBounds(crs, minLong, minLat, maxLong, maxLat);
-
-        return bounds;
+        return new ProjectorBounds(crs, minLong, minLat, maxLong, maxLat);
     }
 
     public List<String> getLayers() {
