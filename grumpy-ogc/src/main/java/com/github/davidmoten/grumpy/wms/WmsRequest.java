@@ -82,7 +82,7 @@ public class WmsRequest {
         this(list(checkNotBlank(layers, "LAYERS")), //
                 list(queryLayers), //
                 list(checkNotBlank(styles, "STYLES")), //
-                getBounds(getEffectiveCrs(srs, checkNotBlank(crs, "CRS")), //
+                getBounds(getEffectiveCrs(srs, crs), //
                         checkNotBlank(bbox, "BBOX"), //
                         version), //
                 checkNotBlank(format, "FORMAT"), //
