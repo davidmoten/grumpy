@@ -37,7 +37,8 @@ public class WmsServletRequestProcessor {
      * @param imageCache
      * @param imageWriter
      */
-    public WmsServletRequestProcessor(CapabilitiesProvider capabilitiesProvider, WmsRequestProcessor processor) {
+    public WmsServletRequestProcessor(CapabilitiesProvider capabilitiesProvider,
+            WmsRequestProcessor processor) {
         this.capabilitiesProvider = capabilitiesProvider;
         this.processor = processor;
     }
@@ -79,14 +80,51 @@ public class WmsServletRequestProcessor {
             return this;
         }
 
+        public Builder addCachedLayer(Layer layer) {
+            return addCachedLayer(layer.getFeatures().getName(), layer);
+        }
+
+        /**
+         * Adds the layer with cacheable images when generated and uses the given name
+         * for the layer for WMS calls (this will override the layer name defined in
+         * {#link {@link Layer#getFeatures()}.
+         * 
+         * @param name  override name for layer
+         * @param layer layer to add with cacheable images
+         * @return this
+         */
         public Builder addCachedLayer(String name, Layer layer) {
             return addLayer(name, layer, true);
         }
 
+        public Builder addLayer(Layer layer) {
+            return addLayer(layer.getFeatures().getName(), layer);
+        }
+
+        /**
+         * Adds the layer where generated images are non-cacheable and uses the given
+         * name for the layer for WMS calls (this will override the layer name defined
+         * in {#link {@link Layer#getFeatures()}.
+         * 
+         * @param name  override name for layer
+         * @param layer layer to add with cacheable images
+         * @return this
+         */
         public Builder addLayer(String name, Layer layer) {
             return addLayer(name, layer, false);
         }
 
+        /**
+         * Adds the layer where generated images are cacheable according to parameter
+         * {@code cache} and uses the given name for the layer for WMS calls (this will
+         * override the layer name defined in {#link {@link Layer#getFeatures()}.
+         * 
+         * @param name  override name for layer
+         * @param layer layer to add with cacheable images
+         * @param cache if and only if true images will be cached up to the max image
+         *              cache size
+         * @return this
+         */
         public Builder addLayer(String name, Layer layer, boolean cache) {
             layersBuilder.add(name, layer);
             if (cache)
@@ -111,7 +149,8 @@ public class WmsServletRequestProcessor {
                 imageCache.add(layer);
             if (layers == null)
                 layers = layersBuilder.build();
-            WmsRequestProcessor processor = new WmsRequestProcessor(layers, imageCache, imageWriter);
+            WmsRequestProcessor processor = new WmsRequestProcessor(layers, imageCache,
+                    imageWriter);
             return new WmsServletRequestProcessor(capabilitiesProvider, processor);
         }
     }
@@ -183,7 +222,7 @@ public class WmsServletRequestProcessor {
 
         processor.writeImage(wmsRequest, cacheImage, out);
     }
-   
+
     private void writeFeatureInfo(HttpServletRequest request, HttpServletResponse response)
             throws MissingMandatoryParameterException, IOException {
         log.info("getting feature info");

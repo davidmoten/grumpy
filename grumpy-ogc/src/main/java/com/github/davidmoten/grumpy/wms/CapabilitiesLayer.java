@@ -55,8 +55,8 @@ public class CapabilitiesLayer {
         return new Builder();
     }
 
-    public static Builder from(Layer layer) {
-        return new Builder().layer(layer);
+    public static Builder from(LayerFeatures layer) {
+        return new Builder().layerFeatures(layer);
     }
 
     public static class Builder {
@@ -68,7 +68,7 @@ public class CapabilitiesLayer {
         private List<CapabilitiesLayer> layers = new ArrayList<CapabilitiesLayer>();
         private Boolean queryable = null;
         private boolean opaque = true;
-        private Layer layer;
+        private LayerFeatures layerFeatures;
 
         private Builder() {
         }
@@ -121,8 +121,8 @@ public class CapabilitiesLayer {
             return this;
         }
 
-        public Builder layer(Layer layer) {
-            this.layer = layer;
+        public Builder layerFeatures(LayerFeatures layerFeatures) {
+            this.layerFeatures = layerFeatures;
             return this;
         }
 
@@ -137,13 +137,13 @@ public class CapabilitiesLayer {
         }
 
         public CapabilitiesLayer build() {
-            if (layer != null) {
-                styles.addAll(layer.getFeatures().getStyles());
-                crs.addAll(layer.getFeatures().getCrs());
+            if (layerFeatures != null) {
+                styles.addAll(layerFeatures.getStyles());
+                crs.addAll(layerFeatures.getCrs());
                 if (name == null)
-                    name = layer.getFeatures().getName();
+                    name = layerFeatures.getName();
                 if (queryable == null)
-                    queryable = layer.getFeatures().isQueryable();
+                    queryable = layerFeatures.isQueryable();
             }
             if (title == null)
                 title = name;

@@ -40,7 +40,7 @@ public class WmsServlet extends HttpServlet {
                 // add info format
                 .infoFormat("text/html")
                 // add darkness layer
-                .layer(darkness)
+                .layerFeatures(darkness.getFeatures())
                 // build caps
                 .build();
 

@@ -42,11 +42,11 @@ public class WmsServlet extends HttpServlet {
                 // add info format
                 .infoFormat("text/html")
                 // add custom layer
-                .layer(custom)
+                .layerFeatures(custom)
                 // add darkness layer
-                .layer(darkness)
+                .layerFeatures(darkness)
                 // add fiddle layer
-                .layer(fiddle)
+                .layerFeatures(fiddle)
                 // build caps
                 .build();
 

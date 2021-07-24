@@ -65,7 +65,7 @@ public class WmsRequestProcessor {
             this.imageCacheSize = size;
             return this;
         }
-
+        
         public Builder addCachedLayer(String name, Layer layer) {
             return addLayer(name, layer, true);
         }

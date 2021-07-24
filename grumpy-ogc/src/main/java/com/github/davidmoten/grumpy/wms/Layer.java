@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Renders or displays info about positions on a WMS layer.
  */
-public interface Layer {
+public interface Layer extends HasLayerFeatures {
 
     /**
      * Render some information onto the supplied graphics context
@@ -34,13 +34,5 @@ public interface Layer {
      * @return
      */
     String getInfo(Date time, WmsRequest request, Point point, String mimeType);
-
-    /**
-     * Returns features about the WMS layer including styles, supported CRS and
-     * the default name of the layer.
-     * 
-     * @return
-     */
-    LayerFeatures getFeatures();
 
 }

@@ -133,9 +133,13 @@ public class Capabilities {
             return this;
         }
 
-        public Builder layer(Layer layer) {
-            this.layers.add(CapabilitiesLayer.from(layer).build());
+        public Builder layerFeatures(LayerFeatures layerFeatures) {
+            this.layers.add(CapabilitiesLayer.from(layerFeatures).build());
             return this;
+        }
+        
+        public Builder layerFeatures(Layer layer) {
+            return layerFeatures(layer.getFeatures());
         }
 
         public Capabilities build() {
