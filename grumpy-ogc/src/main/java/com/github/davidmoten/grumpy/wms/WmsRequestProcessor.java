@@ -66,8 +66,16 @@ public class WmsRequestProcessor {
             return this;
         }
         
+        public Builder addCachedLayer(Layer layer) {
+            return addCachedLayer(layer.getFeatures().getName(), layer);
+        }
+        
         public Builder addCachedLayer(String name, Layer layer) {
             return addLayer(name, layer, true);
+        }
+        
+        public Builder addLayer(Layer layer) {
+            return addLayer(layer.getFeatures().getName(), layer);
         }
 
         public Builder addLayer(String name, Layer layer) {
