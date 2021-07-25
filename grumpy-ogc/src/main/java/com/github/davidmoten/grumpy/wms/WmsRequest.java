@@ -81,7 +81,7 @@ public class WmsRequest {
             String time) {
         this(list(checkNotBlank(layers, "LAYERS")), //
                 list(queryLayers), //
-                list(checkNotBlank(styles, "STYLES")), //
+                list(styles), // spec says non-empty but uDig doesn't honour so not enforcing it
                 getBounds(getEffectiveCrs(srs, crs), //
                         checkNotBlank(bbox, "BBOX"), //
                         version), //
