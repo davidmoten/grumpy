@@ -263,8 +263,9 @@ public class WmsRequest {
          * 
          **/
 
+        //TODO use axis definitions for the EPSG to determine coordinate ordering
         try {
-            if (("1.1.1".equals(version) || ("1.1.0".equals(version)) || !("CRS:84".equals(crs)))) {
+            if (("1.1.1".equals(version) || ("1.1.0".equals(version)) || !"CRS:84".equals(crs) && !"EPSG:4326".equals(crs))) {
                 minLong = Double.parseDouble(items[0]);
                 minLat = Double.parseDouble(items[1]);
                 maxLong = Double.parseDouble(items[2]);
