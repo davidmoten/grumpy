@@ -1,7 +1,5 @@
 package com.github.davidmoten.grumpy.projection;
 
-import com.github.davidmoten.grumpy.core.Position;
-import org.apache.commons.io.IOUtils;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.locationtech.jts.geom.Coordinate;
@@ -14,9 +12,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import com.github.davidmoten.grumpy.core.Position;
 
 public class FeatureUtil {
     public static final String EPSG_4326 = "EPSG:4326";
@@ -26,32 +22,16 @@ public class FeatureUtil {
      * ARCGIS copy of 3857
      */
     public static final String EPSG_102100 = "EPSG:102100";
-
-    private static Map<String, CoordinateReferenceSystem> crs = new ConcurrentHashMap<String, CoordinateReferenceSystem>();
+    private static final boolean LONGITUDE_FIRST = true;
 
     public static synchronized CoordinateReferenceSystem getCrs(String epsg) {
         try {
-            if (crs.get(epsg) != null)
-                return crs.get(epsg);
-
-            if (epsg.equals(EPSG_900913)) {
-                String wkt = IOUtils.toString(FeatureUtil.class
-                        .getResourceAsStream("/epsg/EPSG_900913.txt"));
-                crs.put(epsg, CRS.parseWKT(wkt));
-            } else if (epsg.equals(EPSG_102100)) {
-                String wkt = IOUtils.toString(FeatureUtil.class
-                        .getResourceAsStream("/epsg/EPSG_102100.txt"));
-                crs.put(epsg, CRS.parseWKT(wkt));
-            } else
-                crs.put(epsg, CRS.decode(epsg));
-            return crs.get(epsg);
+            return CRS.decode(epsg, LONGITUDE_FIRST);
         } catch (FactoryException e) {
-            throw new RuntimeException("could not load " + epsg, e);
-        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
+    
     public static Point createPoint(double lat, double lon, String srsName) {
         GeometryFactory geometryFactory = new GeometryFactory();
         Coordinate coordinate = new Coordinate(lon, lat);

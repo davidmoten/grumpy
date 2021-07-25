@@ -263,9 +263,10 @@ public class WmsRequest {
          * 
          **/
 
-        //TODO use axis definitions for the EPSG to determine coordinate ordering
+        // Note that EPSG:4326 is lat,lon,lat,lon but FeatureUtil.getCrs(String) uses 
+        // Hints.FORCE_LONGITUDE_FIRST_AXIS_ORDER
         try {
-            if (("1.1.1".equals(version) || ("1.1.0".equals(version)) || !"CRS:84".equals(crs) && !"EPSG:4326".equals(crs))) {
+            if (("1.1.1".equals(version) || ("1.1.0".equals(version)) || !"CRS:84".equals(crs))) {
                 minLong = Double.parseDouble(items[0]);
                 minLat = Double.parseDouble(items[1]);
                 maxLong = Double.parseDouble(items[2]);
@@ -327,5 +328,5 @@ public class WmsRequest {
     public Date getTime() {
         return time;
     }
-
+    
 }
