@@ -3,7 +3,8 @@ package com.github.davidmoten.grumpy.wms;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CapabilitiesLayer {
+public final class CapabilitiesLayer {
+    
     private final String name;
     private final String title;
     private final boolean queryable;

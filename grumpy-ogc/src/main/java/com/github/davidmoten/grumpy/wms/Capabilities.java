@@ -3,7 +3,9 @@ package com.github.davidmoten.grumpy.wms;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Capabilities {
+import com.google.common.base.Preconditions;
+
+public final class Capabilities {
     private final String serviceName;
     private final String serviceTitle;
     private final String serviceAbstract;
@@ -12,12 +14,16 @@ public class Capabilities {
     private final List<String> imageFormats;
     private final List<String> infoFormats;
     private final List<CapabilitiesLayer> layers;
+    private final String serviceUrlBase;
 
     private Capabilities(String serviceName, String serviceTitle, String serviceAbstract,
             Integer serviceMaxWidth, Integer serviceMaxHeight, List<String> imageFormats,
-            List<String> infoFormats, List<CapabilitiesLayer> layers) {
-        if (serviceName == null)
-            throw new RuntimeException("serviceName cannot be null");
+            List<String> infoFormats, List<CapabilitiesLayer> layers, String serviceUrlBase) {
+        Preconditions.checkNotNull(serviceName, "serviceName cannot be null");
+        Preconditions.checkNotNull(imageFormats, "imageFormats cannot be null");
+        Preconditions.checkNotNull(infoFormats, "infoFormats cannot be null");
+        Preconditions.checkNotNull(layers, "layers cannot be null");
+        Preconditions.checkNotNull(serviceUrlBase, "serviceUrlBase cannot be null");
         this.serviceName = serviceName;
         this.serviceTitle = serviceTitle;
         this.serviceAbstract = serviceAbstract;
@@ -26,6 +32,7 @@ public class Capabilities {
         this.imageFormats = imageFormats;
         this.infoFormats = infoFormats;
         this.layers = layers;
+        this.serviceUrlBase = serviceUrlBase;
     }
 
     public String getServiceTitle() {
@@ -60,6 +67,10 @@ public class Capabilities {
         return layers;
     }
 
+    public String getServiceUrlBase() {
+        return serviceUrlBase;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -74,8 +85,14 @@ public class Capabilities {
         private List<String> imageFormats = new ArrayList<String>();
         private List<String> infoFormats = new ArrayList<String>();
         private List<CapabilitiesLayer> layers = new ArrayList<CapabilitiesLayer>();
+        private String serviceUrlBase;
 
         private Builder() {
+        }
+
+        public Builder serviceBaseUrl(String serviceUrlBase) {
+            this.serviceUrlBase = serviceUrlBase;
+            return this;
         }
 
         public Builder serviceName(String serviceName) {
@@ -137,7 +154,7 @@ public class Capabilities {
             this.layers.add(CapabilitiesLayer.from(layerFeatures).build());
             return this;
         }
-        
+
         public Builder layerFeatures(Layer layer) {
             return layerFeatures(layer.getFeatures());
         }
@@ -148,7 +165,7 @@ public class Capabilities {
             if (serviceAbstract == null)
                 serviceAbstract = serviceName;
             return new Capabilities(serviceName, serviceTitle, serviceAbstract, serviceMaxWidth,
-                    serviceMaxHeight, imageFormats, infoFormats, layers);
+                    serviceMaxHeight, imageFormats, infoFormats, layers, serviceUrlBase);
         }
     }
 

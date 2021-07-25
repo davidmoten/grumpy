@@ -1,6 +1,9 @@
 package com.github.davidmoten.grumpy.wms;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jamesmurty.utils.XMLBuilder;
 
-public class CapabilitiesProviderFromCapabilities implements CapabilitiesProvider {
+public final class CapabilitiesProviderFromCapabilities implements CapabilitiesProvider {
 
     private static final Logger log = LoggerFactory
             .getLogger(CapabilitiesProviderFromCapabilities.class);
@@ -37,6 +40,7 @@ public class CapabilitiesProviderFromCapabilities implements CapabilitiesProvide
         template = template.replace("${imageFormats}", formats(capabilities.getImageFormats()));
         template = template.replace("${infoFormats}", formats(capabilities.getInfoFormats()));
         template = template.replace("${layers}", layers(capabilities.getLayers()));
+        template = template.replace("${serviceBaseUrl}", capabilities.getServiceUrlBase());
         log.info("capabilities=\n" + template);
         return template;
     }
@@ -58,7 +62,7 @@ public class CapabilitiesProviderFromCapabilities implements CapabilitiesProvide
             if (layer.isOpaque())
                 xml = xml.a("opaque", "1");
             xml = xml.element("Name").text(layer.getName()).up()
-            // add title
+                    // add title
                     .element("Title").text(layer.getTitle()).up();
             for (String crs : layer.getCrs()) {
                 xml = xml.element("CRS").text(crs).up();
@@ -101,11 +105,11 @@ public class CapabilitiesProviderFromCapabilities implements CapabilitiesProvide
     }
 
     private static String getTemplate() {
-        try {
-            return IOUtils.toString(CapabilitiesProviderFromCapabilities.class
-                    .getResourceAsStream("/wms-capabilities-template.xml"));
+        try (InputStream in = CapabilitiesProviderFromCapabilities.class
+                .getResourceAsStream("/wms-capabilities-template.xml")) {
+            return IOUtils.toString(in, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 

@@ -1,12 +1,15 @@
 package com.github.davidmoten.grumpy.wms;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
 
-public class CapabilitiesProviderFromClasspath implements CapabilitiesProvider {
+public final class CapabilitiesProviderFromClasspath implements CapabilitiesProvider {
 
     private final String resource;
 
@@ -20,11 +23,11 @@ public class CapabilitiesProviderFromClasspath implements CapabilitiesProvider {
 
     @Override
     public String getCapabilities(HttpServletRequest request) {
-        try {
-            return IOUtils.toString(CapabilitiesProviderFromClasspath.class
-                    .getResourceAsStream(resource));
+        try (InputStream in = CapabilitiesProviderFromClasspath.class
+                .getResourceAsStream(resource)) {
+            return IOUtils.toString(in, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 
