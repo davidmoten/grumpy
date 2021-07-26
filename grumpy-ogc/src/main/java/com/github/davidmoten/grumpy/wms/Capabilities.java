@@ -25,8 +25,8 @@ public final class Capabilities {
         Preconditions.checkNotNull(layers, "layers cannot be null");
         Preconditions.checkNotNull(serviceUrlBase, "serviceUrlBase cannot be null");
         this.serviceName = serviceName;
-        this.serviceTitle = serviceTitle;
-        this.serviceAbstract = serviceAbstract;
+        this.serviceTitle = nvl(serviceTitle, serviceName);
+        this.serviceAbstract = nvl(serviceAbstract, serviceName);
         this.serviceMaxWidth = serviceMaxWidth;
         this.serviceMaxHeight = serviceMaxHeight;
         this.imageFormats = imageFormats;
@@ -35,6 +35,14 @@ public final class Capabilities {
         this.serviceUrlBase = serviceUrlBase;
     }
 
+    private static <T> T nvl(T v, T w) {
+        if (v == null) {
+            return w;
+        } else {
+            return v;
+        }
+    }
+    
     public String getServiceTitle() {
         return serviceTitle;
     }
