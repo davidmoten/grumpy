@@ -8,7 +8,7 @@ public class BoundsSamplerMaxSizeTest {
 
     @Test
     public void testSample() {
-        RectangleSampler b = new RectangleSamplerGrid(100);
+        RectangleSampler b = new RectangleSamplerGrid();
         Rectangle r = new Rectangle(0, 0, 200, 300);
         System.out.println(b.sample(r, null));
     }

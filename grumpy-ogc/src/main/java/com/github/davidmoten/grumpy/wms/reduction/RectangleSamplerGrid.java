@@ -13,15 +13,8 @@ import com.github.davidmoten.grumpy.projection.Projector;
  */
 public class RectangleSamplerGrid implements RectangleSampler {
 
-    private final double maxCellSizeKm;
-
-    public RectangleSamplerGrid(double maxCellSizeKm) {
-        this.maxCellSizeKm = maxCellSizeKm;
-    }
-
     @Override
     public List<Point> sample(Rectangle region, Projector projector) {
-
         return RectangleUtil.corners(region);
     }
 }
