@@ -3,7 +3,7 @@ package com.github.davidmoten.grumpy.wms;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.base.Preconditions;
+import com.github.davidmoten.guavamini.Preconditions;
 
 public final class Capabilities {
     private final String serviceName;
