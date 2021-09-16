@@ -12,6 +12,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,9 +41,31 @@ public final class CapabilitiesProviderFromCapabilities implements CapabilitiesP
         template = template.replace("${imageFormats}", formats(capabilities.getImageFormats()));
         template = template.replace("${infoFormats}", formats(capabilities.getInfoFormats()));
         template = template.replace("${layers}", layers(capabilities.getLayers()));
-        template = template.replace("${serviceBaseUrl}", capabilities.getServiceUrlBase());
+        template = template.replace("${serviceBaseUrl}",
+                StringEscapeUtils.escapeXml11(adjustUrl(capabilities.getServiceUrlBase())));
         log.info("capabilities=\n" + template);
         return template;
+    }
+
+    private static final String SERVICE_EQUALS_WMS = "SERVICE=WMS";
+
+    private static String adjustUrl(String u) {
+        // ensure ends in & and contains parameter SERVICE=WMS
+        if (u.contains("?")) {
+            if (u.contains(SERVICE_EQUALS_WMS)) {
+                if (u.endsWith("&")) {
+                    return u;
+                } else {
+                    return u + "&";
+                }
+            } else if (u.endsWith("&")) {
+                return u + SERVICE_EQUALS_WMS + "&";
+            } else {
+                return u + "&" + SERVICE_EQUALS_WMS + "&";
+            }
+        } else {
+            return u + "?" + SERVICE_EQUALS_WMS + "&";
+        }
     }
 
     private String layers(List<CapabilitiesLayer> layers) {

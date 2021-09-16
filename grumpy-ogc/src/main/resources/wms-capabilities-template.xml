@@ -40,7 +40,7 @@
                         <Get>
                             <OnlineResource
                                 xlink:type="simple"
-                                xlink:href="${serviceBaseUrl}?SERVICE=WMS&amp;" />
+                                xlink:href="${serviceBaseUrl}" />
                         </Get>
                     </HTTP>
                 </DCPType>
@@ -52,7 +52,7 @@
                         <Get>
                             <OnlineResource
                                 xlink:type="simple"
-                                xlink:href="${serviceBaseUrl}?SERVICE=WMS&amp;" />
+                                xlink:href="${serviceBaseUrl}" />
                         </Get>
                     </HTTP>
                 </DCPType>
@@ -64,7 +64,7 @@
                         <Get>
                             <OnlineResource
                                 xlink:type="simple"
-                                xlink:href="${serviceBaseUrl}?SERVICE=WMS&amp;" />
+                                xlink:href="${serviceBaseUrl}&amp;" />
                         </Get>
                     </HTTP>
                 </DCPType>
