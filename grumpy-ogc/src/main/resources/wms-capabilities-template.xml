@@ -64,7 +64,7 @@
                         <Get>
                             <OnlineResource
                                 xlink:type="simple"
-                                xlink:href="${serviceBaseUrl}&amp;" />
+                                xlink:href="${serviceBaseUrl}" />
                         </Get>
                     </HTTP>
                 </DCPType>
