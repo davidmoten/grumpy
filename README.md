@@ -24,11 +24,6 @@ Features
 * Handles boundary discontinuities with ```Reducer``` and ```RendererUtil``` methods
 * War artifact to deploy Darkness layer as WMS service (```grumpy-app```)
 
-Demonstration
------------------
-Try it [live](http://grumpy.xuml-tools.cloudbees.net/) on cloudbees. 
-
-
 Run demo locally
 ------------------
 ```
