@@ -55,7 +55,7 @@ To make your own WMS service add this dependency to the pom.xml of your war proj
 <dependency>
   <groupId>com.github.davidmoten</groupId>
   <artifactId>grumpy-ogc</artifactId>
-  <version>0.2.2</version>
+  <version>VERSION_HERE</version>
 </dependency>
 ```
 
