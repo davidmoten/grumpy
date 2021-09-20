@@ -24,7 +24,7 @@ Features
 * Handles boundary discontinuities with ```Reducer``` and ```RendererUtil``` methods
 * War artifact to deploy Darkness layer as WMS service (```grumpy-app```)
 
-Serverless AWS implementation of grumpy with OpenLayers 6:
+Serverless AWS implementation of grumpy with OpenLayers 6 and ArcGIS base layers:
 
 <img src="https://raw.githubusercontent.com/davidmoten/grumpy/master/src/docs/craft.png"/>
 
