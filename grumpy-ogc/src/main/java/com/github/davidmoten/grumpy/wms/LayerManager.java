@@ -150,17 +150,17 @@ class LayerManager {
                 try {
                     paintLayer(graphics.graphics, layerName, layers, request);
                 } catch (Throwable t) {
-                    log.error(t.getMessage(), t);
+                    log.warn(t.getMessage(), t);
                     Graphics2D g = graphics.graphics;
                     g.setColor(Color.black);
-                    g.setFont(g.getFont().deriveFont(14f));
+                    g.setFont(g.getFont().deriveFont(10f));
                     g.drawString(t.getClass().getName() + ":" + t.getMessage(), graphics.image.getWidth()/2-50, graphics.image.getHeight() /2 + 10);
                 }
                 return graphics.image;
             }
         };
     }
-
+    
     private static void paintLayer(Graphics2D g, String layerName, Layers layers, WmsRequest request) {
         log.info("painting " + layerName);
         final Layer layer = layers.getLayer(layerName);
