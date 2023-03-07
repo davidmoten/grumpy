@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.github.davidmoten</groupId>
 		<artifactId>grumpy</artifactId>
-		<version>0.4.8-SNAPSHOT</version>
+		<version>0.4.8</version>
 	</parent>
 
 	<artifactId>grumpy-ogc-layers</artifactId>
