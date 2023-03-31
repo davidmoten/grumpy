@@ -40,7 +40,7 @@
         <coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
         <war.plugin.version>3.3.2</war.plugin.version>
         <scm.url>scm:git:https://github.com/davidmoten/grumpy.git</scm.url>
-        <guava.mini.version>0.1.4</guava.mini.version>
+        <guava.mini.version>0.1.5</guava.mini.version>
 
     </properties>
 
